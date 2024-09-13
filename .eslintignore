@@ -1,0 +1,7 @@
+node_modules
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+public
+build
+dist
