@@ -1,26 +1,26 @@
 import { Button } from '@nextui-org/react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-export default function Transactions() {
+export default function Orders() {
   const navigate = useNavigate();
 
-  const transactions = [
-    { id: '1', title: 'Transaction 1' },
-    { id: '2', title: 'Transaction 2' },
+  const orders = [
+    { id: '1', title: 'Order 1' },
+    { id: '2', title: 'Order 2' },
   ];
 
   const handleClick = (id: string) => {
-    navigate(`/transactions/${id}`);
+    navigate(`/orders/${id}`);
   };
 
   return (
     <div className="flex">
       <div>
-        <h1>Transactions</h1>
+        <h1>Orders</h1>
         <ul>
-          {transactions.map((transaction) => (
-            <li key={transaction.id}>
-              <Button onClick={() => handleClick(transaction.id)}>{transaction.title}</Button>
+          {orders.map((order) => (
+            <li key={order.id}>
+              <Button onClick={() => handleClick(order.id)}>{order.title}</Button>
             </li>
           ))}
         </ul>
