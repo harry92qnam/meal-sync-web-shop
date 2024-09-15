@@ -1,4 +1,4 @@
-import { Button, Divider, Image, Input } from '@nextui-org/react';
+import { Button, Image, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
