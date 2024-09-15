@@ -10,7 +10,18 @@ const validationSchema = yup.object().shape({
     .string()
     .matches(/^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/, 'Email không hợp lệ!')
     .required('Vui lòng nhập email'),
-  password: yup.string().required('Vui lòng nhập mật khẩu'),
+  password: yup
+    .string()
+    .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+    .max(25, 'Mật khẩu chỉ có tối đa 25 ký tự')
+    .matches(/[0-9]/, 'Mật khẩu phải chứa ít nhất một ký tự số (0-9)')
+    .matches(/[a-z]/, 'Mật khẩu phải chứa ít nhất một chữ cái in thường (a-z)')
+    .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ cái in hoa (A-Z)')
+    .matches(
+      /[^\w]/,
+      'Mật khẩu phải chứa ít nhất một ký tự đặc biệt (`, ~, !, @, #, $, %, ^, &, *, ?)',
+    )
+    .required('Vui lòng nhập mật khẩu'),
 });
 
 export default function Login() {
