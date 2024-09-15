@@ -85,26 +85,13 @@ export default function Login() {
               </button>
             }
           />
-          <Link to={'/forgot-password'}>
-            <p className="underline text-primary text-sm text-right my-2">Quên mật khẩu?</p>
-          </Link>
+          <div className="flex justify-end">
+            <Link to={'/forgot-password'}>
+              <p className="underline text-primary text-sm w-28">Quên mật khẩu?</p>
+            </Link>
+          </div>
           <Button type="submit" color="primary" className="w-full py-6 text-lg">
             Đăng nhập
-          </Button>
-          <div className="flex items-center">
-            <Divider className="flex-grow w-1/3" />
-            <span className="px-2 text-gray-500">Hoặc</span>
-            <Divider className="flex-grow w-1/3" />
-          </div>
-          <Button type="submit" color="default" className="w-full py-6 text-lg">
-            <Image
-              alt="MealSync Logo"
-              height={24}
-              width={24}
-              radius="md"
-              src="./images/google-icon.png"
-            />{' '}
-            Đăng nhập bằng Google
           </Button>
           <div className="text-sm text-center">
             Chưa có cửa hàng? {}

@@ -1,4 +1,4 @@
-import { Button, Divider, Image, Input } from '@nextui-org/react';
+import { Button, Image, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -6,6 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
+  shopOwner: yup
+    .string()
+    .required('Vui lòng nhập tên của bạn')
+    .max(30, 'Tên cửa hàng chỉ có tối đa 30 ký tự'),
   shopName: yup
     .string()
     .required('Vui lòng nhập tên cửa hàng')
@@ -18,6 +22,10 @@ const validationSchema = yup.object().shape({
     .string()
     .matches(/((^(\\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/, 'Số điện thoại không hợp lệ!')
     .required('Vui lòng nhập số điện thoại'),
+  address: yup
+    .string()
+    .required('Vui lòng nhập địa chỉ cửa hàng')
+    .max(100, 'Địa chỉ cửa hàng chỉ có tối đa 100 ký tự'),
   password: yup
     .string()
     .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
@@ -45,9 +53,11 @@ export default function Register() {
 
   const formik = useFormik({
     initialValues: {
+      shopOwner: '',
       shopName: '',
       email: '',
       phoneNumber: '',
+      address: '',
       password: '',
       confirmPassword: '',
     },
@@ -70,6 +80,17 @@ export default function Register() {
         </div>
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
+          <Input
+            type="text"
+            name="shopOwner"
+            label="Tên chủ cửa hàng"
+            placeholder="Nhập tên của bạn"
+            value={formik.values.shopOwner}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.shopOwner && !!formik.errors.shopOwner}
+            errorMessage={formik.touched.shopOwner && formik.errors.shopOwner}
+          />
           <Input
             type="text"
             name="shopName"
@@ -102,6 +123,17 @@ export default function Register() {
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.phoneNumber && !!formik.errors.phoneNumber}
             errorMessage={formik.touched.phoneNumber && formik.errors.phoneNumber}
+          />
+          <Input
+            type="text"
+            name="address"
+            label="Địa chỉ"
+            placeholder="Nhập địa chỉ của cửa hàng"
+            value={formik.values.address}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.address && !!formik.errors.address}
+            errorMessage={formik.touched.address && formik.errors.address}
           />
           <Input
             type={isShowPassword ? 'text' : 'password'}
@@ -148,21 +180,6 @@ export default function Register() {
               Đăng ký
             </Button>
           </div>
-          <div className="flex items-center">
-            <Divider className="flex-grow w-1/3" />
-            <span className="px-2 text-gray-500">Hoặc</span>
-            <Divider className="flex-grow w-1/3" />
-          </div>
-          <Button type="submit" color="default" className="w-full py-6 text-lg">
-            <Image
-              alt="MealSync Logo"
-              height={24}
-              width={24}
-              radius="md"
-              src="./images/google-icon.png"
-            />{' '}
-            Đăng ký bằng Google
-          </Button>
           <div className="text-sm text-center">
             Đã có tài khoản? {}
             <Link to="/" className="text-primary underline">
