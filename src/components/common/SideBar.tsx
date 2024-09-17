@@ -8,7 +8,7 @@ import { IoMdGift } from 'react-icons/io';
 import { IoFastFoodOutline, IoPeopleOutline } from 'react-icons/io5';
 import { MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
 import { RiExchangeDollarFill } from 'react-icons/ri';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface SidebarItemProps {
   title: string;
@@ -28,7 +28,6 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Thông tin cá nhân', icon: CgProfile, iconSize: 17, path: '/profile' },
 ];
 const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
-  const navigate = useNavigate();
   // const isAuthenticated = () => {
   //   const token = localStorage.getItem('token');
   //   return token !== null;
@@ -40,15 +39,11 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   //   }
   // }, []);
 
-  const handleAvatarClick = () => {
-    navigate('/shop');
-  };
-
   return (
     <aside className="bg-white shadow-md p-6 pt-5 h-screen flex-col items-center min-w-[240px]">
-      <div
+      <Link
+        to={'/shop'}
         className="flex items-center gap-2 justify-center cursor-pointer hover:opacity-80 max-w-[240px]"
-        onClick={handleAvatarClick}
       >
         <Avatar
           src="https://i.pinimg.com/originals/98/48/d6/9848d697fc7882b000c0fac2eabb4b6b.png"
@@ -56,7 +51,7 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
           className="w-16 h-16 min-w-16"
         />
         <p className="text-xl font-bold text-primary">Tiệm ăn tháng năm</p>
-      </div>
+      </Link>
       <Divider className="my-4" />
       <nav>
         <ul className="space-y-5">
