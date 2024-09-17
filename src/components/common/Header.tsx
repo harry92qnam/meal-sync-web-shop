@@ -79,7 +79,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
             onClick={handleNotiClick}
           >
             <Badge content="5" color="primary">
-              <IoMdNotifications size={24} className="text-blue-400" />
+              <IoMdNotifications size={24} className="text-orange-500" />
             </Badge>
           </div>
           {notiVisible && (
