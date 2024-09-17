@@ -1,4 +1,4 @@
-import { Avatar, Divider } from '@nextui-org/react';
+import { Avatar, Button, Divider } from '@nextui-org/react';
 import React from 'react';
 import { IconType } from 'react-icons';
 import { BsShop } from 'react-icons/bs';
@@ -6,9 +6,9 @@ import { CgProfile } from 'react-icons/cg';
 import { GrTransaction } from 'react-icons/gr';
 import { IoMdGift } from 'react-icons/io';
 import { IoFastFoodOutline, IoPeopleOutline } from 'react-icons/io5';
-import { MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
+import { MdLogout, MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
 import { RiExchangeDollarFill } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface SidebarItemProps {
   title: string;
@@ -28,6 +28,7 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Thông tin cá nhân', icon: CgProfile, iconSize: 17, path: '/profile' },
 ];
 const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
+  const navigate = useNavigate();
   // const isAuthenticated = () => {
   //   const token = localStorage.getItem('token');
   //   return token !== null;
@@ -39,8 +40,13 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   //   }
   // }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
-    <aside className="bg-white shadow-md p-6 pt-5 h-screen flex-col items-center min-w-[240px]">
+    <aside className="bg-white p-6 pt-5 h-screen flex-col items-center min-w-[240px] overflow-scroll">
       <Link
         to={'/shop'}
         className="flex items-center gap-2 justify-center cursor-pointer hover:opacity-80 max-w-[240px]"
@@ -70,6 +76,14 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
               </Link>
             </li>
           ))}
+
+          <Button
+            className="w-full font-medium gap-2 text-gray-600 hover:text-white hover:bg-primary"
+            onClick={handleLogout}
+          >
+            <MdLogout size={20} />
+            <p className="text-base">Đăng xuất</p>
+          </Button>
         </ul>
       </nav>
     </aside>
