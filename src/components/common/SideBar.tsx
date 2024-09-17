@@ -8,7 +8,7 @@ import { IoMdGift } from 'react-icons/io';
 import { IoFastFoodOutline, IoPeopleOutline } from 'react-icons/io5';
 import { MdLogout, MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
 import { RiExchangeDollarFill } from 'react-icons/ri';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface SidebarItemProps {
   title: string;
@@ -28,7 +28,6 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Thông tin cá nhân', icon: CgProfile, iconSize: 17, path: '/profile' },
 ];
 const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
-  const navigate = useNavigate();
   // const isAuthenticated = () => {
   //   const token = localStorage.getItem('token');
   //   return token !== null;
