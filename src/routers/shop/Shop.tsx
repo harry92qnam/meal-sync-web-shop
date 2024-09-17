@@ -1,13 +1,13 @@
 import Header from '../../components/common/Header';
 import MainLayout from '../../components/layout/MainLayout';
 
-export default function Dashboard() {
+export default function Shop() {
   return (
-    <MainLayout activeContentIndex={0}>
+    <MainLayout activeContentIndex={7}>
       <div className="md:col-span-1 py-4">
-        <Header title="Thống kê tổng quan" />
+        <Header title="Thông tin cửa hàng" />
       </div>
-      <div>Thống kê tổng quan</div>
+      <div>Thông tin cửa hàng</div>
     </MainLayout>
   );
 }

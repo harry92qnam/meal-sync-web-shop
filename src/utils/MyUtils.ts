@@ -9,6 +9,29 @@ export const formatTimeToSeconds = (dateString: string) => {
 
 export const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-GB');
 
+export const formatTimeAgo = (date: Date) => {
+  const now = new Date();
+  const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} phút trước`;
+  } else if (diffInMinutes < 1440) {
+    // 60 minutes * 24 hours
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    return `${diffInHours} giờ trước`;
+  } else if (diffInMinutes < 43200) {
+    // 60 minutes * 24 hours * 30 days
+    const diffInDays = Math.floor(diffInMinutes / 1440);
+    return `${diffInDays} ngày trước`;
+  } else if (diffInMinutes < 525600) {
+    // 60 minutes * 24 hours * 365 days
+    const diffInMonths = Math.floor(diffInMinutes / 43200); // 30 days
+    return `${diffInMonths} tháng trước`;
+  } else {
+    const diffInYears = Math.floor(diffInMinutes / 525600); // 60 * 24 * 365
+    return `${diffInYears} năm trước`;
+  }
+};
+
 export const formatCurrency = (value: number | string | undefined | null) =>
   Number(value || 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
