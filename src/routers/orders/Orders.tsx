@@ -1,5 +1,7 @@
 import { Button } from '@nextui-org/react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import MainLayout from '../../components/layout/MainLayout';
+import Header from '../../components/common/Header';
 
 export default function Orders() {
   const navigate = useNavigate();
@@ -10,25 +12,32 @@ export default function Orders() {
   ];
 
   const handleClick = (id: string) => {
-    navigate(`/orders/${id}`);
+    const encodedId = btoa(id);
+    navigate(`/orders/${encodedId}`);
   };
 
   return (
-    <div className="flex">
-      <div>
-        <h1>Orders</h1>
-        <ul>
-          {orders.map((order) => (
-            <li key={order.id}>
-              <Button onClick={() => handleClick(order.id)}>{order.title}</Button>
-            </li>
-          ))}
-        </ul>
-        <Button onClick={() => navigate('/')}>Back to login</Button>
+    <MainLayout activeContentIndex={1}>
+      <div className="md:col-span-1 py-4">
+        <Header title="Quản lý đơn hàng" />
       </div>
-      <div>
-        <Outlet />
+      <div>Quản lý đơn hàng</div>
+      <div className="flex">
+        <div>
+          <h1>Orders</h1>
+          <ul>
+            {orders.map((order) => (
+              <li key={order.id}>
+                <Button onClick={() => handleClick(order.id)}>{order.title}</Button>
+              </li>
+            ))}
+          </ul>
+          <Button onClick={() => navigate('/')}>Back to login</Button>
+        </div>
+        <div>
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }

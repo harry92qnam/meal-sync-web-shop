@@ -18,6 +18,7 @@ export default {
         quinary: '#22c55e', // green-500
         senary: '#ef4444', // red-500
         septenary: '#020617', // slate-950
+        bgPrimary: '#ea580c',
       },
     },
   },
