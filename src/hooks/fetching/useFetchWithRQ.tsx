@@ -3,10 +3,10 @@ import PagingRequestQuery from '../../types/queries/PagingRequestQuery';
 import useFetchWithRQConfig from './useFetchWithRQConfig';
 
 const useFetchWithRQ = <Model extends APIEntityModel, Query extends PagingRequestQuery>(
-  keyBase: any[],
+  keyBase: string[],
   apiService: APIService<Model>,
   requestQuery: Query,
-  deps?: any[],
+  deps?: string[],
 ) => {
   return useFetchWithRQConfig<Model>(
     keyBase,

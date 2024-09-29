@@ -1,7 +1,7 @@
 export default interface PageableModel {
   pageIndex: number;
   pageSize: number;
-  numberOfItems: 20;
+  numberOfItems: number;
   totalOfPages: number;
   hasPrevious: boolean;
   hasNext: boolean;

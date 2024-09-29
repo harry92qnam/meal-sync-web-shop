@@ -1,9 +1,9 @@
-import TestModel from '../../types/models/TestModel';
+import OrderModel from '../../types/models/OrderModel';
 import apiClient from './api-client';
 import createHttpService from './api-service';
 
 export const endpoints = {
-  TEST: 'https://my-json-server.typicode.com/duckodei/test-json-server/list/',
+  ORDERS: 'moderator/orders',
 };
 
-export const testApiService = createHttpService<TestModel>(apiClient, endpoints.TEST);
+export const orderApiService = createHttpService<OrderModel>(apiClient, endpoints.ORDERS);
