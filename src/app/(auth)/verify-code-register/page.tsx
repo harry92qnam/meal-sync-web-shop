@@ -1,13 +1,28 @@
 'use client';
-import { useRef, useState } from 'react';
+import HeaderAuthentication from '@/components/authentication/HeaderAuthentication';
 import { Button } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import HeaderAuthentication from '@/components/authentication/HeaderAuthentication';
+import { useEffect, useRef, useState } from 'react';
 
 export default function VerifyCodeRegister() {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]); // Specify the type of refs
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
   const [code, setCode] = useState(['', '', '', '']);
+  const [countDown, setCountDown] = useState(120);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCountDown((pre) => {
+        if (pre <= 1) {
+          clearInterval(id);
+          return 0;
+        }
+        return pre - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const value = e.target.value;
@@ -46,6 +61,10 @@ export default function VerifyCodeRegister() {
     router.push('/login');
   };
 
+  const handleResendOTP = async () => {
+    // Implement logic for resending OTP here
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
       <div className="w-full max-w-[500px] bg-white rounded-lg shadow-md border border-gray-200 p-12">
@@ -67,6 +86,21 @@ export default function VerifyCodeRegister() {
                 onKeyDown={(e) => handleKeyDown(e, index)}
               />
             ))}
+          </div>
+          <div className="flex justify-center gap-1">
+            {countDown <= 0 ? (
+              <p className=" text-gray-400">Mã OTP đã hết hạn. </p>
+            ) : (
+              <p className=" text-gray-400">
+                Mã OTP sẽ hết hạn sau <span className="text-primary">{countDown}</span> giây.
+              </p>
+            )}
+            <p
+              className="text-primary hover:cursor-pointer hover:text-opacity-80"
+              onClick={handleResendOTP}
+            >
+              Gửi lại mã?
+            </p>
           </div>
           <div>
             <Button type="submit" color="primary" className="w-full mt-4 py-6 text-lg">
