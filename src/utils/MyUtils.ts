@@ -32,8 +32,12 @@ export const formatTimeAgo = (date: Date) => {
   }
 };
 
-export const formatCurrency = (value: number | string | undefined | null) =>
-  Number(value || 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('vi-VI', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(amount);
+};
 
 export const formatNumber = (value: number | string | undefined | null) =>
   Number(value || 0).toLocaleString('en-US');

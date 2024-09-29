@@ -1,17 +1,17 @@
 // Manage orders
-const orderColumns = [
-  { name: 'Thứ tự đơn hàng', uid: 'id', sortable: true },
-  { name: 'Tên cửa hàng', uid: 'shopName', sortable: true },
-  { name: 'Tên khách hàng', uid: 'customerName', sortable: true },
-  { name: 'Trạng thái đơn hàng', uid: 'status', sortable: true },
-  { name: 'Tổng hóa đơn', uid: 'price', sortable: true },
-  { name: 'Thời gian giao dịch', uid: 'orderDate', sortable: true },
+const ORDER_COLUMNS = [
+  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'shopName', name: 'Tên cửa hàng' },
+  { key: 'customerName', name: 'Tên khách hàng' },
+  { key: 'status', name: 'Trạng thái đơn hàng' },
+  { key: 'price', name: 'Tổng hóa đơn' },
+  { key: 'orderDate', name: 'Thời gian giao dịch' },
 ];
 
-const orderStatus = [
-  { name: 'Đã hoàn thành', uid: 'Đã hoàn thành' },
-  { name: 'Đang thực hiện', uid: 'Đang thực hiện' },
-  { name: 'Đã hủy', uid: 'Đã hủy' },
+const ORDER_STATUS = [
+  { key: 1, desc: 'Đã hoàn thành' },
+  { key: 2, desc: 'Đang thực hiện' },
+  { key: 3, desc: 'Đã hủy' },
 ];
 
 // Manage shops
@@ -59,8 +59,8 @@ const accountType = [
 ];
 
 export {
-  orderColumns,
-  orderStatus,
+  ORDER_COLUMNS,
+  ORDER_STATUS,
   shopColumns,
   shopStatus,
   accountColumns,
