@@ -20,13 +20,16 @@ interface SidebarItemProps {
 export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Thống kê tổng quan', icon: MdOutlineDashboard, iconSize: 19, path: '/dashboard' },
   { title: 'Quản lý đơn hàng', icon: GrTransaction, iconSize: 18, path: '/orders' },
+  { title: 'Quản lý báo cáo', icon: MdOutlineReport, iconSize: 19, path: '/reports' },
   { title: 'Quản lý sản phẩm', icon: IoFastFoodOutline, iconSize: 19, path: '/products' },
   { title: 'Quản lý khuyến mãi', icon: IoMdGift, iconSize: 19, path: '/promotions' },
   { title: 'Quản lý nhân viên', icon: IoPeopleOutline, iconSize: 19, path: '/staffs' },
-  { title: 'Quản lý báo cáo', icon: MdOutlineReport, iconSize: 19, path: '/reports' },
-  { title: 'Kiểm tra số dư', icon: RiExchangeDollarFill, iconSize: 19, path: '/account-balance' },
-  { title: 'Thông tin cửa hàng', icon: BsShop, iconSize: 18, path: '/shop' },
-  { title: 'Thông tin cá nhân', icon: CgProfile, iconSize: 17, path: '/profile' },
+  {
+    title: 'Quản lý tài chính',
+    icon: RiExchangeDollarFill,
+    iconSize: 19,
+    path: '/account-balance',
+  },
 ];
 const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   const router = useRouter();
@@ -47,7 +50,7 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   };
 
   return (
-    <aside className="bg-white p-6 pt-5 h-screen flex-col items-center w-[300px] overflow-scroll">
+    <aside className="bg-white p-6 pt-5 h-screen flex-col items-center shadow-md">
       <Link
         href={'/shop'}
         className="flex items-center gap-2 justify-center cursor-pointer hover:opacity-80 max-w-[240px]"
@@ -68,8 +71,8 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
                 href={item.path}
                 className={`flex pl-3 py-2 pr-8 rounded-xl items-center w-full ${
                   activeContentIndex === index
-                    ? 'text-white bg-bgPrimary bg-opacity-80 font-medium hover:text-white hover:bg-opacity-100'
-                    : 'text-gray-600 hover:bg-bgPrimary hover:text-white hover:font-medium'
+                    ? 'text-white bg-bgPrimary font-medium hover:text-white hover:bg-opacity-100'
+                    : 'text-gray-600 hover:bg-orange-100 hover:text-black'
                 }`}
               >
                 <item.icon size={item.iconSize} />

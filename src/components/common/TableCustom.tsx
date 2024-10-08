@@ -1,6 +1,3 @@
-import DateRangeFilter from '@/components/common/DateRangeFilter';
-import Header from '@/components/common/Header';
-import MainLayout from '@/components/layout/MainLayout';
 import PageableModel from '@/types/models/PageableModel';
 import {
   Button,
@@ -33,14 +30,13 @@ export interface TableCustomFilter {
 
 type TableCustomProps = {
   // data
-  indexPage: number;
-  title: string;
   placeHolderSearch: string;
   description: string;
   columns: Array<{ name: string; key: string }>;
   arrayData: { [key: string]: any }[];
   // arrayDataColumns: Array<{ name: string; uid: string; sortable?: boolean; imageable?: boolean }>;
   renderCell: (item: any, columnKey: React.Key) => ReactNode;
+  selectionMode: 'multiple' | 'single';
 
   // search and paging
   searchHandler: (value: string) => void;
@@ -49,29 +45,28 @@ type TableCustomProps = {
   setPageSize: (size: number) => void;
 
   // optional
-  leftHeaderNode?: ReactNode;
   filters?: TableCustomFilter[];
+  isFilter?: boolean;
 
   // actions
   handleRowClick: (id: number) => void;
 };
 
 export default function TableCustom({
-  indexPage,
-  title,
   placeHolderSearch,
   description,
   columns,
   arrayData,
+  renderCell,
+  selectionMode,
 
   searchHandler,
   pagination,
   goToPage,
   setPageSize,
 
-  leftHeaderNode,
+  isFilter,
   filters = [],
-  renderCell,
   handleRowClick,
 }: TableCustomProps) {
   const [page, setPage] = useState(1);
@@ -95,6 +90,7 @@ export default function TableCustom({
     searchHandler('');
     setPage(1);
   }, []);
+  console.dir(selectedKeys);
 
   const topContent = useMemo(() => {
     return (
@@ -115,40 +111,45 @@ export default function TableCustom({
               searchHandler(value);
             }}
           />
-          <div className="flex gap-3">
-            {filters.map((filter, index) => (
-              <Dropdown key={index}>
-                <DropdownTrigger className="hidden sm:flex">
-                  <Button endContent={<IoChevronDown className="text-small" />} variant="flat">
-                    {filter.label}
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  disallowEmptySelection
-                  aria-label="Filter Options"
-                  closeOnSelect={false}
-                  selectedKeys={filter.selectedValues}
-                  selectionMode={filter.selectionMode == 1 ? 'single' : 'multiple'}
-                  onSelectionChange={(selected) => {
-                    filter.handleFunc(selected);
-                  }}
-                >
-                  {filter.options.map((option) => (
-                    <DropdownItem key={option.key} className="capitalize">
-                      {option.desc}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
-            ))}
-          </div>
+          {isFilter && (
+            <div className="flex gap-3">
+              {filters.map((filter, index) => (
+                <Dropdown key={index}>
+                  <DropdownTrigger className="hidden sm:flex">
+                    <Button endContent={<IoChevronDown className="text-small" />} variant="flat">
+                      {filter.label}
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu
+                    disallowEmptySelection
+                    aria-label="Filter Options"
+                    closeOnSelect={false}
+                    selectedKeys={filter.selectedValues}
+                    selectionMode={filter.selectionMode == 1 ? 'single' : 'multiple'}
+                    onSelectionChange={(selected) => {
+                      filter.handleFunc(selected);
+                    }}
+                  >
+                    {filter.options.map((option) => (
+                      <DropdownItem key={option.key} className="capitalize">
+                        {option.desc}
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                </Dropdown>
+              ))}
+            </div>
+          )}
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-default-400 text-small">
-            <span>
+          <div className="flex items-center">
+            <span className="text-default-400 text-small mr-4">
               Tổng cộng có {arrayData.length} {description}
             </span>
-          </p>
+            {selectionMode === 'multiple' && selectedKeys && (
+              <Button className="block">Nhận tất cả</Button>
+            )}
+          </div>
           <label className="flex items-center text-default-400 text-small">
             Lượng dữ liệu / trang:
             <select className="bg-transparent text-base" onChange={onRowsPerPageChange}>
@@ -195,26 +196,13 @@ export default function TableCustom({
   }, [page, pagination]);
 
   return (
-    <MainLayout activeContentIndex={indexPage}>
-      <div className="md:col-span-1 pb-24">
-        <Header title={title} />
-      </div>
-      {leftHeaderNode ? (
-        <div className="flex items-center justify-between mb-4">
-          <DateRangeFilter />
-          {leftHeaderNode}
-        </div>
-      ) : (
-        <div className="flex items-center justify-end mb-4">
-          <DateRangeFilter />
-        </div>
-      )}
+    <>
       <Table
         isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         selectedKeys={selectedKeys}
-        selectionMode="single"
+        selectionMode={selectionMode}
         topContent={topContent}
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
@@ -240,6 +228,6 @@ export default function TableCustom({
           }}
         </TableBody>
       </Table>
-    </MainLayout>
+    </>
   );
 }

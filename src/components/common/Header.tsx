@@ -39,9 +39,9 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
   };
 
   return (
-    <div className="fixed top-0 left-[300px] right-4 z-50 bg-white shadow-md py-8 rounded-md pl-8">
+    <div className="fixed top-0 left-[290px] right-4 z-50 bg-white shadow-md py-4 pl-8">
       <div className="flex justify-between items-center pr-4">
-        <p className="text-3xl text-primary font-medium">{title}</p>
+        <p className="text-2xl text-primary font-medium">{title}</p>
         <div className="flex gap-4 justify-between items-center">
           <div
             className="flex justify-center items-center h-[36px] w-[36px] bg-blue-100 rounded-lg cursor-pointer hover:opacity-70"

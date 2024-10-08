@@ -76,7 +76,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
     items: [
       {
         id: 1,
-        shopName: 'Shop A',
+        phoneNumber: '0372485570',
         customerName: 'John Doe',
         price: 123456789,
         orderDate: '2023-10-01',
@@ -164,7 +164,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 2,
-        shopName: 'Shop B',
+        phoneNumber: '0372485570',
         customerName: 'Jane Smith',
         price: 987654321,
         orderDate: '2023-10-02',
@@ -237,7 +237,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 3,
-        shopName: 'Shop C',
+        phoneNumber: '0372485570',
         customerName: 'Alice Johnson',
         price: 1111111111,
         orderDate: '2023-10-03',
@@ -310,7 +310,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 4,
-        shopName: 'Shop D',
+        phoneNumber: '0372485570',
         customerName: 'Bob Brown',
         price: 120,
         orderDate: '2023-10-04',
@@ -383,11 +383,11 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 5,
-        shopName: 'Shop E',
+        phoneNumber: '0372485570',
         customerName: 'Charlie Davis',
         price: 90,
         orderDate: '2023-10-05',
-        status: 1,
+        status: 4,
         orderInfo: {
           orderId: 105,
           orderStatus: 1,
@@ -456,7 +456,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 6,
-        shopName: 'Shop F',
+        phoneNumber: '0372485570',
         customerName: 'Diana Evans',
         price: 250,
         orderDate: '2023-10-06',
@@ -529,11 +529,11 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 7,
-        shopName: 'Shop G',
+        phoneNumber: '0372485570',
         customerName: 'Eve White',
         price: 60,
         orderDate: '2023-10-07',
-        status: 1,
+        status: 5,
         orderInfo: {
           orderId: 107,
           orderStatus: 1,
@@ -602,11 +602,11 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 8,
-        shopName: 'Shop H',
+        phoneNumber: '0372485570',
         customerName: 'Frank Black',
         price: 180,
         orderDate: '2023-10-08',
-        status: 2,
+        status: 4,
         orderInfo: {
           orderId: 108,
           orderStatus: 2,
@@ -675,7 +675,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 9,
-        shopName: 'Shop I',
+        phoneNumber: '0372485570',
         customerName: 'Grace Green',
         price: 75,
         orderDate: '2023-10-09',
@@ -748,7 +748,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 10,
-        shopName: 'Shop J',
+        phoneNumber: '0372485570',
         customerName: 'Henry Blue',
         price: 130,
         orderDate: '2023-10-10',
@@ -821,7 +821,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 11,
-        shopName: 'Shop K',
+        phoneNumber: '0372485570',
         customerName: 'Ivy Red',
         price: 110,
         orderDate: '2023-10-11',
@@ -894,7 +894,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 12,
-        shopName: 'Shop L',
+        phoneNumber: '0372485570',
         customerName: 'Jack Grey',
         price: 95,
         orderDate: '2023-10-12',
@@ -967,7 +967,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 13,
-        shopName: 'Shop M',
+        phoneNumber: '0372485570',
         customerName: 'Liam Orange',
         price: 150,
         orderDate: '2023-10-13',
@@ -1040,7 +1040,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 14,
-        shopName: 'Shop N',
+        phoneNumber: '0372485570',
         customerName: 'Olivia Purple',
         price: 80,
         orderDate: '2023-10-14',
@@ -1113,7 +1113,7 @@ export const sampleOrders: FetchResponse<OrderModel> = {
       },
       {
         id: 15,
-        shopName: 'Shop O',
+        phoneNumber: '0372485570',
         customerName: 'Noah Brown',
         price: 140,
         orderDate: '2023-10-15',
