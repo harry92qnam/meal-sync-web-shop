@@ -1,17 +1,52 @@
 // Manage orders
-const ORDER_COLUMNS = [
+const INCOMING_ORDER_COLUMNS = [
   { key: 'id', name: 'Thứ tự đơn hàng' },
-  { key: 'shopName', name: 'Tên cửa hàng' },
   { key: 'customerName', name: 'Tên khách hàng' },
+  { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'price', name: 'Tổng hóa đơn' },
+  { key: 'orderedDate', name: 'Thời gian đặt đơn' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const CONFIRMED_ORDER_COLUMNS = [
+  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'customerName', name: 'Tên khách hàng' },
+  { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'price', name: 'Tổng hóa đơn' },
+  { key: 'confirmedDate', name: 'Thời gian nhận đơn' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const DELIVERING_ORDER_COLUMNS = [
+  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'customerName', name: 'Tên khách hàng' },
+  { key: 'staffName', name: 'Tên nhân viên giao hàng' },
+  { key: 'status', name: 'Trạng thái giao hàng' },
+  { key: 'price', name: 'Tổng hóa đơn' },
+  { key: 'deliveryDate', name: 'Thời gian giao hàng' },
+];
+
+const HISTORY_ORDER_COLUMNS = [
+  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'customerName', name: 'Tên khách hàng' },
+  { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'status', name: 'Trạng thái đơn hàng' },
   { key: 'price', name: 'Tổng hóa đơn' },
-  { key: 'orderDate', name: 'Thời gian giao dịch' },
+  { key: 'orderedDate', name: 'Thời gian giao dịch' },
+];
+
+const DELIVERY_STATUS = [
+  { key: 1, desc: 'Đang giao' },
+  { key: 2, desc: 'Thành công' },
+  { key: 3, desc: 'Thất bại' },
 ];
 
 const ORDER_STATUS = [
-  { key: 1, desc: 'Đã hoàn thành' },
-  { key: 2, desc: 'Đang thực hiện' },
-  { key: 3, desc: 'Đã hủy' },
+  { key: 1, desc: 'Đã hủy' },
+  { key: 2, desc: 'Hoàn thành' },
+  { key: 3, desc: 'Thất bại' },
+  { key: 4, desc: 'Bị báo cáo' },
+  { key: 5, desc: 'Hoàn tiền' },
 ];
 
 // Manage shops
@@ -59,7 +94,11 @@ const accountType = [
 ];
 
 export {
-  ORDER_COLUMNS,
+  INCOMING_ORDER_COLUMNS,
+  CONFIRMED_ORDER_COLUMNS,
+  DELIVERING_ORDER_COLUMNS,
+  HISTORY_ORDER_COLUMNS,
+  DELIVERY_STATUS,
   ORDER_STATUS,
   shopColumns,
   shopStatus,

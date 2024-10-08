@@ -1,6 +1,6 @@
 export default interface OrderModel {
   id: number;
-  shopName: string;
+  phoneNumber: string;
   customerName: string;
   price: number;
   orderDate: string;

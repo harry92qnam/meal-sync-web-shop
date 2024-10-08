@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://my-json-server.typicode.com/duckodei/dsocial-json-server',
+  baseURL: 'https://api.mealsync.org/api/v1/',
 });
 
 apiClient.interceptors.request.use(
