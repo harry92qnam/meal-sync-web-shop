@@ -170,7 +170,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue.toString();
     }
   }, []);
 
@@ -227,7 +227,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue.toString();
     }
   }, []);
 
@@ -283,7 +283,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue.toString();
     }
   }, []);
 
@@ -345,7 +345,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        return cellValue.toString();
     }
   }, []);
 
