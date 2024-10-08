@@ -49,6 +49,21 @@ const ORDER_STATUS = [
   { key: 5, desc: 'Hoàn tiền' },
 ];
 
+// Manage reports
+const REPORT_COLUMNS = [
+  { key: 'id', name: 'Thứ tự' },
+  { key: 'orderId', name: 'Mã đơn hàng' },
+  { key: 'customerName', name: 'Tên người báo cáo' },
+  { key: 'reason', name: 'Lý do' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'createdDate', name: 'Thời gian báo cáo' },
+];
+
+const REPORT_STATUS = [
+  { key: 1, desc: 'Đang xử lý' },
+  { key: 2, desc: 'Đã xử lý' },
+];
+
 // Manage shops
 const shopColumns = [
   { name: 'Thứ tự cửa hàng', uid: 'id', sortable: true },
@@ -100,6 +115,8 @@ export {
   HISTORY_ORDER_COLUMNS,
   DELIVERY_STATUS,
   ORDER_STATUS,
+  REPORT_COLUMNS,
+  REPORT_STATUS,
   shopColumns,
   shopStatus,
   accountColumns,

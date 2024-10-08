@@ -95,7 +95,7 @@ export default function TableCustom({
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between items-end gap-20">
+        <div className="flex justify-between items-end gap-8">
           <Input
             isClearable
             className="w-full flex-1"
