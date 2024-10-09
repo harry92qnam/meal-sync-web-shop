@@ -1,4 +1,5 @@
 'use client';
+import DateRangeFilter from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -101,8 +102,11 @@ export default function Orders() {
 
   return (
     <MainLayout activeContentIndex={2}>
-      <div className="md:col-span-1 pb-24">
-        <Header title="Quản lý đơn hàng" />
+      <div className="md:col-span-1 pb-16">
+        <Header title="Quản lý báo cáo" />
+      </div>
+      <div className="flex justify-end mb-2">
+        <DateRangeFilter />
       </div>
       <TableCustom
         placeHolderSearch="Tìm kiếm báo cáo..."
