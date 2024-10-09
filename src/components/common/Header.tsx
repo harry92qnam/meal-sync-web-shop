@@ -1,41 +1,33 @@
-import { Avatar, Badge, Divider, Listbox, ListboxItem } from '@nextui-org/react';
+import UpdateProfileModal from '@/components/authentication/UpdateProfileModal';
+import { Avatar, Badge, Divider, useDisclosure } from '@nextui-org/react';
 import { useState } from 'react';
 import { FaFacebookMessenger } from 'react-icons/fa6';
 import { IoMdNotifications } from 'react-icons/io';
-import { sampleNotifications, sampleChats } from '../../data/TestData';
+import { sampleChats, sampleNotifications } from '../../data/TestData';
 import { formatDate, formatTimeAgo } from '../../utils/MyUtils';
-import { ListboxWrapper } from './ListboxWrapper';
-import { MdLogout } from 'react-icons/md';
-import { useRouter } from 'next/navigation';
 
 const Header: React.FC<{ title: string }> = ({ title }) => {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [chatVisible, setChatVisible] = useState(false);
   const [notiVisible, setNotiVisible] = useState(false);
-
-  const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleAvatarClick = () => {
-    setDropdownVisible((prev) => !prev);
+    // setDropdownVisible((prev) => !prev);
+    onOpen();
     setChatVisible(false);
     setNotiVisible(false);
   };
 
   const handleChatClick = () => {
     setChatVisible((prev) => !prev);
-    setDropdownVisible(false);
+    // setDropdownVisible(false);
     setNotiVisible(false);
   };
 
   const handleNotiClick = () => {
     setNotiVisible((prev) => !prev);
-    setDropdownVisible(false);
+    // setDropdownVisible(false);
     setChatVisible(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/login');
   };
 
   return (
@@ -105,38 +97,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
             onClick={handleAvatarClick}
             className="cursor-pointer hover:opacity-70"
           />
-          {dropdownVisible && (
-            <div className="absolute top-20 right-8 bg-white shadow-2xl">
-              <ListboxWrapper>
-                <Listbox aria-label="actions">
-                  <ListboxItem key="profile" href="/profile">
-                    <div className="flex items-center gap-2">
-                      <Avatar
-                        src="https://avatars.githubusercontent.com/u/62385893?v=4"
-                        size="sm"
-                        onClick={handleAvatarClick}
-                        className="cursor-pointer hover:opacity-70"
-                      />
-                      <p className="text-base">Huỳnh Văn Phướt</p>
-                    </div>
-                  </ListboxItem>
-                  <ListboxItem key="divider" isDisabled>
-                    <Divider />
-                  </ListboxItem>
-                  <ListboxItem
-                    key="logout"
-                    className="text-red-500"
-                    color="primary"
-                    onClick={handleLogout}
-                  >
-                    <div className="flex items-center gap-2">
-                      <MdLogout size={20} /> <p className="text-base">Đăng xuất</p>
-                    </div>
-                  </ListboxItem>
-                </Listbox>
-              </ListboxWrapper>
-            </div>
-          )}
+          <UpdateProfileModal isOpen={isOpen} onOpenChange={onOpenChange} />
         </div>
       </div>
     </div>
