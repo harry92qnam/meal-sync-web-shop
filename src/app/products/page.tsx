@@ -14,7 +14,7 @@ import { Chip, Selection } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useState } from 'react';
 
-export default function Reports() {
+export default function Orders() {
   const router = useRouter();
   const { range } = usePeriodTimeFilterState();
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
@@ -101,16 +101,16 @@ export default function Reports() {
   }, []);
 
   return (
-    <MainLayout activeContentIndex={2}>
+    <MainLayout activeContentIndex={3}>
       <div className="md:col-span-1 pb-16">
-        <Header title="Quản lý báo cáo" />
+        <Header title="Quản lý sản phẩm" />
       </div>
       <div className="flex justify-end mb-2">
         <DateRangeFilter />
       </div>
       <TableCustom
-        placeHolderSearch="Tìm kiếm báo cáo..."
-        description="báo cáo"
+        placeHolderSearch="Tìm kiếm sản phẩm..."
+        description="sản phẩm"
         columns={REPORT_COLUMNS}
         // arrayData={reports?.value?.items ?? []}
         arrayData={reports}

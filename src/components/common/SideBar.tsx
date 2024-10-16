@@ -3,11 +3,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { IconType } from 'react-icons';
-import { BsShop } from 'react-icons/bs';
-import { CgProfile } from 'react-icons/cg';
 import { GrTransaction } from 'react-icons/gr';
 import { IoMdGift } from 'react-icons/io';
-import { IoFastFoodOutline, IoPeopleOutline } from 'react-icons/io5';
+import { IoFastFoodOutline, IoPeopleOutline, IoSettingsOutline } from 'react-icons/io5';
 import { MdLogout, MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
 import { RiExchangeDollarFill } from 'react-icons/ri';
 
@@ -22,6 +20,7 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Quản lý đơn hàng', icon: GrTransaction, iconSize: 18, path: '/orders' },
   { title: 'Quản lý báo cáo', icon: MdOutlineReport, iconSize: 19, path: '/reports' },
   { title: 'Quản lý sản phẩm', icon: IoFastFoodOutline, iconSize: 19, path: '/products' },
+  { title: 'Quản lý danh mục', icon: IoSettingsOutline, iconSize: 19, path: '/categories' },
   { title: 'Quản lý khuyến mãi', icon: IoMdGift, iconSize: 19, path: '/promotions' },
   { title: 'Quản lý nhân viên', icon: IoPeopleOutline, iconSize: 19, path: '/staffs' },
   {
