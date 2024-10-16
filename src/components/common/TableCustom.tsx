@@ -1,3 +1,4 @@
+import { PlusIcon } from '@/components/common/PlusIcon';
 import PageableModel from '@/types/models/PageableModel';
 import {
   Button,
@@ -49,7 +50,8 @@ type TableCustomProps = {
   isFilter?: boolean;
 
   // actions
-  handleRowClick: (id: number) => void;
+  handleRowClick?: (id: number) => void;
+  isAddNew?: boolean;
 };
 
 export default function TableCustom({
@@ -68,6 +70,7 @@ export default function TableCustom({
   isFilter,
   filters = [],
   handleRowClick,
+  isAddNew,
 }: TableCustomProps) {
   const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState('');
@@ -140,6 +143,17 @@ export default function TableCustom({
               ))}
             </div>
           )}
+          {isAddNew && (
+            <Button
+              type="button"
+              color="primary"
+              className=" text-secondary py-[19.5px] text-medium"
+              endContent={<PlusIcon />}
+              size="sm"
+            >
+              Tạo mới
+            </Button>
+          )}
         </div>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -166,7 +180,7 @@ export default function TableCustom({
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
+      <div className=" py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400"></span>
         <Pagination
           showControls
@@ -205,6 +219,8 @@ export default function TableCustom({
         selectionMode={selectionMode}
         topContent={topContent}
         topContentPlacement="outside"
+        layout={selectionMode === 'single' ? 'fixed' : 'auto'}
+        shadow="md"
         onSelectionChange={setSelectedKeys}
       >
         <TableHeader columns={columns}>
@@ -219,13 +235,13 @@ export default function TableCustom({
           )}
         </TableHeader>
         <TableBody emptyContent="No data found" items={arrayData}>
-          {(item) => {
-            return (
-              <TableRow key={item.id} onClick={() => handleRowClick(item.id)}>
-                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-              </TableRow>
-            );
-          }}
+          {(item) => (
+            <TableRow key={item.id} onClick={() => handleRowClick?.(item.id)}>
+              {columns.map((column) => (
+                <TableCell key={column.key}>{renderCell(item, column.key)}</TableCell>
+              ))}
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </>

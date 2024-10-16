@@ -1,6 +1,10 @@
 import OrderModel from '@/types/models/OrderModel';
 import ReportModel from '@/types/models/ReportModel';
+import StaffModel from '@/types/models/StaffModel';
 import FetchResponse from '@/types/responses/FetchResponse';
+import ProductModel from '@/types/models/ProductModel';
+import CategoryModel from '@/types/models/CategoryModel';
+import PromotionModel from '@/types/models/PromotionModel';
 
 export const sampleNotifications = [
   {
@@ -1334,8 +1338,331 @@ export const sampleReports: FetchResponse<ReportModel> = {
   error: { code: '', message: '' },
 };
 
+export const sampleStaff: FetchResponse<StaffModel> = {
+  value: {
+    items: [
+      {
+        id: 1,
+        name: 'Alice Johnson',
+        status: 1,
+        createdDate: '2023-01-01',
+      },
+      {
+        id: 2,
+        name: 'Bob Smith',
+        status: 1,
+        createdDate: '2023-02-15',
+      },
+      {
+        id: 3,
+        name: 'Charlie Brown',
+        status: 2,
+        createdDate: '2023-03-10',
+      },
+      {
+        id: 4,
+        name: 'Diana Evans',
+        status: 3,
+        createdDate: '2023-04-20',
+      },
+      {
+        id: 5,
+        name: 'Eve White',
+        status: 2,
+        createdDate: '2023-05-30',
+      },
+    ] as StaffModel[],
+    pageIndex: 1,
+    pageSize: 10,
+    numberOfItems: 15,
+    totalOfPages: 2,
+    hasPrevious: false,
+    hasNext: true,
+  },
+  isSuccess: true,
+  isFailure: false,
+  error: { code: '', message: '' },
+};
+
+export const sampleProducts: FetchResponse<ProductModel> = {
+  value: {
+    items: [
+      {
+        id: 1,
+        platformCategoryId: 201,
+        shopCategoryId: 301,
+        name: 'Product A',
+        description: 'Description for Product A',
+        price: 29.99,
+        imageUrl: 'http://example.com/imageA.jpg',
+        totalOrder: 100,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-01-01',
+      },
+      {
+        id: 2,
+        platformCategoryId: 202,
+        shopCategoryId: 302,
+        name: 'Product B',
+        description: 'Description for Product B',
+        price: 49.99,
+        imageUrl: 'http://example.com/imageB.jpg',
+        totalOrder: 200,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-02-01',
+      },
+      {
+        id: 3,
+        platformCategoryId: 203,
+        shopCategoryId: 303,
+        name: 'Product C',
+        description: 'Description for Product C',
+        price: 19.99,
+        imageUrl: 'http://example.com/imageC.jpg',
+        totalOrder: 150,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-03-01',
+      },
+      {
+        id: 4,
+        platformCategoryId: 204,
+        shopCategoryId: 304,
+        name: 'Product D',
+        description: 'Description for Product D',
+        price: 39.99,
+        imageUrl: 'http://example.com/imageD.jpg',
+        totalOrder: 80,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-04-01',
+      },
+      {
+        id: 5,
+        platformCategoryId: 205,
+        shopCategoryId: 305,
+        name: 'Product E',
+        description: 'Description for Product E',
+        price: 59.99,
+        imageUrl: 'http://example.com/imageE.jpg',
+        totalOrder: 60,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-05-01',
+      },
+      {
+        id: 6,
+        platformCategoryId: 206,
+        shopCategoryId: 306,
+        name: 'Product F',
+        description: 'Description for Product F',
+        price: 25.99,
+        imageUrl: 'http://example.com/imageF.jpg',
+        totalOrder: 90,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-06-01',
+      },
+      {
+        id: 7,
+        platformCategoryId: 207,
+        shopCategoryId: 307,
+        name: 'Product G',
+        description: 'Description for Product G',
+        price: 15.99,
+        imageUrl: 'http://example.com/imageG.jpg',
+        totalOrder: 120,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-07-01',
+      },
+      {
+        id: 8,
+        platformCategoryId: 208,
+        shopCategoryId: 308,
+        name: 'Product H',
+        description: 'Description for Product H',
+        price: 45.99,
+        imageUrl: 'http://example.com/imageH.jpg',
+        totalOrder: 70,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-08-01',
+      },
+      {
+        id: 9,
+        platformCategoryId: 209,
+        shopCategoryId: 309,
+        name: 'Product I',
+        description: 'Description for Product I',
+        price: 35.99,
+        imageUrl: 'http://example.com/imageI.jpg',
+        totalOrder: 110,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-09-01',
+      },
+      {
+        id: 10,
+        platformCategoryId: 210,
+        shopCategoryId: 310,
+        name: 'Product J',
+        description: 'Description for Product J',
+        price: 55.99,
+        imageUrl: 'http://example.com/imageJ.jpg',
+        totalOrder: 40,
+        status: 1, // Active
+        isSoldOut: false,
+        createdDate: '2023-10-01',
+      },
+    ] as ProductModel[],
+    pageIndex: 1,
+    pageSize: 10,
+    numberOfItems: 10,
+    totalOfPages: 1,
+    hasPrevious: false,
+    hasNext: false,
+  },
+  isSuccess: true,
+  isFailure: false,
+  error: { code: '', message: '' },
+};
+
 export const ACCOUNT_INFO = {
   name: 'Harry',
   email: 'phuothuynh2002@gmail.com',
   phoneNumber: '0372485570',
+};
+
+export const sampleCategories: FetchResponse<CategoryModel> = {
+  value: {
+    items: [
+      {
+        id: 1,
+        name: 'Electronics',
+        description: 'All kinds of electronic items',
+        imageUrl:
+          'https://thumbs.dreamstime.com/b/generative-ai-fruits-vegetables-arranged-heart-shape-healthy-food-nutrition-concept-isolated-business-generative-ai-315051475.jpg',
+        displayOrder: 1,
+        createdDate: '2023-01-01',
+      },
+      {
+        id: 2,
+        name: 'Clothing',
+        description: 'Fashionable clothing for all ages',
+        imageUrl:
+          'https://thumbs.dreamstime.com/b/generative-ai-fruits-vegetables-arranged-heart-shape-healthy-food-nutrition-concept-isolated-business-generative-ai-315051475.jpg',
+        displayOrder: 2,
+        createdDate: '2023-02-01',
+      },
+      {
+        id: 3,
+        name: 'Home & Kitchen',
+        description: 'Essentials for your home and kitchen',
+        imageUrl:
+          'https://thumbs.dreamstime.com/b/generative-ai-fruits-vegetables-arranged-heart-shape-healthy-food-nutrition-concept-isolated-business-generative-ai-315051475.jpg',
+        displayOrder: 3,
+        createdDate: '2023-03-01',
+      },
+      {
+        id: 4,
+        name: 'Books',
+        description: 'A wide range of books across genres',
+        imageUrl:
+          'https://thumbs.dreamstime.com/b/generative-ai-fruits-vegetables-arranged-heart-shape-healthy-food-nutrition-concept-isolated-business-generative-ai-315051475.jpg',
+        displayOrder: 4,
+        createdDate: '2023-04-01',
+      },
+      {
+        id: 5,
+        name: 'Toys',
+        description: 'Fun and educational toys for children',
+        imageUrl:
+          'https://thumbs.dreamstime.com/b/generative-ai-fruits-vegetables-arranged-heart-shape-healthy-food-nutrition-concept-isolated-business-generative-ai-315051475.jpg',
+        displayOrder: 5,
+        createdDate: '2023-05-01',
+      },
+    ] as CategoryModel[],
+    pageIndex: 1,
+    pageSize: 10,
+    numberOfItems: 10,
+    totalOfPages: 1,
+    hasPrevious: false,
+    hasNext: false,
+  },
+  isSuccess: true,
+  isFailure: false,
+  error: { code: '', message: '' },
+};
+
+export const samplePromotions: FetchResponse<PromotionModel> = {
+  value: {
+    items: [
+      {
+        id: 1,
+        title: 'New customer',
+        description: 'Get new customer voucher',
+        bannerUrl: 'http://example.com/promotion1.jpg',
+        type: 1, // Percentage discount
+        amountRate: 20, // 20%
+        amountValue: 0, // Not applicable for percentage discounts
+        minOrderValue: 200000,
+        maximumApplyValue: 50000, // Maximum discount amount
+        startDate: '2023-09-01',
+        endDate: '2023-09-30',
+        usageLimit: 100,
+        numberOfUsed: 25,
+        applyType: 1, // Assuming 1 represents a percentage discount
+        status: 1, // Active
+        createdDate: '2023-08-01',
+      },
+      {
+        id: 2,
+        title: 'Noel with friends',
+        description: 'Enjoy a discount of 10,000 on orders over 50,000.',
+        bannerUrl: 'http://example.com/promotion2.jpg',
+        type: 2, // Direct money discount
+        amountRate: 0, // Not applicable for direct money discounts
+        amountValue: 10000, // Direct discount amount
+        minOrderValue: 50000,
+        maximumApplyValue: 0, // Not applicable for direct money discounts
+        startDate: '2023-09-15',
+        endDate: '2023-10-15',
+        usageLimit: 200,
+        numberOfUsed: 50,
+        applyType: 2, // Assuming 2 represents a direct money discount
+        status: 1, // Active
+        createdDate: '2023-09-01',
+      },
+      {
+        id: 3,
+        title: '1st Anniversary',
+        description: 'Get 15% off on all clothing items.',
+        bannerUrl: 'http://example.com/promotion3.jpg',
+        type: 1, // Percentage discount
+        amountRate: 15, // 15%
+        amountValue: 0, // Not applicable for percentage discounts
+        minOrderValue: 150000,
+        maximumApplyValue: 30000, // Maximum discount amount
+        startDate: '2023-10-01',
+        endDate: '2023-10-31',
+        usageLimit: 150,
+        numberOfUsed: 30,
+        applyType: 1, // Assuming 1 represents a percentage discount
+        status: 2, // Active
+        createdDate: '2023-09-20',
+      },
+    ] as PromotionModel[],
+    pageIndex: 1,
+    pageSize: 10,
+    numberOfItems: 10,
+    totalOfPages: 2,
+    hasPrevious: false,
+    hasNext: true,
+  },
+  isSuccess: true,
+  isFailure: false,
+  error: { code: '', message: '' },
 };

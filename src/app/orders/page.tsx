@@ -52,7 +52,7 @@ export default function Orders() {
   const [query, setQuery] = useState<OrderQuery>({
     title: '',
     description: '',
-    status: 0,
+    status: 1,
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
     pageIndex: 1,

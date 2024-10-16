@@ -64,48 +64,65 @@ const REPORT_STATUS = [
   { key: 2, desc: 'Đã xử lý' },
 ];
 
-// Manage shops
-const shopColumns = [
-  { name: 'Thứ tự cửa hàng', uid: 'id', sortable: true },
-  { name: 'Tên cửa hàng', uid: 'shopName', sortable: true },
-  { name: 'Tên chủ cửa hàng', uid: 'shopOwnerName', sortable: true },
-  { name: 'Số điện thoại', uid: 'phoneNumber' },
-  { name: 'Tổng đơn hàng', uid: 'totalOrder', sortable: true },
-  { name: 'Tổng sản phẩm', uid: 'totalProduct', sortable: true },
-  { name: 'Tổng doanh thu', uid: 'balance', sortable: true },
-  { name: 'Trạng thái cửa hàng', uid: 'status', sortable: true },
-  { name: 'Ngày đăng ký', uid: 'createdDate', sortable: true },
-  { name: 'Thao tác', uid: 'actions' },
+// Manage products
+const PRODUCT_COLUMNS = [
+  { key: 'id', name: 'Thứ tự' },
+  { key: 'name', name: 'Tên sản phẩm ' },
+  { key: 'price', name: 'Giá bán' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'createdDate', name: 'Thời gian tạo sản phẩm' },
 ];
 
-const shopStatus = [
-  { name: 'Đang hoạt động', uid: 'Đang hoạt động' },
-  { name: 'Đang đóng cửa', uid: 'Đang đóng cửa' },
-  { name: 'Chưa phê duyệt', uid: 'Chưa phê duyệt' },
-  { name: 'Đã bị cấm', uid: 'Đã bị cấm' },
+const PRODUCT_STATUS = [
+  { key: 1, desc: 'Đang mở bán' },
+  { key: 2, desc: 'Tạm hết hàng' },
 ];
 
-// Manage accounts
-const accountColumns = [
-  { name: 'Thứ tự', uid: 'id', sortable: true },
-  { name: 'Tên tài khoản', uid: 'fullName', sortable: true },
-  { name: 'Số điện thoại', uid: 'phoneNumber' },
-  { name: 'Email', uid: 'email' },
-  { name: 'Loại tài khoản', uid: 'role', sortable: true },
-  { name: 'Trạng thái', uid: 'status', sortable: true },
-  { name: 'Ngày đăng ký', uid: 'createdDate', sortable: true },
-  { name: 'Thao tác', uid: 'actions' },
+// Manage categories
+const CATEGORY_COLUMNS = [
+  { key: 'id', name: 'Thứ tự' },
+  { key: 'name', name: 'Tên danh mục' },
+  { key: 'description', name: 'Mô tả' },
+  { key: 'createdDate', name: 'Thời gian tạo danh mục' },
+  { key: 'actions', name: 'Thao tác' },
 ];
 
-const accountStatus = [
-  { name: 'Đang hoạt động', uid: 'Đang hoạt động' },
-  { name: 'Đã bị cấm', uid: 'Đã bị cấm' },
-  { name: 'Chưa xác thực', uid: 'Chưa xác thực' },
+// Manage promotions
+const PROMOTION_COLUMNS = [
+  { key: 'id', name: 'Thứ tự' },
+  { key: 'title', name: 'Tên khuyến mãi' },
+  { key: 'type', name: 'Loại áp dụng' },
+  { key: 'startDate', name: 'Ngày bắt đầu' },
+  { key: 'endDate', name: 'Ngày kết thúc' },
+  { key: 'numberOfUsed', name: 'Số lượng đã dùng' },
+  { key: 'usageLimit', name: 'Số lượng tối đa' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'actions', name: 'Thao tác' },
 ];
 
-const accountType = [
-  { name: 'Khách hàng', uid: 'Khách hàng' },
-  { name: 'Chủ cửa hàng', uid: 'Chủ cửa hàng' },
+const PROMOTION_TYPE = [
+  { key: 1, desc: 'Giảm bằng tiền' },
+  { key: 2, desc: 'Giảm bằng %' },
+];
+
+const PROMOTION_STATUS = [
+  { key: 1, desc: 'Đang khuyến mãi' },
+  { key: 2, desc: 'Đã hết hạn' },
+];
+
+// Manage staffs
+const STAFF_COLUMNS = [
+  { key: 'id', name: 'Thứ tự' },
+  { key: 'name', name: 'Tên nhân viên' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'createdDate', name: 'Thời gian tạo tài khoản' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const STAFF_STATUS = [
+  { key: 1, desc: 'Đang rảnh' },
+  { key: 2, desc: 'Đang giao hàng' },
+  { key: 3, desc: 'Không hoạt động' },
 ];
 
 export {
@@ -117,9 +134,12 @@ export {
   ORDER_STATUS,
   REPORT_COLUMNS,
   REPORT_STATUS,
-  shopColumns,
-  shopStatus,
-  accountColumns,
-  accountStatus,
-  accountType,
+  PRODUCT_COLUMNS,
+  PRODUCT_STATUS,
+  CATEGORY_COLUMNS,
+  PROMOTION_COLUMNS,
+  PROMOTION_TYPE,
+  PROMOTION_STATUS,
+  STAFF_COLUMNS,
+  STAFF_STATUS,
 };
