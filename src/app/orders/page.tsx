@@ -32,6 +32,7 @@ import {
   ModalFooter,
   ModalHeader,
   Selection,
+  Textarea,
   useDisclosure,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
@@ -440,8 +441,7 @@ export default function Orders() {
                 <React.Fragment>
                   <ModalHeader className="mx-auto">Lý do từ chối</ModalHeader>
                   <ModalBody>
-                    <Input
-                      autoFocus
+                    <Textarea
                       size="lg"
                       placeholder="Nhập lý do"
                       variant="faded"
@@ -499,8 +499,7 @@ export default function Orders() {
                 <React.Fragment>
                   <ModalHeader className="mx-auto">Lý do từ chối</ModalHeader>
                   <ModalBody>
-                    <Input
-                      autoFocus
+                    <Textarea
                       size="lg"
                       placeholder="Nhập lý do"
                       variant="faded"
@@ -526,123 +525,43 @@ export default function Orders() {
         <></>
       ) : // todo handle kanban board
       isActiveTab === 4 ? (
-        <>
-          <TableCustom
-            placeHolderSearch="Tìm kiếm đơn hàng..."
-            description="đơn hàng"
-            columns={DELIVERING_ORDER_COLUMNS}
-            // arrayData={orders?.value?.items ?? []}
-            arrayData={orders}
-            searchHandler={(value: string) => {
-              setQuery({ ...query, title: value });
-            }}
-            pagination={sampleOrders.value as PageableModel}
-            goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
-            setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            filters={[statusFilter]}
-            selectionMode="single"
-            isFilter={false}
-            renderCell={deliveringOrders}
-            handleRowClick={openOrderDetail}
-          />
-
-          <Modal
-            isOpen={isOpen}
-            onOpenChange={(isOpen) => {
-              if (!isOpen) {
-                setReason('');
-              }
-              onOpenChange();
-            }}
-            placement="top-center"
-          >
-            <ModalContent>
-              {(onClose) => (
-                <React.Fragment>
-                  <ModalHeader className="mx-auto">Lý do từ chối</ModalHeader>
-                  <ModalBody>
-                    <Input
-                      autoFocus
-                      size="lg"
-                      placeholder="Nhập lý do"
-                      variant="faded"
-                      value={reason}
-                      onChange={handleInputChange}
-                    />
-                    {error && <p className="text-sm text-danger-500">{error}</p>}
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="flat" onClick={onClose}>
-                      Đóng
-                    </Button>
-                    <Button color="primary" onClick={() => handleReject(onClose)}>
-                      Xác nhận
-                    </Button>
-                  </ModalFooter>
-                </React.Fragment>
-              )}
-            </ModalContent>
-          </Modal>
-        </>
+        <TableCustom
+          placeHolderSearch="Tìm kiếm đơn hàng..."
+          description="đơn hàng"
+          columns={DELIVERING_ORDER_COLUMNS}
+          // arrayData={orders?.value?.items ?? []}
+          arrayData={orders}
+          searchHandler={(value: string) => {
+            setQuery({ ...query, title: value });
+          }}
+          pagination={sampleOrders.value as PageableModel}
+          goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
+          setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
+          filters={[statusFilter]}
+          selectionMode="single"
+          isFilter={false}
+          renderCell={deliveringOrders}
+          handleRowClick={openOrderDetail}
+        />
       ) : (
-        <>
-          <TableCustom
-            placeHolderSearch="Tìm kiếm đơn hàng..."
-            description="đơn hàng"
-            columns={HISTORY_ORDER_COLUMNS}
-            // arrayData={orders?.value?.items ?? []}
-            arrayData={orders}
-            searchHandler={(value: string) => {
-              setQuery({ ...query, title: value });
-            }}
-            pagination={sampleOrders.value as PageableModel}
-            goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
-            setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            filters={[statusFilter]}
-            selectionMode="single"
-            isFilter={false}
-            renderCell={historyOrders}
-            handleRowClick={openOrderDetail}
-          />
-
-          <Modal
-            isOpen={isOpen}
-            onOpenChange={(isOpen) => {
-              if (!isOpen) {
-                setReason('');
-              }
-              onOpenChange();
-            }}
-            placement="top-center"
-          >
-            <ModalContent>
-              {(onClose) => (
-                <React.Fragment>
-                  <ModalHeader className="mx-auto">Lý do từ chối</ModalHeader>
-                  <ModalBody>
-                    <Input
-                      autoFocus
-                      size="lg"
-                      placeholder="Nhập lý do"
-                      variant="faded"
-                      value={reason}
-                      onChange={handleInputChange}
-                    />
-                    {error && <p className="text-sm text-danger-500">{error}</p>}
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="flat" onClick={onClose}>
-                      Đóng
-                    </Button>
-                    <Button color="primary" onClick={() => handleReject(onClose)}>
-                      Xác nhận
-                    </Button>
-                  </ModalFooter>
-                </React.Fragment>
-              )}
-            </ModalContent>
-          </Modal>
-        </>
+        <TableCustom
+          placeHolderSearch="Tìm kiếm đơn hàng..."
+          description="đơn hàng"
+          columns={HISTORY_ORDER_COLUMNS}
+          // arrayData={orders?.value?.items ?? []}
+          arrayData={orders}
+          searchHandler={(value: string) => {
+            setQuery({ ...query, title: value });
+          }}
+          pagination={sampleOrders.value as PageableModel}
+          goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
+          setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
+          filters={[statusFilter]}
+          selectionMode="single"
+          isFilter={false}
+          renderCell={historyOrders}
+          handleRowClick={openOrderDetail}
+        />
       )}
     </MainLayout>
   );

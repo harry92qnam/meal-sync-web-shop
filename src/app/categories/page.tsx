@@ -18,6 +18,7 @@ import {
 } from '@nextui-org/react';
 import { ReactNode, useCallback, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import Swal from 'sweetalert2';
 
 export default function Categories() {
   const handleUpdate = async () => {
@@ -25,7 +26,22 @@ export default function Categories() {
   };
 
   const handleDelete = async () => {
-    // todo delete category
+    await Swal.fire({
+      title: 'Bạn có chắc muốn xóa danh mục này không?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Không',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          text: 'Đã xóa thành công!',
+          icon: 'success',
+        });
+      }
+    });
   };
 
   const [query, setQuery] = useState<CategoryQuery>({

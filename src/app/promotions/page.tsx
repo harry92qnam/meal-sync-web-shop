@@ -21,6 +21,7 @@ import {
 } from '@nextui-org/react';
 import { ReactNode, useCallback, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import Swal from 'sweetalert2';
 
 export default function Promotions() {
   const { range } = usePeriodTimeFilterState();
@@ -32,7 +33,22 @@ export default function Promotions() {
   };
 
   const handleDelete = async () => {
-    // todo delete promotion
+    await Swal.fire({
+      title: 'Bạn có chắc muốn xóa khuyến mãi này không?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Không',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          text: 'Đã xóa thành công!',
+          icon: 'success',
+        });
+      }
+    });
   };
 
   const [query, setQuery] = useState<PromotionQuery>({
