@@ -1,5 +1,4 @@
 'use client';
-import DateRangeFilter from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -10,13 +9,14 @@ import PageableModel from '@/types/models/PageableModel';
 import ReportModel from '@/types/models/ReportModel';
 import ReportQuery from '@/types/queries/ReportQuery';
 import { formatTimeToSeconds } from '@/utils/MyUtils';
-import { Chip, Selection } from '@nextui-org/react';
+import { Button, Chip, Selection } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useState } from 'react';
 
-export default function Reports() {
+export default function Orders() {
   const router = useRouter();
   const { range } = usePeriodTimeFilterState();
+  const [isActiveTab, setIsActiveTab] = useState(1);
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
 
   const [query, setQuery] = useState<ReportQuery>({
@@ -101,16 +101,31 @@ export default function Reports() {
   }, []);
 
   return (
-    <MainLayout activeContentIndex={4}>
-      <div className="md:col-span-1 pb-16">
-        <Header title="Quản lý báo cáo" />
+    <MainLayout activeContentIndex={7}>
+      <div className="md:col-span-1 pb-32">
+        <Header title="Quản lý tài chính" />
       </div>
-      <div className="flex justify-end mb-2">
-        <DateRangeFilter />
+
+      <div className="flex fixed top-[72px] z-50 bg-white shadow-md py-2 left-[290px] w-[1230px] justify-around border-t-small">
+        {[1, 2].map((tab) => (
+          <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
+            <Button
+              onClick={() => {
+                if (isActiveTab !== tab) {
+                  setIsActiveTab(tab);
+                }
+              }}
+              className={`${isActiveTab === tab ? 'text-primary' : 'text-black'} bg-transparent text-lg font-medium`}
+            >
+              {tab === 1 ? 'Yêu cầu đang đợi duyệt' : 'Biến động số dư'}
+            </Button>
+          </div>
+        ))}
       </div>
+
       <TableCustom
-        placeHolderSearch="Tìm kiếm báo cáo..."
-        description="báo cáo"
+        placeHolderSearch="Tìm kiếm sản phẩm..."
+        description="sản phẩm"
         columns={REPORT_COLUMNS}
         // arrayData={reports?.value?.items ?? []}
         arrayData={reports}

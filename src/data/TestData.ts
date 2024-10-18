@@ -5,12 +5,14 @@ import FetchResponse from '@/types/responses/FetchResponse';
 import ProductModel from '@/types/models/ProductModel';
 import CategoryModel from '@/types/models/CategoryModel';
 import PromotionModel from '@/types/models/PromotionModel';
+import OptionGroupModel from '@/types/models/OptionGroupModel';
 
 export const sampleNotifications = [
   {
     id: 1,
     avatar: 'https://avatars.githubusercontent.com/u/62385893?v=4',
     content: 'Notification content 1 Notification content 1 Notification content 1',
+    isRead: false,
     createdDate: '2023-01-01T12:00:00Z',
   },
   {
@@ -18,6 +20,7 @@ export const sampleNotifications = [
     avatar:
       'https://images.pexels.com/photos/47547/squirrel-animal-cute-rodents-47547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     content: 'Notification content 2',
+    isRead: false,
     createdDate: '2023-01-02T12:00:00Z',
   },
   {
@@ -25,18 +28,43 @@ export const sampleNotifications = [
     avatar:
       'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg',
     content: 'Notification content 3',
+    isRead: false,
     createdDate: '2023-01-03T12:00:00Z',
   },
   {
     id: 4,
     avatar: 'https://media.wired.com/photos/593261cab8eb31692072f129/master/pass/85120553.jpg',
     content: 'Notification content 4',
+    isRead: false,
     createdDate: '2023-01-04T12:00:00Z',
   },
   {
     id: 5,
     avatar: 'https://www.dartmoorzoo.org.uk/wp-content/uploads/2021/01/Tiger-1.jpg',
     content: 'Notification content 5',
+    isRead: false,
+    createdDate: '2023-01-05T12:00:00Z',
+  },
+  {
+    id: 6,
+    avatar:
+      'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg',
+    content: 'Notification content 6',
+    isRead: true,
+    createdDate: '2023-01-03T12:00:00Z',
+  },
+  {
+    id: 7,
+    avatar: 'https://media.wired.com/photos/593261cab8eb31692072f129/master/pass/85120553.jpg',
+    content: 'Notification content 7',
+    isRead: true,
+    createdDate: '2023-01-04T12:00:00Z',
+  },
+  {
+    id: 8,
+    avatar: 'https://www.dartmoorzoo.org.uk/wp-content/uploads/2021/01/Tiger-1.jpg',
+    content: 'Notification content 8',
+    isRead: true,
     createdDate: '2023-01-05T12:00:00Z',
   },
 ];
@@ -46,6 +74,7 @@ export const sampleChats = [
     id: 1,
     avatar: 'https://avatars.githubusercontent.com/u/62385893?v=4',
     message: 'Chat message 1 Chat message 1 Chat message 1 Chat message 1',
+    isRead: false,
     createdDate: '2024-09-17T15:22:22.335Z',
   },
   {
@@ -53,6 +82,7 @@ export const sampleChats = [
     avatar:
       'https://images.pexels.com/photos/47547/squirrel-animal-cute-rodents-47547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
     message: 'Chat message 2',
+    isRead: false,
     createdDate: '2024-09-17T12:00:00Z',
   },
   {
@@ -60,18 +90,43 @@ export const sampleChats = [
     avatar:
       'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg',
     message: 'Chat message 3',
+    isRead: false,
     createdDate: '2024-09-03T12:00:00Z',
   },
   {
     id: 4,
     avatar: 'https://media.wired.com/photos/593261cab8eb31692072f129/master/pass/85120553.jpg',
     message: 'Chat message 4',
+    isRead: true,
     createdDate: '2024-01-03T12:00:00Z',
   },
   {
     id: 5,
     avatar: 'https://www.dartmoorzoo.org.uk/wp-content/uploads/2021/01/Tiger-1.jpg',
     message: 'Chat message 5',
+    isRead: true,
+    createdDate: '2023-01-05T12:00:00Z',
+  },
+  {
+    id: 3,
+    avatar:
+      'https://i.natgeofe.com/k/63b1a8a7-0081-493e-8b53-81d01261ab5d/red-panda-full-body_4x3.jpg',
+    message: 'Chat message 3',
+    isRead: true,
+    createdDate: '2024-09-03T12:00:00Z',
+  },
+  {
+    id: 4,
+    avatar: 'https://media.wired.com/photos/593261cab8eb31692072f129/master/pass/85120553.jpg',
+    message: 'Chat message 4',
+    isRead: true,
+    createdDate: '2024-01-03T12:00:00Z',
+  },
+  {
+    id: 5,
+    avatar: 'https://www.dartmoorzoo.org.uk/wp-content/uploads/2021/01/Tiger-1.jpg',
+    message: 'Chat message 5',
+    isRead: true,
     createdDate: '2023-01-05T12:00:00Z',
   },
 ];
@@ -1371,11 +1426,29 @@ export const sampleStaff: FetchResponse<StaffModel> = {
         status: 2,
         createdDate: '2023-05-30',
       },
+      {
+        id: 6,
+        name: 'Eve White',
+        status: 2,
+        createdDate: '2023-05-30',
+      },
+      {
+        id: 7,
+        name: 'Eve White',
+        status: 2,
+        createdDate: '2023-05-30',
+      },
+      {
+        id: 8,
+        name: 'Eve White',
+        status: 2,
+        createdDate: '2023-05-30',
+      },
     ] as StaffModel[],
     pageIndex: 1,
     pageSize: 10,
     numberOfItems: 15,
-    totalOfPages: 2,
+    totalOfPages: 1,
     hasPrevious: false,
     hasNext: true,
   },
@@ -1393,8 +1466,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 301,
         name: 'Product A',
         description: 'Description for Product A',
-        price: 29.99,
-        imageUrl: 'http://example.com/imageA.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 100,
         status: 1, // Active
         isSoldOut: false,
@@ -1406,8 +1480,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 302,
         name: 'Product B',
         description: 'Description for Product B',
-        price: 49.99,
-        imageUrl: 'http://example.com/imageB.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 200,
         status: 1, // Active
         isSoldOut: false,
@@ -1419,8 +1494,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 303,
         name: 'Product C',
         description: 'Description for Product C',
-        price: 19.99,
-        imageUrl: 'http://example.com/imageC.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 150,
         status: 1, // Active
         isSoldOut: false,
@@ -1432,10 +1508,11 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 304,
         name: 'Product D',
         description: 'Description for Product D',
-        price: 39.99,
-        imageUrl: 'http://example.com/imageD.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 80,
-        status: 1, // Active
+        status: 2, // Active
         isSoldOut: false,
         createdDate: '2023-04-01',
       },
@@ -1445,10 +1522,11 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 305,
         name: 'Product E',
         description: 'Description for Product E',
-        price: 59.99,
-        imageUrl: 'http://example.com/imageE.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 60,
-        status: 1, // Active
+        status: 2, // Active
         isSoldOut: false,
         createdDate: '2023-05-01',
       },
@@ -1458,10 +1536,11 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 306,
         name: 'Product F',
         description: 'Description for Product F',
-        price: 25.99,
-        imageUrl: 'http://example.com/imageF.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 90,
-        status: 1, // Active
+        status: 2, // Active
         isSoldOut: false,
         createdDate: '2023-06-01',
       },
@@ -1471,8 +1550,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 307,
         name: 'Product G',
         description: 'Description for Product G',
-        price: 15.99,
-        imageUrl: 'http://example.com/imageG.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 120,
         status: 1, // Active
         isSoldOut: false,
@@ -1484,8 +1564,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 308,
         name: 'Product H',
         description: 'Description for Product H',
-        price: 45.99,
-        imageUrl: 'http://example.com/imageH.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 70,
         status: 1, // Active
         isSoldOut: false,
@@ -1497,8 +1578,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 309,
         name: 'Product I',
         description: 'Description for Product I',
-        price: 35.99,
-        imageUrl: 'http://example.com/imageI.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 110,
         status: 1, // Active
         isSoldOut: false,
@@ -1510,8 +1592,9 @@ export const sampleProducts: FetchResponse<ProductModel> = {
         shopCategoryId: 310,
         name: 'Product J',
         description: 'Description for Product J',
-        price: 55.99,
-        imageUrl: 'http://example.com/imageJ.jpg',
+        price: 100000,
+        imageUrl:
+          'https://www.summahealth.org/-/media/project/summahealth/website/page-content/flourish/2_18a_fl_fastfood_400x400.webp?la=en&h=400&w=400&hash=145DC0CF6234A159261389F18A36742A',
         totalOrder: 40,
         status: 1, // Active
         isSoldOut: false,
@@ -1577,6 +1660,15 @@ export const sampleCategories: FetchResponse<CategoryModel> = {
       },
       {
         id: 5,
+        name: 'Toys',
+        description: 'Fun and educational toys for children',
+        imageUrl:
+          'https://thumbs.dreamstime.com/b/generative-ai-fruits-vegetables-arranged-heart-shape-healthy-food-nutrition-concept-isolated-business-generative-ai-315051475.jpg',
+        displayOrder: 5,
+        createdDate: '2023-05-01',
+      },
+      {
+        id: 6,
         name: 'Toys',
         description: 'Fun and educational toys for children',
         imageUrl:
@@ -1654,11 +1746,161 @@ export const samplePromotions: FetchResponse<PromotionModel> = {
         status: 2, // Active
         createdDate: '2023-09-20',
       },
+      {
+        id: 4,
+        title: '1st Anniversary',
+        description: 'Get 15% off on all clothing items.',
+        bannerUrl: 'http://example.com/promotion3.jpg',
+        type: 1, // Percentage discount
+        amountRate: 15, // 15%
+        amountValue: 0, // Not applicable for percentage discounts
+        minOrderValue: 150000,
+        maximumApplyValue: 30000, // Maximum discount amount
+        startDate: '2023-10-01',
+        endDate: '2023-10-31',
+        usageLimit: 150,
+        numberOfUsed: 30,
+        applyType: 1, // Assuming 1 represents a percentage discount
+        status: 2, // Active
+        createdDate: '2023-09-20',
+      },
+      {
+        id: 5,
+        title: '1st Anniversary',
+        description: 'Get 15% off on all clothing items.',
+        bannerUrl: 'http://example.com/promotion3.jpg',
+        type: 1, // Percentage discount
+        amountRate: 15, // 15%
+        amountValue: 0, // Not applicable for percentage discounts
+        minOrderValue: 150000,
+        maximumApplyValue: 30000, // Maximum discount amount
+        startDate: '2023-10-01',
+        endDate: '2023-10-31',
+        usageLimit: 150,
+        numberOfUsed: 30,
+        applyType: 1, // Assuming 1 represents a percentage discount
+        status: 2, // Active
+        createdDate: '2023-09-20',
+      },
+      {
+        id: 6,
+        title: '1st Anniversary',
+        description: 'Get 15% off on all clothing items.',
+        bannerUrl: 'http://example.com/promotion3.jpg',
+        type: 1, // Percentage discount
+        amountRate: 15, // 15%
+        amountValue: 0, // Not applicable for percentage discounts
+        minOrderValue: 150000,
+        maximumApplyValue: 30000, // Maximum discount amount
+        startDate: '2023-10-01',
+        endDate: '2023-10-31',
+        usageLimit: 150,
+        numberOfUsed: 30,
+        applyType: 1, // Assuming 1 represents a percentage discount
+        status: 2, // Active
+        createdDate: '2023-09-20',
+      },
     ] as PromotionModel[],
     pageIndex: 1,
     pageSize: 10,
     numberOfItems: 10,
-    totalOfPages: 2,
+    totalOfPages: 1,
+    hasPrevious: false,
+    hasNext: true,
+  },
+  isSuccess: true,
+  isFailure: false,
+  error: { code: '', message: '' },
+};
+
+export const sampleOptionGroups: FetchResponse<OptionGroupModel> = {
+  value: {
+    items: [
+      {
+        id: 1,
+        name: 'Topping',
+        isRequire: true,
+        type: 1,
+        status: 1,
+        maxChoices: 5,
+        minChoices: 1,
+        createdDate: '2023-01-01',
+      },
+      {
+        id: 2,
+        name: 'Group B',
+        isRequire: false,
+        type: 2,
+        status: 1,
+        maxChoices: 3,
+        minChoices: 1,
+        createdDate: '2023-02-15',
+      },
+      {
+        id: 3,
+        name: 'Group C',
+        isRequire: true,
+        type: 1,
+        status: 2,
+        maxChoices: 4,
+        minChoices: 2,
+        createdDate: '2023-03-10',
+      },
+      {
+        id: 4,
+        name: 'Group D',
+        isRequire: false,
+        type: 2,
+        status: 2,
+        maxChoices: 2,
+        minChoices: 1,
+        createdDate: '2023-04-20',
+      },
+      {
+        id: 5,
+        name: 'Group E',
+        isRequire: true,
+        type: 1,
+        status: 2,
+        maxChoices: 6,
+        minChoices: 1,
+        createdDate: '2023-05-30',
+      },
+      {
+        id: 6,
+        name: 'Group F',
+        isRequire: false,
+        type: 2,
+        status: 1,
+        maxChoices: 3,
+        minChoices: 1,
+        createdDate: '2023-06-10',
+      },
+      {
+        id: 7,
+        name: 'Group G',
+        isRequire: true,
+        type: 1,
+        status: 2,
+        maxChoices: 5,
+        minChoices: 2,
+        createdDate: '2023-07-15',
+      },
+      {
+        id: 8,
+        name: 'Group H',
+        isRequire: false,
+        type: 2,
+        status: 1,
+        maxChoices: 4,
+        minChoices: 1,
+        createdDate: '2023-08-20',
+      },
+    ] as OptionGroupModel[],
+    pageIndex: 1,
+    pageSize: 10,
+    numberOfItems: 10,
+    totalOfPages: 1,
     hasPrevious: false,
     hasNext: true,
   },

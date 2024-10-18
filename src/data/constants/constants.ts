@@ -1,6 +1,6 @@
 // Manage orders
 const INCOMING_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'id', name: 'Thứ tự' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'price', name: 'Tổng hóa đơn' },
@@ -9,7 +9,7 @@ const INCOMING_ORDER_COLUMNS = [
 ];
 
 const CONFIRMED_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'id', name: 'Thứ tự' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'price', name: 'Tổng hóa đơn' },
@@ -18,7 +18,7 @@ const CONFIRMED_ORDER_COLUMNS = [
 ];
 
 const DELIVERING_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'id', name: 'Thứ tự' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'staffName', name: 'Tên nhân viên giao hàng' },
   { key: 'status', name: 'Trạng thái giao hàng' },
@@ -27,7 +27,7 @@ const DELIVERING_ORDER_COLUMNS = [
 ];
 
 const HISTORY_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự đơn hàng' },
+  { key: 'id', name: 'Thứ tự' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'status', name: 'Trạng thái đơn hàng' },
@@ -67,15 +67,30 @@ const REPORT_STATUS = [
 // Manage products
 const PRODUCT_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
-  { key: 'name', name: 'Tên sản phẩm ' },
+  { key: 'name', name: 'Tên sản phẩm' },
   { key: 'price', name: 'Giá bán' },
   { key: 'status', name: 'Trạng thái' },
   { key: 'createdDate', name: 'Thời gian tạo sản phẩm' },
+  { key: 'actions', name: 'Thao tác' },
 ];
 
 const PRODUCT_STATUS = [
   { key: 1, desc: 'Đang mở bán' },
   { key: 2, desc: 'Tạm hết hàng' },
+];
+
+// Manage option groups
+const OPTION_GROUP_COLUMNS = [
+  { key: 'id', name: 'Thứ tự' },
+  { key: 'name', name: 'Tên nhóm' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'createdDate', name: 'Thời gian tạo lựa chọn' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const OPTION_GROUP_STATUS = [
+  { key: 1, desc: 'Đang hoạt động' },
+  { key: 2, desc: 'Đã tạm ẩn' },
 ];
 
 // Manage categories
@@ -136,6 +151,8 @@ export {
   REPORT_STATUS,
   PRODUCT_COLUMNS,
   PRODUCT_STATUS,
+  OPTION_GROUP_COLUMNS,
+  OPTION_GROUP_STATUS,
   CATEGORY_COLUMNS,
   PROMOTION_COLUMNS,
   PROMOTION_TYPE,

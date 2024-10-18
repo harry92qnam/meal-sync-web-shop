@@ -28,6 +28,10 @@ export default function Promotions() {
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
   const [applyTypes, setApplyTypes] = useState<Selection>(new Set(['0']));
 
+  const handleAddNewPromotion = async () => {
+    alert('add new promotion');
+  };
+
   const handleUpdate = async () => {
     // todo update promotion
   };
@@ -52,7 +56,7 @@ export default function Promotions() {
   };
 
   const [query, setQuery] = useState<PromotionQuery>({
-    title: '',
+    name: '',
     status: 1,
     type: 1,
     dateFrom: range.dateFrom,
@@ -96,7 +100,7 @@ export default function Promotions() {
     options: applyTypeFilterOptions,
     selectedValues: applyTypes,
     handleFunc: (values: Selection) => {
-      let value = Array.from(values).map((val) => parseInt(val.toString()))[0];
+      const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
       setApplyTypes(values);
       setQuery({ ...query, type: value, ...range });
     },
@@ -202,7 +206,7 @@ export default function Promotions() {
         // arrayData={promotions?.value?.items ?? []}
         arrayData={promotions}
         searchHandler={(value: string) => {
-          setQuery({ ...query, title: value });
+          setQuery({ ...query, name: value });
         }}
         pagination={samplePromotions.value as PageableModel}
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -211,7 +215,7 @@ export default function Promotions() {
         isFilter={true}
         filters={[statusFilter, applyTypeFilter]}
         renderCell={renderCell}
-        isAddNew={true}
+        handleAddNew={handleAddNewPromotion}
       />
     </MainLayout>
   );

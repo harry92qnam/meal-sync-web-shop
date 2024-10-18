@@ -25,7 +25,6 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -51,7 +50,7 @@ export default function Orders() {
   const orders = sampleOrders.value.items;
 
   const [query, setQuery] = useState<OrderQuery>({
-    title: '',
+    name: '',
     description: '',
     status: 1,
     dateFrom: range.dateFrom,
@@ -414,7 +413,7 @@ export default function Orders() {
             // arrayData={orders?.value?.items ?? []}
             arrayData={orders}
             searchHandler={(value: string) => {
-              setQuery({ ...query, title: value });
+              setQuery({ ...query, name: value });
             }}
             pagination={sampleOrders.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -472,7 +471,7 @@ export default function Orders() {
             // arrayData={orders?.value?.items ?? []}
             arrayData={orders}
             searchHandler={(value: string) => {
-              setQuery({ ...query, title: value });
+              setQuery({ ...query, name: value });
             }}
             pagination={sampleOrders.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -532,7 +531,7 @@ export default function Orders() {
           // arrayData={orders?.value?.items ?? []}
           arrayData={orders}
           searchHandler={(value: string) => {
-            setQuery({ ...query, title: value });
+            setQuery({ ...query, name: value });
           }}
           pagination={sampleOrders.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -551,7 +550,7 @@ export default function Orders() {
           // arrayData={orders?.value?.items ?? []}
           arrayData={orders}
           searchHandler={(value: string) => {
-            setQuery({ ...query, title: value });
+            setQuery({ ...query, name: value });
           }}
           pagination={sampleOrders.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}

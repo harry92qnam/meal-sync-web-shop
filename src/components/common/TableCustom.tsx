@@ -33,7 +33,7 @@ type TableCustomProps = {
   // data
   placeHolderSearch: string;
   description: string;
-  columns: Array<{ name: string; key: string }>;
+  columns: Array<{ name: string; key: string; sortable?: boolean }>;
   arrayData: { [key: string]: any }[];
   // arrayDataColumns: Array<{ name: string; uid: string; sortable?: boolean; imageable?: boolean }>;
   renderCell: (item: any, columnKey: React.Key) => ReactNode;
@@ -51,7 +51,7 @@ type TableCustomProps = {
 
   // actions
   handleRowClick?: (id: number) => void;
-  isAddNew?: boolean;
+  handleAddNew?: () => void;
 };
 
 export default function TableCustom({
@@ -70,7 +70,7 @@ export default function TableCustom({
   isFilter,
   filters = [],
   handleRowClick,
-  isAddNew,
+  handleAddNew,
 }: TableCustomProps) {
   const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState('');
@@ -143,13 +143,14 @@ export default function TableCustom({
               ))}
             </div>
           )}
-          {isAddNew && (
+          {handleAddNew && (
             <Button
               type="button"
               color="primary"
               className=" text-secondary py-[19.5px] text-medium"
               endContent={<PlusIcon />}
               size="sm"
+              onClick={handleAddNew}
             >
               Tạo mới
             </Button>
@@ -223,22 +224,25 @@ export default function TableCustom({
         shadow="md"
         onSelectionChange={setSelectedKeys}
       >
-        <TableHeader columns={columns}>
+        <TableHeader columns={columns} className="text-center">
           {(column) => (
             <TableColumn
               key={column.key}
-              align={column.key === 'actions' ? 'center' : 'start'}
-              // allowsSorting={column.sortable}
+              align={column.key === 'actions' ? 'end' : 'center'}
+              allowsSorting={column?.sortable}
+              className={column.key === 'id' ? 'w-20' : ''}
             >
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent="No data found" items={arrayData}>
+        <TableBody emptyContent="Không có dữ liệu" items={arrayData}>
           {(item) => (
             <TableRow key={item.id} onClick={() => handleRowClick?.(item.id)}>
               {columns.map((column) => (
-                <TableCell key={column.key}>{renderCell(item, column.key)}</TableCell>
+                <TableCell key={column.key} className="text-center">
+                  {renderCell(item, column.key)}
+                </TableCell>
               ))}
             </TableRow>
           )}

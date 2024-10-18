@@ -44,21 +44,24 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
             </Badge>
           </div>
           {chatVisible && (
-            <div className="absolute max-w-[360px] top-20 right-8 border-1 px-4 py-2 rounded-lg bg-white shadow-2xl">
+            <div className="absolute max-w-[360px] top-16 right-8 border-1 px-2 py-2 rounded-lg bg-white shadow-2xl">
               <p className="text-2xl font-bold mt-2">Tin nhắn</p>
               <Divider className="my-2" />
               {sampleChats.map((chat) => (
                 <div
-                  className="flex gap-2 pb-2 items-center hover:opacity-70 cursor-pointer"
+                  className="flex gap-2 py-1 pl-2 pr-5 items-center hover:bg-slate-200 hover:rounded-lg cursor-pointer"
                   key={chat.id}
                 >
                   <Avatar src={chat.avatar} size="md" className="w-12 h-12 min-w-12" />
                   <div key={chat.id} className="flex-col">
-                    <p className="text-sm">{chat.message}</p>
+                    <p className={`text-sm ${!chat.isRead && 'font-bold'}`}>{chat.message}</p>
                     <p className="text-xs text-gray-400">
                       {formatTimeAgo(new Date(chat.createdDate))}
                     </p>
                   </div>
+                  {!chat.isRead && (
+                    <span className="w-3 h-3 bg-blue-500 rounded-full absolute right-4" />
+                  )}
                 </div>
               ))}
             </div>
@@ -73,19 +76,22 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
             </Badge>
           </div>
           {notiVisible && (
-            <div className="absolute max-w-[360px] top-20 right-8 border-1 px-4 py-2 rounded-lg bg-white shadow-2xl">
+            <div className="absolute max-w-[360px] top-16 right-8 border-1 px-2 py-2 rounded-lg bg-white shadow-2xl">
               <p className="text-2xl font-bold mt-2">Thông báo</p>
               <Divider className="my-2" />
               {sampleNotifications.map((noti) => (
                 <div
-                  className="flex gap-2 pb-2 items-center hover:opacity-70 cursor-pointer"
+                  className="flex gap-2 py-1 pl-2 pr-5 items-center hover:bg-slate-200 hover:rounded-lg cursor-pointer"
                   key={noti.id}
                 >
                   <Avatar src={noti.avatar} size="md" className="w-12 h-12 min-w-12" />
                   <div key={noti.id} className="flex-col items-center">
-                    <p className="text-sm">{noti.content}</p>
+                    <p className={`text-sm ${!noti.isRead && 'font-bold'}`}>{noti.content}</p>
                     <p className="text-xs text-gray-400">{formatDate(noti.createdDate)}</p>
                   </div>
+                  {!noti.isRead && (
+                    <span className="w-3 h-3 bg-blue-500 rounded-full absolute right-4" />
+                  )}
                 </div>
               ))}
             </div>
