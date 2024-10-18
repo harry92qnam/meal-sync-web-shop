@@ -21,6 +21,10 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Categories() {
+  const handleAddNewCategory = async () => {
+    alert('add new category');
+  };
+
   const handleUpdate = async () => {
     // todo update category
   };
@@ -64,7 +68,7 @@ export default function Categories() {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{category.id}</p>
+            <p className="text-small">{category.id}</p>
           </div>
         );
       case 'name':
@@ -72,21 +76,19 @@ export default function Categories() {
           <User
             avatarProps={{ radius: 'full', src: category.imageUrl }}
             name={category.name}
-            className="flex justify-start font-semibold"
-          >
-            {category.name}
-          </User>
+            className="flex justify-start ml-12 gap-4"
+          />
         );
       case 'description':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{category.description}</p>
+            <p className="text-small text-start">{category.description}</p>
           </div>
         );
       case 'createdDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatDate(category.createdDate)}</p>
+            <p className="text-small">{formatDate(category.createdDate)}</p>
           </div>
         );
       case 'actions':
@@ -111,7 +113,7 @@ export default function Categories() {
   }, []);
 
   return (
-    <MainLayout activeContentIndex={4}>
+    <MainLayout activeContentIndex={3}>
       <div className="md:col-span-1 pb-20">
         <Header title="Quản lý danh mục" />
       </div>
@@ -130,7 +132,7 @@ export default function Categories() {
         selectionMode="single"
         isFilter={true}
         renderCell={renderCell}
-        isAddNew={true}
+        handleAddNew={handleAddNewCategory}
       />
     </MainLayout>
   );

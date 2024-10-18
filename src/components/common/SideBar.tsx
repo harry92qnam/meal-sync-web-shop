@@ -18,9 +18,9 @@ interface SidebarItemProps {
 export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Thống kê tổng quan', icon: MdOutlineDashboard, iconSize: 19, path: '/dashboard' },
   { title: 'Quản lý đơn hàng', icon: GrTransaction, iconSize: 18, path: '/orders' },
-  { title: 'Quản lý báo cáo', icon: MdOutlineReport, iconSize: 19, path: '/reports' },
   { title: 'Quản lý sản phẩm', icon: IoFastFoodOutline, iconSize: 19, path: '/products' },
   { title: 'Quản lý danh mục', icon: IoSettingsOutline, iconSize: 19, path: '/categories' },
+  { title: 'Quản lý báo cáo', icon: MdOutlineReport, iconSize: 19, path: '/reports' },
   { title: 'Quản lý khuyến mãi', icon: IoMdGift, iconSize: 19, path: '/promotions' },
   { title: 'Quản lý nhân viên', icon: IoPeopleOutline, iconSize: 19, path: '/staffs' },
   {

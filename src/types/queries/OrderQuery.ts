@@ -1,7 +1,7 @@
 import PagingRequestQuery from './PagingRequestQuery';
 
 export default interface OrderQuery extends PagingRequestQuery {
-  title: string;
+  name: string;
   description: string;
   status: number;
   dateFrom: Date;

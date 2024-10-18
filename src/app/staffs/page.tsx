@@ -43,6 +43,10 @@ export default function Staffs() {
     });
   };
 
+  const handleAddNewStaff = async () => {
+    alert('add new staff');
+  };
+
   const [query, setQuery] = useState<StaffQuery>({
     name: '',
     status: 0,
@@ -153,7 +157,7 @@ export default function Staffs() {
         isFilter={true}
         filters={[statusFilter]}
         renderCell={renderCell}
-        isAddNew={true}
+        handleAddNew={handleAddNewStaff}
       />
     </MainLayout>
   );
