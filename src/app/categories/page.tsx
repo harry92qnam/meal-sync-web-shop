@@ -1,4 +1,5 @@
 'use client';
+import CategoryModal from '@/components/category/CategoryModal';
 import Header from '@/components/common/Header';
 import TableCustom from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -14,6 +15,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  useDisclosure,
   User,
 } from '@nextui-org/react';
 import { ReactNode, useCallback, useState } from 'react';
@@ -21,8 +23,14 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Categories() {
-  const handleAddNewCategory = async () => {
-    alert('add new category');
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onOpenChange: onCreateOpenChange,
+  } = useDisclosure();
+
+  const handleAddNewCategory = () => {
+    onCreateOpen();
   };
 
   const handleUpdate = async () => {
@@ -132,6 +140,12 @@ export default function Categories() {
         selectionMode="single"
         renderCell={renderCell}
         handleAddNew={handleAddNewCategory}
+      />
+
+      <CategoryModal
+        isOpen={isCreateOpen}
+        onOpen={onCreateOpen}
+        onOpenChange={onCreateOpenChange}
       />
     </MainLayout>
   );

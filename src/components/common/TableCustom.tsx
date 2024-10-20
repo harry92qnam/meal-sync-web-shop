@@ -188,7 +188,7 @@ export default function TableCustom({
           showShadow
           color="primary"
           page={page}
-          total={pagination?.totalOfPages ?? 0}
+          total={pagination?.totalPages ?? 0}
           onChange={(index: number) => {
             goToPage(index);
             setPage(index);
