@@ -159,7 +159,7 @@ export default function TableCustom({
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-default-400 text-small mr-4">
-              Tổng cộng có {arrayData.length} {description}
+              Tổng cộng có {arrayData?.length} {description}
             </span>
             {selectionMode === 'multiple' && selectedKeys && (
               <Button className="block">Nhận tất cả</Button>
@@ -177,7 +177,7 @@ export default function TableCustom({
         </div>
       </div>
     );
-  }, [onClear, searchHandler, arrayData.length, pagination, filters]);
+  }, [onClear, searchHandler, arrayData?.length, pagination, filters]);
 
   const bottomContent = useMemo(() => {
     return (

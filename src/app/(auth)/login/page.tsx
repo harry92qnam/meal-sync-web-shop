@@ -53,8 +53,7 @@ export default function Login() {
         //   return;
         // }
         localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
-        console.log(responseData.data.value.tokenResponse.accessToken, 'accessToken');
-        router.push('/dashboard');
+        router.push('/products');
       }
     } catch (error: any) {
       setError(error.response.data.error.message);
