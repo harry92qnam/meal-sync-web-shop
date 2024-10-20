@@ -10,12 +10,13 @@ import OptionGroupModel from '@/types/models/OptionGroupModel';
 
 export const endpoints = {
   ORDERS: 'shop-owner/order',
-  REPORTS: 'shop-owner/reports',
-  PRODUCTS: 'shop-owner/products',
-  OPTIONS: 'shop-owner/options',
-  CATEGORIES: 'shop-owner/categories',
-  PROMOTIONS: 'shop-owner/promotions',
-  STAFFS: 'shop-owner/staffs',
+  REPORTS: 'shop-owner/report',
+  PRODUCTS: 'shop-owner/product',
+  OPTIONS: 'shop-owner/option',
+  CATEGORIES: 'shop-owner/category',
+  CATEGORY_IMAGE_UPLOAD: 'shop-owner/category/upload',
+  PROMOTIONS: 'shop-owner/promotion',
+  STAFFS: 'shop-owner/staff',
 };
 
 export const orderApiService = createHttpService<OrderModel>(apiClient, endpoints.ORDERS);

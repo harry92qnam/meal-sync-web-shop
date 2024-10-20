@@ -34,16 +34,13 @@ export default function Login() {
   const [error, setError] = useState('');
 
   const handleLogin = async (data: { email: string; password: string }) => {
-    const payload = {
-      loginContext: 3,
-      email: data.email,
-      password: data.password,
-    };
-    console.log(payload);
     try {
+      const payload = {
+        loginContext: 3,
+        email: data.email,
+        password: data.password,
+      };
       const responseData = await apiClient.post('auth/login', payload);
-      console.log(responseData);
-      console.log(responseData.data.isSuccess);
 
       if (!responseData.data.isSuccess) {
         setError(responseData.data.error.message);
