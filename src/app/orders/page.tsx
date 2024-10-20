@@ -11,9 +11,12 @@ import {
   DELIVERY_STATUS,
   ORDER_STATUS,
 } from '@/data/constants/constants';
+import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 
 import { sampleOrders } from '@/data/TestData';
+import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
+import { orderApiService } from '@/services/api-services/api-service-instances';
 import OrderModel from '@/types/models/OrderModel';
 import PageableModel from '@/types/models/PageableModel';
 import OrderQuery from '@/types/queries/OrderQuery';
@@ -47,8 +50,6 @@ export default function Orders() {
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
 
-  const orders = sampleOrders.value.items;
-
   const [query, setQuery] = useState<OrderQuery>({
     name: '',
     description: '',
@@ -59,10 +60,14 @@ export default function Orders() {
     pageSize: 10,
   } as OrderQuery);
 
-  const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
-    DELIVERY_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
-  );
-  console.log(isActiveTab);
+  const statusFilterOptions =
+    isActiveTab === 4
+      ? [{ key: 0, desc: 'Tất cả' }].concat(
+          DELIVERY_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
+        )
+      : [{ key: 0, desc: 'Tất cả' }].concat(
+          ORDER_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
+        );
 
   const statusFilter = {
     label: 'Trạng thái',
@@ -76,6 +81,14 @@ export default function Orders() {
       setQuery({ ...query, status: value, ...range });
     },
   } as TableCustomFilter;
+
+  // const { data: orders } = useFetchWithRQ<OrderModel, OrderQuery>(
+  //   REACT_QUERY_CACHE_KEYS.ORDERS,
+  //   orderApiService,
+  //   query,
+  // );
+  // console.log(orders, 'orders');
+  const orders = sampleOrders.value.items;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setError('');
@@ -325,7 +338,6 @@ export default function Orders() {
                       ? 'bg-yellow-200 text-yellow-600'
                       : 'bg-purple-200 text-purple-600'
             }`}
-            // color={STATUS_COLOR_MAP[order.status]}
             size="sm"
             variant="flat"
           >
@@ -354,6 +366,7 @@ export default function Orders() {
   switch (isActiveTab) {
     case 1:
       // view list of new orders
+
       break;
     case 2:
       // view list of confirmed orders
@@ -538,7 +551,6 @@ export default function Orders() {
           setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
           filters={[statusFilter]}
           selectionMode="single"
-          isFilter={false}
           renderCell={deliveringOrders}
           handleRowClick={openOrderDetail}
         />
@@ -557,7 +569,6 @@ export default function Orders() {
           setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
           filters={[statusFilter]}
           selectionMode="single"
-          isFilter={false}
           renderCell={historyOrders}
           handleRowClick={openOrderDetail}
         />

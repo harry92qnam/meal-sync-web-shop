@@ -314,7 +314,6 @@ export default function Orders() {
           goToPage={(index: number) => setProductQuery({ ...productQuery, pageIndex: index })}
           setPageSize={(size: number) => setProductQuery({ ...productQuery, pageSize: size })}
           selectionMode="single"
-          isFilter={true}
           filters={[filterProducts]}
           renderCell={productTable}
           handleRowClick={openProductDetail}
@@ -339,7 +338,6 @@ export default function Orders() {
               setOptionGroupQuery({ ...optionGroupQuery, pageSize: size })
             }
             selectionMode="single"
-            isFilter={true}
             filters={[filterOptions]}
             renderCell={optionTable}
             handleRowClick={openOptionModal}

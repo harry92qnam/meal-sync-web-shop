@@ -34,6 +34,7 @@ export default function ForgotPassword() {
         <p className="text-center my-10 text-xl font-medium">Nhập email để lấy lại mật khẩu</p>
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <Input
+            isRequired
             type="email"
             name="email"
             label="Email"

@@ -53,6 +53,7 @@ export default function ResetPassword() {
         <p className="text-center my-10 text-xl font-medium">Đặt mật khẩu mới</p>
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <Input
+            isRequired
             type={isShowPassword ? 'text' : 'password'}
             name="password"
             label="Mật khẩu"
@@ -73,6 +74,7 @@ export default function ResetPassword() {
             }
           />
           <Input
+            isRequired
             type={isShowConfirmPassword ? 'text' : 'password'}
             name="confirmPassword"
             label="Nhập lại mật khẩu"

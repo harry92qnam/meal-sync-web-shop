@@ -1,5 +1,14 @@
 'use client';
-import { Button, Image, Input } from '@nextui-org/react';
+import apiClient from '@/services/api-services/api-client';
+import {
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Image,
+  Input,
+  Radio,
+  RadioGroup,
+} from '@nextui-org/react';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -24,10 +33,6 @@ const validationSchema = yup.object().shape({
     .string()
     .matches(/((^(\\+84|84|0|0084){1})(3|5|7|8|9))+([0-9]{8})$/, 'Số điện thoại không hợp lệ!')
     .required('Vui lòng nhập số điện thoại'),
-  address: yup
-    .string()
-    .required('Vui lòng nhập địa chỉ cửa hàng')
-    .max(100, 'Địa chỉ cửa hàng chỉ có tối đa 100 ký tự'),
   password: yup
     .string()
     .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
@@ -46,12 +51,55 @@ const validationSchema = yup.object().shape({
     .required('Vui lòng nhập lại mật khẩu'),
 });
 
+type registerInput = {
+  email: string;
+  shopOwner: string;
+  shopName: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword: string;
+  address: string;
+  gender: string;
+  dormitoryIds: string[];
+  // latitude: number;
+  // longitude: number;
+};
+
 export default function Register() {
+  const router = useRouter();
   const [isShowPassword, setIsShownPassword] = useState(false);
   const [isShowConfirmPassword, setIsShownConfirmPassword] = useState(false);
   const togglePassword = () => setIsShownPassword(!isShowPassword);
   const toggleConfirmPassword = () => setIsShownConfirmPassword(!isShowConfirmPassword);
-  const router = useRouter();
+  const [error, setError] = useState('');
+
+  const handleRegister = async (data: registerInput) => {
+    const payload = {
+      email: data.email,
+      fullName: data.shopOwner,
+      shopName: data.shopName,
+      phoneNumber: data.phoneNumber,
+      password: data.password,
+      address: data.address,
+      gender: Number(data.gender),
+      dormitoryIds: data.dormitoryIds.map(Number),
+      // latitude: data.latitude,
+      // longitude: data.longitude,
+    };
+    console.log(payload);
+    const responseData = await apiClient.post('auth/shop-register', payload);
+    console.log(responseData);
+    if (responseData.data.isSuccess) {
+      router.push('/verify-code-register');
+      // save temp email here
+    } else {
+      setError(responseData.data.error.message);
+    }
+  };
+
+  const handleChangeAddress = async () => {
+    // handle change address here
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -62,12 +110,13 @@ export default function Register() {
       address: '',
       password: '',
       confirmPassword: '',
+      gender: '1',
+      dormitoryIds: [],
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log('New shop infor:', values);
-      // Handle logic here
-      router.push('/verify-code-register');
+      handleRegister(values);
+      // router.push('/verify-code-register');
     },
   });
 
@@ -83,17 +132,7 @@ export default function Register() {
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <Input
-            type="text"
-            name="shopOwner"
-            label="Tên chủ cửa hàng"
-            placeholder="Nhập tên của bạn"
-            value={formik.values.shopOwner}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.shopOwner && !!formik.errors.shopOwner}
-            errorMessage={formik.touched.shopOwner && formik.errors.shopOwner}
-          />
-          <Input
+            isRequired
             type="text"
             name="shopName"
             label="Tên cửa hàng"
@@ -105,6 +144,19 @@ export default function Register() {
             errorMessage={formik.touched.shopName && formik.errors.shopName}
           />
           <Input
+            isRequired
+            type="text"
+            name="shopOwner"
+            label="Tên chủ cửa hàng"
+            placeholder="Nhập tên của bạn"
+            value={formik.values.shopOwner}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.shopOwner && !!formik.errors.shopOwner}
+            errorMessage={formik.touched.shopOwner && formik.errors.shopOwner}
+          />
+          <Input
+            isRequired
             type="email"
             name="email"
             label="Email"
@@ -116,6 +168,7 @@ export default function Register() {
             errorMessage={formik.touched.email && formik.errors.email}
           />
           <Input
+            isRequired
             type="text"
             name="phoneNumber"
             label="Số điện thoại"
@@ -126,18 +179,53 @@ export default function Register() {
             isInvalid={formik.touched.phoneNumber && !!formik.errors.phoneNumber}
             errorMessage={formik.touched.phoneNumber && formik.errors.phoneNumber}
           />
-          <Input
-            type="text"
-            name="address"
-            label="Địa chỉ"
-            placeholder="Nhập địa chỉ của cửa hàng"
-            value={formik.values.address}
+          <RadioGroup
+            name="gender"
+            label="Giới tính"
+            className="text-sm"
+            size="sm"
+            defaultValue="1"
+            isRequired
+            value={formik.values.gender}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.address && !!formik.errors.address}
-            errorMessage={formik.touched.address && formik.errors.address}
-          />
+          >
+            <div className="flex-row flex gap-4">
+              <Radio value="1">Nam</Radio>
+              <Radio value="2">Nữ</Radio>
+              <Radio value="3">Khác</Radio>
+            </div>
+          </RadioGroup>
+          <CheckboxGroup
+            name="dormitoryIds"
+            label="Khu vực muốn bán"
+            className="text-sm"
+            size="sm"
+            isRequired
+            value={formik.values.dormitoryIds}
+            onChange={(value) => formik.setFieldValue('dormitoryIds', value)}
+          >
+            <div className="flex gap-4">
+              <Checkbox value="1">Khu A</Checkbox>
+              <Checkbox value="2">Khu B</Checkbox>
+            </div>
+          </CheckboxGroup>
+          <div className="flex items-center gap-3">
+            <Input
+              isRequired
+              isReadOnly
+              type="text"
+              name="address"
+              // label="Địa chỉ"
+              placeholder="Địa chỉ cửa hàng"
+              value={formik.values.address}
+              onBlur={formik.handleBlur}
+            />
+            <Button onClick={handleChangeAddress} className="text-gray-500 bg-gray-200">
+              Chọn địa chỉ
+            </Button>
+          </div>
           <Input
+            isRequired
             type={isShowPassword ? 'text' : 'password'}
             name="password"
             label="Mật khẩu"
@@ -158,6 +246,7 @@ export default function Register() {
             }
           />
           <Input
+            isRequired
             type={isShowConfirmPassword ? 'text' : 'password'}
             name="confirmPassword"
             label="Nhập lại mật khẩu"
@@ -177,8 +266,9 @@ export default function Register() {
               </button>
             }
           />
+          {error && <p className="text-sm text-danger text-center">{error}</p>}
           <div>
-            <Button type="submit" color="primary" className="w-full mt-4 py-6 text-lg">
+            <Button type="submit" color="primary" className="w-full mt-2 py-6 text-lg">
               Đăng ký
             </Button>
           </div>

@@ -1,4 +1,5 @@
 'use client';
+import apiClient from '@/services/api-services/api-client';
 import { Button, Image, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import Link from 'next/link';
@@ -27,10 +28,37 @@ const validationSchema = yup.object().shape({
 });
 
 export default function Login() {
-  const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
-
+  const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const [error, setError] = useState('');
+
+  const handleLogin = async (data: { email: string; password: string }) => {
+    const payload = {
+      loginContext: 3,
+      email: data.email,
+      password: data.password,
+    };
+    console.log(payload);
+    try {
+      const responseData = await apiClient.post('auth/login', payload);
+      console.log(responseData);
+      console.log(responseData.data.isSuccess);
+
+      if (!responseData.data.isSuccess) {
+        setError(responseData.data.error.message);
+      } else {
+        // if (responseData.data.value.accountResponse.roleName !== 'ShopOwner') {
+        //   setError('Bạn không có quyền truy cập');
+        //   return;
+        // }
+        localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
+        router.push('/products');
+      }
+    } catch (error: any) {
+      setError(error.response.data.error.message);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -39,9 +67,7 @@ export default function Login() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log('Form submitted with values:', values);
-      // Handle logic here
-      router.push('/dashboard');
+      handleLogin(values);
     },
   });
 
@@ -57,6 +83,7 @@ export default function Login() {
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <Input
+            isRequired
             type="email"
             name="email"
             label="Email"
@@ -68,6 +95,7 @@ export default function Login() {
             errorMessage={formik.touched.email && formik.errors.email}
           />
           <Input
+            isRequired
             type={isVisible ? 'text' : 'password'}
             name="password"
             label="Mật khẩu"
@@ -87,6 +115,7 @@ export default function Login() {
               </button>
             }
           />
+          {error && <p className="text-sm text-danger text-center">{error}</p>}
           <div className="flex justify-end">
             <Link href={'/forgot-password'}>
               <p className="underline text-primary text-sm w-28">Quên mật khẩu?</p>
