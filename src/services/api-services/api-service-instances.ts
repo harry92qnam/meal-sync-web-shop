@@ -9,13 +9,13 @@ import StaffModel from '@/types/models/StaffModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 
 export const endpoints = {
-  ORDERS: 'shop/orders',
-  REPORTS: 'shop/reports',
-  PRODUCTS: 'shop/products',
-  OPTIONS: 'shop/options',
-  CATEGORIES: 'shop/categories',
-  PROMOTIONS: 'shop/promotions',
-  STAFFS: 'shop/staffs',
+  ORDERS: 'shop-owner/order',
+  REPORTS: 'shop-owner/reports',
+  PRODUCTS: 'shop-owner/products',
+  OPTIONS: 'shop-owner/options',
+  CATEGORIES: 'shop-owner/categories',
+  PROMOTIONS: 'shop-owner/promotions',
+  STAFFS: 'shop-owner/staffs',
 };
 
 export const orderApiService = createHttpService<OrderModel>(apiClient, endpoints.ORDERS);

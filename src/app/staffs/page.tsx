@@ -154,7 +154,6 @@ export default function Staffs() {
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"
-        isFilter={true}
         filters={[statusFilter]}
         renderCell={renderCell}
         handleAddNew={handleAddNewStaff}

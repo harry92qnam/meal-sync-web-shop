@@ -67,7 +67,7 @@ export default function TableCustom({
   goToPage,
   setPageSize,
 
-  isFilter,
+  isFilter = true,
   filters = [],
   handleRowClick,
   handleAddNew,

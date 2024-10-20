@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -55,3 +56,21 @@ export const toast = (icon: 'success' | 'error', content: string) =>
     showConfirmButton: true,
     timer: 2000,
   });
+
+// calculate coordinates base on address
+export const getCoordinates = async (address: string) => {
+  const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your Google Maps API key
+  const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+    params: {
+      address: address,
+      key: apiKey,
+    },
+  });
+
+  if (response.data.status === 'OK') {
+    const location = response.data.results[0].geometry.location;
+    return { latitude: location.lat, longitude: location.lng };
+  } else {
+    throw new Error('Unable to get coordinates');
+  }
+};

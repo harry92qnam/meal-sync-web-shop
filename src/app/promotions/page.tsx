@@ -212,7 +212,6 @@ export default function Promotions() {
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"
-        isFilter={true}
         filters={[statusFilter, applyTypeFilter]}
         renderCell={renderCell}
         handleAddNew={handleAddNewPromotion}
