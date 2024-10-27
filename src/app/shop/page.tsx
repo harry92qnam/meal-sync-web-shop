@@ -3,6 +3,7 @@ import Header from '@/components/common/Header';
 import { PlusIcon } from '@/components/common/PlusIcon';
 import MainLayout from '@/components/layout/MainLayout';
 import apiClient from '@/services/api-services/api-client';
+import ActiveSlotModel from '@/types/models/ActiveSlotModel';
 import { toast } from '@/utils/MyUtils';
 import { Button, Switch } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
@@ -12,7 +13,7 @@ export default function Shop() {
   const [status, setStatus] = useState(1);
   const [isOvernight, setIsOvernight] = useState(false);
   const [isAuto, setIsAuto] = useState(false);
-  const [activeSlots, setActiveSlots] = useState([]);
+  const [activeSlots, setActiveSlots] = useState<ActiveSlotModel[]>([]);
 
   const [title, setTitle] = useState('');
   const [startTime, setStartTime] = useState(0);
