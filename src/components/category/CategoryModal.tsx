@@ -33,7 +33,6 @@ const validationSchema = yup.object().shape({
 
 export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalProps) {
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [error, setError] = useState('');
   const [urlFile, setUrlFile] = useState('');
   const formik = useFormik({
     initialValues: {
@@ -57,7 +56,7 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
           },
         });
         if (!responseData.data.isSuccess) {
-          setError(responseData.data.error.message);
+          toast('error', responseData.data.error.message);
         } else {
           return responseData.data.value.url;
         }
@@ -79,7 +78,7 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
       const responseData = await apiClient.post('shop-owner/category/create', payload);
       console.log(responseData);
       if (!responseData.data.isSuccess) {
-        setError(responseData.data.error.message);
+        toast('error', responseData.data.error.message);
       } else {
         toast('success', 'Tạo mới danh mục thành công');
       }
@@ -89,12 +88,14 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
     onOpenChange(false);
     formik.resetForm();
     setAvatar(null);
+    setUrlFile('');
   };
 
   const handleCancel = (onClose: () => void) => {
     onClose();
     formik.resetForm();
     setAvatar(null);
+    setUrlFile('');
   };
 
   const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {

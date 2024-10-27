@@ -1,11 +1,23 @@
 interface OptionGroupModel {
   id: number;
-  name: string;
+  title: string;
   isRequire: boolean;
   type: number;
   status: number;
   maxChoices: number;
   minChoices: number;
+  numOfItemLinked: number;
+  options: [
+    {
+      id: number;
+      isDefault: boolean;
+      title: string;
+      isCalculatePrice: boolean;
+      price: number;
+      imageUrl: string;
+      status: number;
+    },
+  ];
   createdDate: string;
 }
 

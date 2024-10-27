@@ -3,8 +3,9 @@ const INCOMING_ORDER_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
-  { key: 'price', name: 'Tổng hóa đơn' },
-  { key: 'orderedDate', name: 'Thời gian đặt đơn' },
+  { key: 'totalPrice', name: 'Tổng hóa đơn' },
+  { key: 'frame', name: 'Khung giờ nhận hàng' },
+  { key: 'createdDate', name: 'Thời gian đặt đơn' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -12,8 +13,8 @@ const CONFIRMED_ORDER_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
-  { key: 'price', name: 'Tổng hóa đơn' },
-  { key: 'confirmedDate', name: 'Thời gian nhận đơn' },
+  { key: 'totalPrice', name: 'Tổng hóa đơn' },
+  { key: 'frame', name: 'Khung giờ nhận hàng' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -22,8 +23,8 @@ const DELIVERING_ORDER_COLUMNS = [
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'staffName', name: 'Tên nhân viên giao hàng' },
   { key: 'status', name: 'Trạng thái giao hàng' },
-  { key: 'price', name: 'Tổng hóa đơn' },
-  { key: 'deliveryDate', name: 'Thời gian giao hàng' },
+  { key: 'totalPrice', name: 'Tổng hóa đơn' },
+  { key: 'createdDate', name: 'Thời gian giao hàng' },
 ];
 
 const HISTORY_ORDER_COLUMNS = [
@@ -31,22 +32,23 @@ const HISTORY_ORDER_COLUMNS = [
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'status', name: 'Trạng thái đơn hàng' },
-  { key: 'price', name: 'Tổng hóa đơn' },
-  { key: 'orderedDate', name: 'Thời gian giao dịch' },
+  { key: 'totalPrice', name: 'Tổng hóa đơn' },
+  { key: 'createdDate', name: 'Thời gian giao dịch' },
 ];
 
 const DELIVERY_STATUS = [
-  { key: 1, desc: 'Đang giao' },
-  { key: 2, desc: 'Thành công' },
-  { key: 3, desc: 'Thất bại' },
+  { key: 6, desc: 'Đang giao' },
+  { key: 7, desc: 'Giao thành công' },
+  { key: 8, desc: 'Giao thất bại' },
 ];
 
 const ORDER_STATUS = [
-  { key: 1, desc: 'Đã hủy' },
-  { key: 2, desc: 'Hoàn thành' },
-  { key: 3, desc: 'Thất bại' },
-  { key: 4, desc: 'Bị báo cáo' },
-  { key: 5, desc: 'Hoàn tiền' },
+  { key: 2, desc: 'Từ chối' },
+  { key: 4, desc: 'Đã hủy' },
+  { key: 9, desc: 'Hoàn thành' },
+  { key: 10, desc: 'Bị báo cáo' },
+  { key: 11, desc: 'Đang giải quyết' },
+  { key: 12, desc: 'Đã giải quyết' },
 ];
 
 // Manage reports
@@ -70,7 +72,8 @@ const PRODUCT_COLUMNS = [
   { key: 'name', name: 'Tên sản phẩm' },
   { key: 'price', name: 'Giá bán' },
   { key: 'status', name: 'Trạng thái' },
-  { key: 'createdDate', name: 'Thời gian tạo sản phẩm' },
+  { key: 'slot', name: 'Khung giờ mở bán' },
+  { key: 'shopCategory', name: 'Danh mục liên kết' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -82,7 +85,8 @@ const PRODUCT_STATUS = [
 // Manage option groups
 const OPTION_GROUP_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
-  { key: 'name', name: 'Tên nhóm' },
+  { key: 'title', name: 'Tên nhóm' },
+  { key: 'numOfItemLinked', name: 'Số sản phẩm liên kết' },
   { key: 'status', name: 'Trạng thái' },
   { key: 'createdDate', name: 'Thời gian tạo lựa chọn' },
   { key: 'actions', name: 'Thao tác' },
@@ -98,6 +102,7 @@ const CATEGORY_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
   { key: 'name', name: 'Tên danh mục' },
   { key: 'description', name: 'Mô tả' },
+  { key: 'numberFoodLinked', name: 'Số sản phẩm liên kết' },
   { key: 'createdDate', name: 'Thời gian tạo danh mục' },
   { key: 'actions', name: 'Thao tác' },
 ];
@@ -130,11 +135,17 @@ const STAFF_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
   { key: 'name', name: 'Tên nhân viên' },
   { key: 'status', name: 'Trạng thái' },
+  { key: 'active', name: 'Hoạt động' },
   { key: 'createdDate', name: 'Thời gian tạo tài khoản' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
 const STAFF_STATUS = [
+  { key: 1, desc: 'Đang hoạt động' },
+  { key: 2, desc: 'Không hoạt động' },
+];
+
+const STAFF_ACTIVE_STATUS = [
   { key: 1, desc: 'Đang rảnh' },
   { key: 2, desc: 'Đang giao hàng' },
   { key: 3, desc: 'Không hoạt động' },
@@ -159,4 +170,5 @@ export {
   PROMOTION_STATUS,
   STAFF_COLUMNS,
   STAFF_STATUS,
+  STAFF_ACTIVE_STATUS,
 };

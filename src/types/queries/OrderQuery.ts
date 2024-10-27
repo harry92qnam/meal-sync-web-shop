@@ -3,7 +3,7 @@ import PagingRequestQuery from './PagingRequestQuery';
 export default interface OrderQuery extends PagingRequestQuery {
   name: string;
   description: string;
-  status: number;
+  status: number[];
   dateFrom: Date;
   dateTo: Date;
 }

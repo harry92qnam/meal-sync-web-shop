@@ -13,7 +13,6 @@ import {
 } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 
-import { sampleOrders } from '@/data/TestData';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
 import { orderApiService } from '@/services/api-services/api-service-instances';
@@ -38,7 +37,7 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
 export default function Orders() {
@@ -49,11 +48,12 @@ export default function Orders() {
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
+  const [status, setStatus] = useState<number[]>([1]);
 
   const [query, setQuery] = useState<OrderQuery>({
     name: '',
     description: '',
-    status: 1,
+    status: [1],
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
     pageIndex: 1,
@@ -76,19 +76,51 @@ export default function Orders() {
     options: statusFilterOptions,
     selectedValues: statuses,
     handleFunc: (values: Selection) => {
-      const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
+      const selectedStatuses = Array.from(values).map((val) => parseInt(val.toString()));
       setStatuses(values);
-      setQuery({ ...query, status: value, ...range });
+      setQuery((prevQuery) => ({ ...prevQuery, status: selectedStatuses, ...range }));
     },
   } as TableCustomFilter;
 
-  // const { data: orders } = useFetchWithRQ<OrderModel, OrderQuery>(
-  //   REACT_QUERY_CACHE_KEYS.ORDERS,
-  //   orderApiService,
-  //   query,
-  // );
-  // console.log(orders, 'orders');
-  const orders = sampleOrders.value.items;
+  useEffect(() => {
+    let statusArray = [];
+    switch (isActiveTab) {
+      case 1:
+        statusArray = [1];
+        break;
+      case 2:
+        statusArray = [3];
+        break;
+      case 3:
+        statusArray = [5];
+        break;
+      case 4:
+        statusArray = [6, 7, 8];
+        break;
+      case 5:
+        statusArray = [2, 4, 9, 10, 11, 12];
+        break;
+      default:
+        statusArray = [1];
+        break;
+    }
+    setStatus(statusArray);
+  }, [isActiveTab]);
+
+  useEffect(() => {
+    setQuery((prevQuery) => ({
+      ...prevQuery,
+      status,
+      pageIndex: 1,
+      ...range,
+    }));
+  }, [status, range]);
+
+  const { data: orders } = useFetchWithRQ<OrderModel, OrderQuery>(
+    REACT_QUERY_CACHE_KEYS.ORDERS,
+    orderApiService(status),
+    query,
+  );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setError('');
@@ -123,18 +155,15 @@ export default function Orders() {
   };
 
   const openOrderDetail = (id: number) => {
-    const order = orders.find((item) => item.id === id);
-    if (!order) {
-      router.push('/');
-    }
-    router.push('orders/order-detail');
+    // const order = orders?.value.items.find((item) => item.id === id);
+    router.push(`orders/${id}`);
   };
 
-  const incomingOrders = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
+  const incomingOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
     const cellValue = order[columnKey as keyof OrderModel];
 
     switch (columnKey) {
-      case 'orderId':
+      case 'id':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small">{order.id}</p>
@@ -143,21 +172,33 @@ export default function Orders() {
       case 'customerName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.customerName}</p>
+            <p className="text-bold text-small capitalize">{order.customer.fullName}</p>
           </div>
         );
       case 'phoneNumber':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">
-              {formatPhoneNumber(order.phoneNumber)}
+              {formatPhoneNumber(order.customer.phoneNumber)}
             </p>
           </div>
         );
-      case 'price':
+      case 'totalPrice':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatCurrency(order.price)}</p>
+            <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
+          </div>
+        );
+      case 'frame':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small">{order.timeFrameFormat}</p>
+          </div>
+        );
+      case 'createdDate':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small">{formatTimeToSeconds(order.createdDate)}</p>
           </div>
         );
       case 'actions':
@@ -176,22 +217,17 @@ export default function Orders() {
             </Dropdown>
           </div>
         );
-      case 'orderedDate':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
-          </div>
-        );
+
       default:
-        return cellValue.toString();
+        break;
     }
   }, []);
 
-  const confirmedOrders = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
+  const confirmedOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
     const cellValue = order[columnKey as keyof OrderModel];
 
     switch (columnKey) {
-      case 'orderId':
+      case 'id':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small">{order.id}</p>
@@ -200,21 +236,27 @@ export default function Orders() {
       case 'customerName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.customerName}</p>
+            <p className="text-bold text-small capitalize">{order.customer.fullName}</p>
           </div>
         );
       case 'phoneNumber':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">
-              {formatPhoneNumber(order.phoneNumber)}
+              {formatPhoneNumber(order.customer.phoneNumber)}
             </p>
           </div>
         );
-      case 'price':
+      case 'totalPrice':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatCurrency(order.price)}</p>
+            <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
+          </div>
+        );
+      case 'frame':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small">{order.timeFrameFormat}</p>
           </div>
         );
       case 'actions':
@@ -240,30 +282,32 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue.toString();
+        break;
     }
   }, []);
 
-  const deliveringOrders = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
+  const deliveringOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
     const cellValue = order[columnKey as keyof OrderModel];
 
     switch (columnKey) {
-      case 'orderId':
+      case 'id':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small">{order.id}</p>
           </div>
         );
-      case 'staffName':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.shopInfo.name}</p>
-          </div>
-        );
       case 'customerName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.customerName}</p>
+            <p className="text-bold text-small capitalize">{order.customer.fullName}</p>
+          </div>
+        );
+      case 'staffName':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">
+              {order?.shopDeliveryStaff?.fullName ?? 'Tự giao'}
+            </p>
           </div>
         );
       case 'status':
@@ -271,9 +315,9 @@ export default function Orders() {
           <Chip
             // handle 3 statuses of delivery (pending, success and fail)
             className={`capitalize ${
-              order.status == 1
+              order.status == 6
                 ? 'bg-yellow-200 text-yellow-600'
-                : order.status == 2
+                : order.status == 7
                   ? 'bg-green-200 text-green-600'
                   : 'bg-red-200 text-rose-600'
             }`}
@@ -283,28 +327,28 @@ export default function Orders() {
             {DELIVERY_STATUS.find((item) => item.key == order.status)?.desc}
           </Chip>
         );
-      case 'price':
+      case 'totalPrice':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatCurrency(order.price)}</p>
+            <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
           </div>
         );
-      case 'deliveryDate':
+      case 'createdDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
+            <p className="text-bold text-small">{formatTimeToSeconds(order.createdDate)}</p>
           </div>
         );
       default:
-        return cellValue.toString();
+        break;
     }
   }, []);
 
-  const historyOrders = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
+  const historyOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
     const cellValue = order[columnKey as keyof OrderModel];
 
     switch (columnKey) {
-      case 'orderId':
+      case 'id':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small">{order.id}</p>
@@ -313,14 +357,14 @@ export default function Orders() {
       case 'customerName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.customerName}</p>
+            <p className="text-bold text-small capitalize">{order.customer.fullName}</p>
           </div>
         );
       case 'phoneNumber':
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">
-              {formatPhoneNumber(order.phoneNumber)}
+              {formatPhoneNumber(order.customer.phoneNumber)}
             </p>
           </div>
         );
@@ -328,13 +372,13 @@ export default function Orders() {
         return (
           <Chip
             className={`capitalize ${
-              order.status == 1
-                ? 'bg-gray-200 text-gray-600'
-                : order.status == 2
+              order.status == 2 || order.status == 4
+                ? 'bg-red-200 text-rose-600'
+                : order.status == 9
                   ? 'bg-green-200 text-green-600'
-                  : order.status == 3
-                    ? 'bg-red-200 text-rose-600'
-                    : order.status == 4
+                  : order.status == 10
+                    ? 'bg-gray-200 text-gray-600'
+                    : order.status == 11
                       ? 'bg-yellow-200 text-yellow-600'
                       : 'bg-purple-200 text-purple-600'
             }`}
@@ -344,45 +388,23 @@ export default function Orders() {
             {ORDER_STATUS.find((item) => item.key == order.status)?.desc}
           </Chip>
         );
-      case 'price':
+      case 'totalPrice':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatCurrency(order.price)}</p>
+            <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
           </div>
         );
-      case 'orderedDate':
+      case 'createdDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
+            <p className="text-bold text-small">{formatTimeToSeconds(order.createdDate)}</p>
           </div>
         );
       default:
-        return cellValue.toString();
+        break;
     }
   }, []);
 
-  // todo
-
-  switch (isActiveTab) {
-    case 1:
-      // view list of new orders
-
-      break;
-    case 2:
-      // view list of confirmed orders
-      break;
-    case 3:
-      // view list of preparing orders
-      break;
-    case 4:
-      // view list of delivering orders
-      break;
-    case 5:
-      // view list of old orders (completed, failed, reported, refunded)
-      break;
-    default:
-      break;
-  }
   return (
     <MainLayout activeContentIndex={1}>
       <div className="md:col-span-1 pb-24">
@@ -407,34 +429,29 @@ export default function Orders() {
                   : tab === 3
                     ? 'Đang chuẩn bị'
                     : tab === 4
-                      ? 'Đang giao'
+                      ? 'Giao hàng'
                       : 'Lịch sử đơn hàng'}
             </Button>
           </div>
         ))}
       </div>
-      <div className="mt-6 flex justify-end mb-2">
-        <DateRangeFilter />
-      </div>
 
       {isActiveTab === 1 ? (
-        <>
+        <div className="mt-6">
           <TableCustom
             placeHolderSearch="Tìm kiếm đơn hàng..."
             description="đơn hàng"
             columns={INCOMING_ORDER_COLUMNS}
-            // arrayData={orders?.value?.items ?? []}
-            arrayData={orders}
+            arrayData={orders?.value.items ?? []}
             searchHandler={(value: string) => {
               setQuery({ ...query, name: value });
             }}
-            pagination={sampleOrders.value as PageableModel}
+            pagination={orders?.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
             setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            filters={[statusFilter]}
             selectionMode="multiple"
             isFilter={false}
-            renderCell={incomingOrders}
+            renderCell={incomingOrdersCell}
             handleRowClick={openOrderDetail}
           />
 
@@ -474,25 +491,23 @@ export default function Orders() {
               )}
             </ModalContent>
           </Modal>
-        </>
+        </div>
       ) : isActiveTab === 2 ? (
-        <>
+        <div className="mt-6">
           <TableCustom
             placeHolderSearch="Tìm kiếm đơn hàng..."
             description="đơn hàng"
             columns={CONFIRMED_ORDER_COLUMNS}
-            // arrayData={orders?.value?.items ?? []}
-            arrayData={orders}
+            arrayData={orders?.value?.items ?? []}
             searchHandler={(value: string) => {
               setQuery({ ...query, name: value });
             }}
-            pagination={sampleOrders.value as PageableModel}
+            pagination={orders?.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
             setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            filters={[statusFilter]}
             selectionMode="multiple"
             isFilter={false}
-            renderCell={confirmedOrders}
+            renderCell={confirmedOrdersCell}
             handleRowClick={openOrderDetail}
           />
 
@@ -532,46 +547,51 @@ export default function Orders() {
               )}
             </ModalContent>
           </Modal>
-        </>
+        </div>
       ) : isActiveTab === 3 ? (
         <></>
       ) : // todo handle kanban board
       isActiveTab === 4 ? (
-        <TableCustom
-          placeHolderSearch="Tìm kiếm đơn hàng..."
-          description="đơn hàng"
-          columns={DELIVERING_ORDER_COLUMNS}
-          // arrayData={orders?.value?.items ?? []}
-          arrayData={orders}
-          searchHandler={(value: string) => {
-            setQuery({ ...query, name: value });
-          }}
-          pagination={sampleOrders.value as PageableModel}
-          goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
-          setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-          filters={[statusFilter]}
-          selectionMode="single"
-          renderCell={deliveringOrders}
-          handleRowClick={openOrderDetail}
-        />
+        <div className="mt-6">
+          <TableCustom
+            placeHolderSearch="Tìm kiếm đơn hàng..."
+            description="đơn hàng"
+            columns={DELIVERING_ORDER_COLUMNS}
+            arrayData={orders?.value?.items ?? []}
+            searchHandler={(value: string) => {
+              setQuery({ ...query, name: value });
+            }}
+            pagination={orders?.value as PageableModel}
+            goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
+            setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
+            filters={[statusFilter]}
+            selectionMode="single"
+            renderCell={deliveringOrdersCell}
+            handleRowClick={openOrderDetail}
+          />
+        </div>
       ) : (
-        <TableCustom
-          placeHolderSearch="Tìm kiếm đơn hàng..."
-          description="đơn hàng"
-          columns={HISTORY_ORDER_COLUMNS}
-          // arrayData={orders?.value?.items ?? []}
-          arrayData={orders}
-          searchHandler={(value: string) => {
-            setQuery({ ...query, name: value });
-          }}
-          pagination={sampleOrders.value as PageableModel}
-          goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
-          setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-          filters={[statusFilter]}
-          selectionMode="single"
-          renderCell={historyOrders}
-          handleRowClick={openOrderDetail}
-        />
+        <div>
+          <div className="mt-6 flex justify-end mb-2">
+            <DateRangeFilter />
+          </div>
+          <TableCustom
+            placeHolderSearch="Tìm kiếm đơn hàng..."
+            description="đơn hàng"
+            columns={HISTORY_ORDER_COLUMNS}
+            arrayData={orders?.value?.items ?? []}
+            searchHandler={(value: string) => {
+              setQuery({ ...query, name: value });
+            }}
+            pagination={orders?.value as PageableModel}
+            goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
+            setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
+            filters={[statusFilter]}
+            selectionMode="single"
+            renderCell={historyOrdersCell}
+            handleRowClick={openOrderDetail}
+          />
+        </div>
       )}
     </MainLayout>
   );

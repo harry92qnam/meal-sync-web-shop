@@ -44,6 +44,7 @@ export const formatNumber = (value: number | string | undefined | null) =>
   Number(value || 0).toLocaleString('en-US');
 
 export const formatPhoneNumber = (phone: string) => {
+  if (!phone) return null;
   const match = phone.replace(/\D/g, '').match(/^(\d{3})(\d{3})(\d{4})$/);
   return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
 };

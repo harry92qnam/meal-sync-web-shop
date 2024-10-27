@@ -96,7 +96,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 
