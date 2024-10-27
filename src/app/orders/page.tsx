@@ -305,7 +305,9 @@ export default function Orders() {
       case 'staffName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order?.staff?.fullName ?? 'Tự giao'}</p>
+            <p className="text-bold text-small capitalize">
+              {order?.shopDeliveryStaff?.fullName ?? 'Tự giao'}
+            </p>
           </div>
         );
       case 'status':
