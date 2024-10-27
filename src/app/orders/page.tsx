@@ -76,7 +76,7 @@ export default function Orders() {
     options: statusFilterOptions,
     selectedValues: statuses,
     handleFunc: (values: Selection) => {
-      const selectedStatuses = Array.from(values).map((val) => parseInt(val));
+      const selectedStatuses = Array.from(values).map((val) => parseInt(val.toString()));
       setStatuses(values);
       setQuery((prevQuery) => ({ ...prevQuery, status: selectedStatuses, ...range }));
     },
@@ -447,7 +447,6 @@ export default function Orders() {
             pagination={orders?.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
             setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            filters={[statusFilter]}
             selectionMode="multiple"
             isFilter={false}
             renderCell={incomingOrdersCell}
@@ -504,7 +503,6 @@ export default function Orders() {
             pagination={orders?.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
             setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            filters={[statusFilter]}
             selectionMode="multiple"
             isFilter={false}
             renderCell={confirmedOrdersCell}
