@@ -230,7 +230,7 @@ export default function TableCustom({
               key={column.key}
               align={column.key === 'actions' ? 'end' : 'center'}
               allowsSorting={column?.sortable}
-              className={column.key === 'id' ? 'w-20' : ''}
+              className={column.key === 'id' ? 'w-20' : column.key === 'name' ? 'w-80' : ''}
             >
               {column.name}
             </TableColumn>

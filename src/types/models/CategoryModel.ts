@@ -4,5 +4,6 @@ export default interface CategoryModel {
   description: string;
   imageUrl: string;
   displayOrder: number;
+  numberFoodLinked: number;
   createdDate: string;
 }

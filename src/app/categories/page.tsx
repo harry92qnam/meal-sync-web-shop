@@ -4,11 +4,15 @@ import Header from '@/components/common/Header';
 import TableCustom from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
 import { CATEGORY_COLUMNS } from '@/data/constants/constants';
+import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import { sampleCategories } from '@/data/TestData';
+import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
+import apiClient from '@/services/api-services/api-client';
+import { categoryApiService } from '@/services/api-services/api-service-instances';
 import CategoryModel from '@/types/models/CategoryModel';
 import PageableModel from '@/types/models/PageableModel';
 import CategoryQuery from '@/types/queries/CategoryQuery';
-import { formatDate } from '@/utils/MyUtils';
+import { formatDate, formatNumber } from '@/utils/MyUtils';
 import {
   Button,
   Dropdown,
@@ -29,6 +33,18 @@ export default function Categories() {
     onOpenChange: onCreateOpenChange,
   } = useDisclosure();
 
+  const [query, setQuery] = useState<CategoryQuery>({
+    name: '',
+    pageIndex: 1,
+    pageSize: 10,
+  } as CategoryQuery);
+
+  const { data: categories } = useFetchWithRQ<CategoryModel, CategoryQuery>(
+    REACT_QUERY_CACHE_KEYS.CATEGORIES,
+    categoryApiService,
+    query,
+  );
+
   const handleAddNewCategory = () => {
     onCreateOpen();
   };
@@ -37,7 +53,7 @@ export default function Categories() {
     // todo update category
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id: number) => {
     await Swal.fire({
       title: 'Bạn có chắc muốn xóa danh mục này không?',
       icon: 'warning',
@@ -46,28 +62,18 @@ export default function Categories() {
       cancelButtonColor: '#94a3b8',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Không',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          text: 'Đã xóa thành công!',
-          icon: 'success',
-        });
+        const responseData = await apiClient.delete(`shop-owner/category/${id}`);
+        if (responseData.data.isSuccess) {
+          Swal.fire({
+            text: 'Đã xóa thành công!',
+            icon: 'success',
+          });
+        }
       }
     });
   };
-
-  const [query, setQuery] = useState<CategoryQuery>({
-    name: '',
-    pageIndex: 1,
-    pageSize: 10,
-  } as CategoryQuery);
-
-  const categories = sampleCategories.value.items;
-  // const { data: categories } = useFetchWithRQ<CategoryModel, CategoryQuery>(
-  //   REACT_QUERY_CACHE_KEYS.CATEGORIES,
-  //   categoryApiService,
-  //   query,
-  // );
 
   const renderCell = useCallback((category: CategoryModel, columnKey: React.Key): ReactNode => {
     const cellValue = category[columnKey as keyof CategoryModel];
@@ -99,6 +105,12 @@ export default function Categories() {
             <p className="text-small">{formatDate(category.createdDate)}</p>
           </div>
         );
+      case 'numberFoodLinked':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{formatNumber(category.numberFoodLinked)}</p>
+          </div>
+        );
       case 'actions':
         return (
           <div className="relative flex justify-end items-center gap-2">
@@ -109,8 +121,8 @@ export default function Categories() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={handleUpdate}>Sửa danh mục</DropdownItem>
-                <DropdownItem onClick={handleDelete}>Xóa danh mục</DropdownItem>
+                <DropdownItem onClick={() => handleUpdate()}>Sửa danh mục</DropdownItem>
+                <DropdownItem onClick={() => handleDelete(category.id)}>Xóa danh mục</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -129,12 +141,11 @@ export default function Categories() {
         placeHolderSearch="Tìm kiếm danh mục..."
         description="danh mục"
         columns={CATEGORY_COLUMNS}
-        // arrayData={categories?.value?.items ?? []}
-        arrayData={categories}
+        arrayData={categories?.value.items ?? []}
         searchHandler={(value: string) => {
           setQuery({ ...query, name: value });
         }}
-        pagination={sampleCategories.value as PageableModel}
+        pagination={categories?.value as PageableModel}
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"

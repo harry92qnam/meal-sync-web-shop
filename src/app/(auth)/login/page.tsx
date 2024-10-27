@@ -52,8 +52,8 @@ export default function Login() {
         localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
         router.push('/products');
       }
-    } catch (error: any) {
-      setError(error.response.data.error.message);
+    } catch (error) {
+      console.log(error);
     }
   };
 

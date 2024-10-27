@@ -11,15 +11,21 @@ import OptionGroupModel from '@/types/models/OptionGroupModel';
 export const endpoints = {
   ORDERS: 'shop-owner/order',
   REPORTS: 'shop-owner/report',
-  PRODUCTS: 'shop-owner/product',
-  OPTIONS: 'shop-owner/option',
-  CATEGORIES: 'shop-owner/category',
+  PRODUCTS: 'web/shop-owner/food',
+  OPTIONS: 'shop-owner/option-group',
+  CATEGORIES: 'web/shop-owner/category',
   CATEGORY_IMAGE_UPLOAD: 'shop-owner/category/upload',
   PROMOTIONS: 'shop-owner/promotion',
   STAFFS: 'shop-owner/staff',
 };
 
-export const orderApiService = createHttpService<OrderModel>(apiClient, endpoints.ORDERS);
+export const orderApiService = (statuses: number[]) => {
+  const statusQuery = statuses.map((status) => `status=${status}`).join('&');
+  return createHttpService<OrderModel>(
+    apiClient,
+    `${endpoints.ORDERS}?StartTime=0&EndTime=2400&${statusQuery}`,
+  );
+};
 export const reportApiService = createHttpService<ReportModel>(apiClient, endpoints.REPORTS);
 export const productApiService = createHttpService<ProductModel>(apiClient, endpoints.PRODUCTS);
 export const optionApiService = createHttpService<OptionGroupModel>(apiClient, endpoints.OPTIONS);

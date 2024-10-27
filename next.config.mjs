@@ -6,7 +6,14 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'gongcha.com.vn',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

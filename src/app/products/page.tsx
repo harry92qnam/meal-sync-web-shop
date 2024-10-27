@@ -8,12 +8,15 @@ import {
   PRODUCT_COLUMNS,
   PRODUCT_STATUS,
 } from '@/data/constants/constants';
-import { sampleOptionGroups, sampleProducts } from '@/data/TestData';
+import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
+import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
+import { optionApiService, productApiService } from '@/services/api-services/api-service-instances';
+import OptionGroupModel from '@/types/models/OptionGroupModel';
 import PageableModel from '@/types/models/PageableModel';
 import ProductModel from '@/types/models/ProductModel';
 import OptionGroupQuery from '@/types/queries/OptionGroupQuery';
 import ProductQuery from '@/types/queries/ProductQuery';
-import { formatCurrency, formatDate } from '@/utils/MyUtils';
+import { formatCurrency, formatDate, formatNumber } from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -70,11 +73,11 @@ export default function Orders() {
   };
 
   const openProductDetail = (id: number) => {
-    const product = products.find((item) => item.id === id);
-    if (!product) {
-      router.push('/');
-    }
-    router.push('products/product-detail');
+    // const product = products.find((item) => item.id === id);
+    // if (!product) {
+    //   router.push('/');
+    // }
+    // router.push('products/product-detail');
   };
 
   // option groups
@@ -95,25 +98,23 @@ export default function Orders() {
   } as ProductQuery);
 
   const [optionGroupQuery, setOptionGroupQuery] = useState<OptionGroupQuery>({
-    name: '',
+    title: '',
     status: 1,
     pageIndex: 1,
     pageSize: 10,
   } as OptionGroupQuery);
 
-  const products = sampleProducts.value.items;
-  // const { data: products } = useFetchWithRQ<ProductModel, ProductQuery>(
-  //   REACT_QUERY_CACHE_KEYS.PRODUCTS,
-  //   productApiService,
-  //   query,
-  // );
+  const { data: products } = useFetchWithRQ<ProductModel, ProductQuery>(
+    REACT_QUERY_CACHE_KEYS.PRODUCTS,
+    productApiService,
+    productQuery,
+  );
 
-  const optionList = sampleOptionGroups.value.items;
-  // const { data: optionList } = useFetchWithRQ<OptionGroupModel, OptionGroupQuery>(
-  //   REACT_QUERY_CACHE_KEYS.OPTIONS,
-  //   optionApiService,
-  //   query,
-  // );
+  const { data: optionList } = useFetchWithRQ<OptionGroupModel, OptionGroupQuery>(
+    REACT_QUERY_CACHE_KEYS.OPTIONS,
+    optionApiService,
+    optionGroupQuery,
+  );
 
   const statusFilterProducts = [{ key: 0, desc: 'Tất cả' }].concat(
     PRODUCT_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
@@ -148,6 +149,8 @@ export default function Orders() {
       setOptionGroupQuery({ ...optionGroupQuery, status: value });
     },
   } as TableCustomFilter;
+  console.log(productQuery);
+  console.log(optionGroupQuery);
 
   const productTable = useCallback((product: ProductModel, columnKey: React.Key): ReactNode => {
     const cellValue = product[columnKey as keyof ProductModel];
@@ -185,10 +188,20 @@ export default function Orders() {
             {PRODUCT_STATUS.find((item) => item.key == product.status)?.desc}
           </Chip>
         );
-      case 'createdDate':
+      case 'slot':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{formatDate(product.createdDate)}</p>
+            <ul className="text-small">
+              {product.operatingSlots.map((slot) => (
+                <li key={slot.id}>{slot.timeFrameFormat}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      case 'shopCategory':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{product.shopCategory.name}</p>
           </div>
         );
       case 'actions':
@@ -217,38 +230,44 @@ export default function Orders() {
     }
   }, []);
 
-  const optionTable = useCallback((product: ProductModel, columnKey: React.Key): ReactNode => {
-    const cellValue = product[columnKey as keyof ProductModel];
+  const optionTable = useCallback((option: OptionGroupModel, columnKey: React.Key): ReactNode => {
+    const cellValue = option[columnKey as keyof OptionGroupModel];
 
     switch (columnKey) {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{product.id}</p>
+            <p className="text-small">{option.id}</p>
           </div>
         );
-      case 'name':
+      case 'title':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{product.name}</p>
+            <p className="text-small">{option.title}</p>
+          </div>
+        );
+      case 'numOfItemLinked':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{formatNumber(option.numOfItemLinked)}</p>
           </div>
         );
       case 'status':
         return (
           <Chip
             className={`capitalize ${
-              product.status === 1 ? 'bg-green-200 text-green-600' : 'bg-red-200 text-rose-600'
+              option.status === 1 ? 'bg-green-200 text-green-600' : 'bg-red-200 text-rose-600'
             }`}
             size="sm"
             variant="flat"
           >
-            {OPTION_GROUP_STATUS.find((item) => item.key == product.status)?.desc}
+            {OPTION_GROUP_STATUS.find((item) => item.key == option.status)?.desc}
           </Chip>
         );
       case 'createdDate':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{formatDate(product.createdDate)}</p>
+            <p className="text-small">{formatDate(option.createdDate)}</p>
           </div>
         );
       case 'actions':
@@ -261,7 +280,7 @@ export default function Orders() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                {product.status === 1 ? (
+                {option.status === 1 ? (
                   <DropdownItem onClick={handleDisable}>Tạm ẩn</DropdownItem>
                 ) : (
                   <DropdownItem onClick={handleEnable}>Hoạt động lại</DropdownItem>
@@ -305,12 +324,11 @@ export default function Orders() {
           placeHolderSearch="Tìm kiếm món ăn..."
           description="món ăn"
           columns={PRODUCT_COLUMNS}
-          // arrayData={products?.value?.items ?? []}
-          arrayData={products}
+          arrayData={products?.value?.items ?? []}
           searchHandler={(value: string) => {
             setProductQuery({ ...productQuery, name: value });
           }}
-          pagination={sampleProducts.value as PageableModel}
+          pagination={products?.value as PageableModel}
           goToPage={(index: number) => setProductQuery({ ...productQuery, pageIndex: index })}
           setPageSize={(size: number) => setProductQuery({ ...productQuery, pageSize: size })}
           selectionMode="single"
@@ -325,12 +343,11 @@ export default function Orders() {
             placeHolderSearch="Tìm kiếm nhóm lựa chọn..."
             description="nhóm lựa chọn"
             columns={OPTION_GROUP_COLUMNS}
-            // arrayData={optionList?.value?.items ?? []}
-            arrayData={optionList}
+            arrayData={optionList?.value?.items ?? []}
             searchHandler={(value: string) => {
-              setOptionGroupQuery({ ...optionGroupQuery, name: value });
+              setOptionGroupQuery({ ...optionGroupQuery, title: value });
             }}
-            pagination={sampleOptionGroups.value as PageableModel}
+            pagination={optionList?.value as PageableModel}
             goToPage={(index: number) =>
               setOptionGroupQuery({ ...optionGroupQuery, pageIndex: index })
             }

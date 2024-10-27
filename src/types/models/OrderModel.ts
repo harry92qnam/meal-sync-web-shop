@@ -1,84 +1,56 @@
 export default interface OrderModel {
   id: number;
-  phoneNumber: string;
-  customerName: string;
-  price: number;
-  orderDate: string;
   status: number;
-  orderInfo: {
-    orderId: number;
-    orderStatus: number;
-    shippingFee: number;
-    totalPrice: number;
-    totalPromotion: number;
+  buildingId: number;
+  dormitoryId: number;
+  dormitoryName: string;
+  buildingName: string;
+  totalPromotion: number;
+  totalPrice: number;
+  orderDate: string;
+  intendedReceiveDate: string;
+  createdDate: string;
+  timeFrameFormat: string;
+  note: string;
+  shopDeliveryStaff: {
+    id: number;
+    fullName: string;
+    avatarUrl: string;
+  };
+  customer: {
+    id: number;
     fullName: string;
     phoneNumber: string;
-    distance: number;
-    durationShipping: string;
-    shopId: number;
-    note: string;
-    reason: string;
-    building: {
-      buildingId: number;
-      address: string;
-      longitude: number;
-      latitude: number;
-    };
-    voucher: {
-      promotionId: number;
-      title: string;
-      amountRate: number;
-      amountValue: number;
-      minimumOrderValue: number;
-      maximumApplyValue: number;
-      applyType: number;
-      startDate: string;
-      endDate: string;
-    };
+    avatarUrl: string;
+    address: string;
   };
-  shopInfo: {
-    id: number;
-    name: string;
-    logoUrl: string;
-    bannerUrl: string;
-    description: string;
-    balance: number;
-    phoneNumber: string;
-    activeFrom: number;
-    activeTo: number;
-    totalProduct: number;
-    rating: number;
-    minimumValueOrderFreeship: number;
-    shippingFee: number;
-    building: {
-      buildingId: number;
-      address: string;
-      longitude: number;
-      latitude: number;
-    };
-  };
-  products: [
+  foods: [
     {
-      orderId: number;
-      productId: number;
-      productQuantity: number;
-      productPrice: number;
-      productName: string;
+      id: number;
+      name: string;
       imageUrl: string;
-      productStatus: number;
-      totalProductPrice: number;
-      topping: [
+      quantity: number;
+    },
+  ];
+  orderDetails: [
+    {
+      id: number;
+      foodId: number;
+      name: string;
+      imageUrl: string;
+      description: string;
+      quantity: number;
+      totalPrice: number;
+      basicPrice: number;
+      optionGroups: [
         {
-          questionId: number;
-          questionType: number;
-          queDescription: string;
-          totalDescription: string;
+          optionGroupTitle: string;
           options: [
             {
-              optionId: number;
-              opDescription: string;
-              optionPrice: number;
+              optionTitle: string;
               optionImageUrl: string;
+              isCalculatePrice: boolean;
+              price: number;
             },
           ];
         },

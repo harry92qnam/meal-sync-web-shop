@@ -2,7 +2,7 @@
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
-import { STAFF_COLUMNS, STAFF_STATUS } from '@/data/constants/constants';
+import { STAFF_ACTIVE_STATUS, STAFF_COLUMNS, STAFF_STATUS } from '@/data/constants/constants';
 import { sampleStaff } from '@/data/TestData';
 import PageableModel from '@/types/models/PageableModel';
 import StaffModel from '@/types/models/StaffModel';
@@ -23,6 +23,9 @@ import Swal from 'sweetalert2';
 
 export default function Staffs() {
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
+  const [active, setActive] = useState<Selection>(new Set(['0']));
+
+  const handleUpdate = async () => {};
 
   const handleDelete = async () => {
     await Swal.fire({
@@ -78,6 +81,23 @@ export default function Staffs() {
     },
   } as TableCustomFilter;
 
+  const activeFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
+    STAFF_ACTIVE_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
+  );
+
+  const activeFilter = {
+    label: 'Hoạt động',
+    mappingField: 'active',
+    selectionMode: 1,
+    options: activeFilterOptions,
+    selectedValues: active,
+    handleFunc: (values: Selection) => {
+      const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
+      setActive(values);
+      setQuery({ ...query, active: value });
+    },
+  } as TableCustomFilter;
+
   const renderCell = useCallback((staff: StaffModel, columnKey: React.Key): ReactNode => {
     const cellValue = staff[columnKey as keyof StaffModel];
 
@@ -98,16 +118,28 @@ export default function Staffs() {
         return (
           <Chip
             className={`capitalize ${
-              staff.status === 1
+              staff.status === 1 ? 'bg-green-200 text-green-600' : 'bg-gray-200 text-gray-600'
+            }`}
+            size="sm"
+            variant="flat"
+          >
+            {STAFF_STATUS.find((item) => item.key === staff.status)?.desc}
+          </Chip>
+        );
+      case 'active':
+        return (
+          <Chip
+            className={`capitalize ${
+              staff.active === 1
                 ? 'bg-green-200 text-green-600'
-                : staff.status === 2
+                : staff.active === 2
                   ? 'bg-yellow-200 text-yellow-600'
                   : 'bg-gray-200 text-gray-600'
             }`}
             size="sm"
             variant="flat"
           >
-            {STAFF_STATUS.find((item) => item.key == staff.status)?.desc}
+            {STAFF_ACTIVE_STATUS.find((item) => item.key === staff.active)?.desc}
           </Chip>
         );
       case 'createdDate':
@@ -126,6 +158,7 @@ export default function Staffs() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
+                <DropdownItem onClick={handleUpdate}>Thay đổi</DropdownItem>
                 <DropdownItem onClick={handleDelete}>Xóa nhân viên</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -154,7 +187,7 @@ export default function Staffs() {
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"
-        filters={[statusFilter]}
+        filters={[statusFilter, activeFilter]}
         renderCell={renderCell}
         handleAddNew={handleAddNewStaff}
       />
