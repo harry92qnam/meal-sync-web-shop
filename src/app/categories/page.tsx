@@ -5,7 +5,6 @@ import TableCustom from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
 import { CATEGORY_COLUMNS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
-import { sampleCategories } from '@/data/TestData';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import apiClient from '@/services/api-services/api-client';
 import { categoryApiService } from '@/services/api-services/api-service-instances';
