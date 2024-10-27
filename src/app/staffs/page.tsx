@@ -165,7 +165,7 @@ export default function Staffs() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 

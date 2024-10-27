@@ -128,7 +128,7 @@ export default function Categories() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 

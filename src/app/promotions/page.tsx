@@ -187,7 +187,7 @@ export default function Promotions() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 

@@ -226,7 +226,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 
@@ -292,7 +292,7 @@ export default function Orders() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 

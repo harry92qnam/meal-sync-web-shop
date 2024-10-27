@@ -96,7 +96,7 @@ export default function Reports() {
           </div>
         );
       default:
-        return cellValue;
+        break;
     }
   }, []);
 
