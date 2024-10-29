@@ -1,11 +1,7 @@
-import OrderModel from '@/types/models/OrderModel';
+import PromotionModel from '@/types/models/PromotionModel';
 import ReportModel from '@/types/models/ReportModel';
 import StaffModel from '@/types/models/StaffModel';
 import FetchResponse from '@/types/responses/FetchResponse';
-import ProductModel from '@/types/models/ProductModel';
-import CategoryModel from '@/types/models/CategoryModel';
-import PromotionModel from '@/types/models/PromotionModel';
-import OptionGroupModel from '@/types/models/OptionGroupModel';
 
 export const sampleNotifications = [
   {
@@ -264,6 +260,7 @@ export const sampleReports: FetchResponse<ReportModel> = {
   },
   isSuccess: true,
   isFailure: false,
+  isWarning: false,
   error: { code: '', message: '' },
 };
 
@@ -336,6 +333,7 @@ export const sampleStaff: FetchResponse<StaffModel> = {
   },
   isSuccess: true,
   isFailure: false,
+  isWarning: false,
   error: { code: '', message: '' },
 };
 
@@ -466,5 +464,6 @@ export const samplePromotions: FetchResponse<PromotionModel> = {
   },
   isSuccess: true,
   isFailure: false,
+  isWarning: false,
   error: { code: '', message: '' },
 };

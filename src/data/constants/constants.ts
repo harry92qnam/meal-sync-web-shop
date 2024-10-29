@@ -1,8 +1,9 @@
 // Manage orders
 const INCOMING_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'dormitory', name: 'Khu vực' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
   { key: 'frame', name: 'Khung giờ nhận hàng' },
   { key: 'createdDate', name: 'Thời gian đặt đơn' },
@@ -10,16 +11,17 @@ const INCOMING_ORDER_COLUMNS = [
 ];
 
 const CONFIRMED_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'dormitory', name: 'Khu vực' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
   { key: 'frame', name: 'Khung giờ nhận hàng' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
 const DELIVERING_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'staffName', name: 'Tên nhân viên giao hàng' },
   { key: 'status', name: 'Trạng thái giao hàng' },
@@ -28,7 +30,7 @@ const DELIVERING_ORDER_COLUMNS = [
 ];
 
 const HISTORY_ORDER_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên khách hàng' },
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'status', name: 'Trạng thái đơn hàng' },

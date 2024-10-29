@@ -9,7 +9,7 @@ import StaffModel from '@/types/models/StaffModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 
 export const endpoints = {
-  ORDERS: 'shop-owner/order',
+  ORDERS: 'web/shop-owner/order',
   REPORTS: 'shop-owner/report',
   PRODUCTS: 'web/shop-owner/food',
   OPTIONS: 'shop-owner/option-group',

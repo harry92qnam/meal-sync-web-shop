@@ -99,8 +99,6 @@ export default function Staffs() {
   } as TableCustomFilter;
 
   const renderCell = useCallback((staff: StaffModel, columnKey: React.Key): ReactNode => {
-    const cellValue = staff[columnKey as keyof StaffModel];
-
     switch (columnKey) {
       case 'id':
         return (

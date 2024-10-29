@@ -107,8 +107,6 @@ export default function Promotions() {
   } as TableCustomFilter;
 
   const renderCell = useCallback((promotion: PromotionModel, columnKey: React.Key): ReactNode => {
-    const cellValue = promotion[columnKey as keyof PromotionModel];
-
     switch (columnKey) {
       case 'id':
         return (
