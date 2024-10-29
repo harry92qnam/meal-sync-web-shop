@@ -62,8 +62,6 @@ export default function Reports() {
   };
 
   const renderCell = useCallback((report: ReportModel, columnKey: React.Key): ReactNode => {
-    const cellValue = report[columnKey as keyof ReportModel];
-
     switch (columnKey) {
       case 'id':
         return (

@@ -11,7 +11,7 @@ import { categoryApiService } from '@/services/api-services/api-service-instance
 import CategoryModel from '@/types/models/CategoryModel';
 import PageableModel from '@/types/models/PageableModel';
 import CategoryQuery from '@/types/queries/CategoryQuery';
-import { formatDate, formatNumber } from '@/utils/MyUtils';
+import { formatDate, formatNumber, toast } from '@/utils/MyUtils';
 import {
   Button,
   Dropdown,
@@ -63,20 +63,21 @@ export default function Categories() {
       cancelButtonText: 'Không',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const responseData = await apiClient.delete(`shop-owner/category/${id}`);
-        if (responseData.data.isSuccess) {
-          Swal.fire({
-            text: 'Đã xóa thành công!',
-            icon: 'success',
-          });
+        try {
+          const responseData = await apiClient.delete(`shop-owner/category/${id}`);
+          console.log(responseData);
+
+          if (responseData.data.isSuccess) {
+            toast('success', responseData.data.value.message ?? 'Xóa danh mục thành công');
+          }
+        } catch (error: any) {
+          toast('error', error.response.data.error.message);
         }
       }
     });
   };
 
   const renderCell = useCallback((category: CategoryModel, columnKey: React.Key): ReactNode => {
-    const cellValue = category[columnKey as keyof CategoryModel];
-
     switch (columnKey) {
       case 'id':
         return (

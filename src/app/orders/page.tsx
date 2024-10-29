@@ -15,11 +15,12 @@ import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
+import apiClient from '@/services/api-services/api-client';
 import { orderApiService } from '@/services/api-services/api-service-instances';
 import OrderModel from '@/types/models/OrderModel';
 import PageableModel from '@/types/models/PageableModel';
 import OrderQuery from '@/types/queries/OrderQuery';
-import { formatCurrency, formatPhoneNumber, formatTimeToSeconds } from '@/utils/MyUtils';
+import { formatCurrency, formatPhoneNumber, formatTimeToSeconds, toast } from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -39,6 +40,7 @@ import {
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import Swal from 'sweetalert2';
 
 export default function Orders() {
   const router = useRouter();
@@ -49,6 +51,7 @@ export default function Orders() {
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
   const [status, setStatus] = useState<number[]>([1]);
+  const [rejectOrderId, setRejectOrderId] = useState<number>(0);
 
   const [query, setQuery] = useState<OrderQuery>({
     name: '',
@@ -127,31 +130,119 @@ export default function Orders() {
     setReason(event.target.value);
   };
 
-  const handleReject = async (onClose: () => void) => {
+  // incoming orders
+  const handleAcceptIncoming = async (id: number) => {
+    try {
+      const responseData = await apiClient.put(`shop-owner/order/${id}/confirm`);
+
+      if (responseData.data.isSuccess) {
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    }
+  };
+
+  const handleConfirmRejectIncoming = async (onClose: () => void) => {
     if (!reason) {
       setError('Nhập lý do từ chối');
       return;
     }
-    onClose();
-    // todo handle reject order
-    // try {
-    //   const payload = {
-    //     reason,
-    //   };
 
-    //   if (responseData.data.isSuccess) {
-    //     toast('success', responseData.data.value);
-    //     onClose();
-    //   } else {
-    //     throw new Error(responseData.data.error.message);
-    //   }
-    // } catch (error) {
-    //   toast('error', (error as any).response.data.error?.message);
-    // }
+    try {
+      const payload = {
+        reason,
+      };
+      const responseData = await apiClient.put(`shop-owner/order/${rejectOrderId}/reject`, payload);
+      console.log(responseData);
+      if (responseData.data.isSuccess) {
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    } finally {
+      onClose();
+    }
   };
 
-  const handleAccept = async () => {
-    // todo handle accept order
+  // confirmed orders
+  const handlePreparing = async (id: number) => {
+    try {
+      const responseData = await apiClient.put(`shop-owner/order/${id}/preparing`, {
+        isConfirm: false,
+      });
+      if (responseData.data.isWarning) {
+        await Swal.fire({
+          text: responseData.data.value.message,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#94a3b8',
+          confirmButtonText: 'Xác nhận',
+          cancelButtonText: 'Hủy',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const responseData = await apiClient.put(`shop-owner/order/${id}/preparing`, {
+              isConfirm: true,
+            });
+            if (responseData.data.isSuccess) {
+              toast('success', responseData.data.value.message);
+            } else {
+              toast('error', responseData.data.error.message);
+            }
+          } else {
+            return;
+          }
+        });
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    }
+  };
+  const handleConfirmRejectConfirmed = async (onClose: () => void) => {
+    if (!reason) {
+      setError('Nhập lý do từ chối');
+      return;
+    }
+    try {
+      const responseData = await apiClient.put(`shop-owner/order/${rejectOrderId}/cancel`, {
+        reason,
+        isConfirm: false,
+      });
+      if (responseData.data.isWarning) {
+        await Swal.fire({
+          text: responseData.data.value.message,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#94a3b8',
+          confirmButtonText: 'Xác nhận',
+          cancelButtonText: 'Hủy',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const responseData = await apiClient.put(`shop-owner/order/${rejectOrderId}/cancel`, {
+              reason,
+              isConfirm: true,
+            });
+            if (responseData.data.isSuccess) {
+              toast('success', responseData.data.value.message);
+            } else {
+              toast('error', responseData.data.error.message);
+            }
+          } else {
+            return;
+          }
+        });
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    } finally {
+      onClose();
+    }
   };
 
   const openOrderDetail = (id: number) => {
@@ -160,13 +251,11 @@ export default function Orders() {
   };
 
   const incomingOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
-    const cellValue = order[columnKey as keyof OrderModel];
-
     switch (columnKey) {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{order.id}</p>
+            <p className="text-bold text-small">MS-{order.id}</p>
           </div>
         );
       case 'customerName':
@@ -181,6 +270,12 @@ export default function Orders() {
             <p className="text-bold text-small capitalize">
               {formatPhoneNumber(order.customer.phoneNumber)}
             </p>
+          </div>
+        );
+      case 'dormitory':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">{order.dormitoryName}</p>
           </div>
         );
       case 'totalPrice':
@@ -211,8 +306,15 @@ export default function Orders() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={handleAccept}>Nhận đơn</DropdownItem>
-                <DropdownItem onClick={onOpen}>Từ chối</DropdownItem>
+                <DropdownItem onClick={() => handleAcceptIncoming(order.id)}>Nhận đơn</DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    setRejectOrderId(order.id);
+                    onOpen();
+                  }}
+                >
+                  Từ chối
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -224,13 +326,11 @@ export default function Orders() {
   }, []);
 
   const confirmedOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
-    const cellValue = order[columnKey as keyof OrderModel];
-
     switch (columnKey) {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{order.id}</p>
+            <p className="text-bold text-small">MS-{order.id}</p>
           </div>
         );
       case 'customerName':
@@ -245,6 +345,12 @@ export default function Orders() {
             <p className="text-bold text-small capitalize">
               {formatPhoneNumber(order.customer.phoneNumber)}
             </p>
+          </div>
+        );
+      case 'dormitory':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">{order.dormitoryName}</p>
           </div>
         );
       case 'totalPrice':
@@ -269,8 +375,15 @@ export default function Orders() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={handleAccept}>Đang chuẩn bị</DropdownItem>
-                <DropdownItem onClick={onOpen}>Từ chối</DropdownItem>
+                <DropdownItem onClick={() => handlePreparing(order.id)}>Đang chuẩn bị</DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    setRejectOrderId(order.id);
+                    onOpen();
+                  }}
+                >
+                  Từ chối
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -287,13 +400,11 @@ export default function Orders() {
   }, []);
 
   const deliveringOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
-    const cellValue = order[columnKey as keyof OrderModel];
-
     switch (columnKey) {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{order.id}</p>
+            <p className="text-bold text-small">MS-{order.id}</p>
           </div>
         );
       case 'customerName':
@@ -345,13 +456,11 @@ export default function Orders() {
   }, []);
 
   const historyOrdersCell = useCallback((order: OrderModel, columnKey: React.Key): ReactNode => {
-    const cellValue = order[columnKey as keyof OrderModel];
-
     switch (columnKey) {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{order.id}</p>
+            <p className="text-bold text-small">MS-{order.id}</p>
           </div>
         );
       case 'customerName':
@@ -411,7 +520,7 @@ export default function Orders() {
         <Header title="Quản lý đơn hàng" />
       </div>
 
-      <div className="flex fixed top-[72px] z-50 bg-white shadow-md py-2 left-[290px] w-[1230px] justify-between border-t-small">
+      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[290px] w-[1230px] justify-between border-t-small">
         {[1, 2, 3, 4, 5].map((tab) => (
           <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
             <Button
@@ -483,7 +592,7 @@ export default function Orders() {
                     <Button color="danger" variant="flat" onClick={onClose}>
                       Đóng
                     </Button>
-                    <Button color="primary" onClick={() => handleReject(onClose)}>
+                    <Button color="primary" onClick={() => handleConfirmRejectIncoming(onClose)}>
                       Xác nhận
                     </Button>
                   </ModalFooter>
@@ -539,7 +648,7 @@ export default function Orders() {
                     <Button color="danger" variant="flat" onClick={onClose}>
                       Đóng
                     </Button>
-                    <Button color="primary" onClick={() => handleReject(onClose)}>
+                    <Button color="primary" onClick={() => handleConfirmRejectConfirmed(onClose)}>
                       Xác nhận
                     </Button>
                   </ModalFooter>

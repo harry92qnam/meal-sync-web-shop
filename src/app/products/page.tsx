@@ -153,8 +153,6 @@ export default function Orders() {
   console.log(optionGroupQuery);
 
   const productTable = useCallback((product: ProductModel, columnKey: React.Key): ReactNode => {
-    const cellValue = product[columnKey as keyof ProductModel];
-
     switch (columnKey) {
       case 'id':
         return (
@@ -231,8 +229,6 @@ export default function Orders() {
   }, []);
 
   const optionTable = useCallback((option: OptionGroupModel, columnKey: React.Key): ReactNode => {
-    const cellValue = option[columnKey as keyof OptionGroupModel];
-
     switch (columnKey) {
       case 'id':
         return (
@@ -302,7 +298,7 @@ export default function Orders() {
         <Header title="Quản lý sản phẩm" />
       </div>
 
-      <div className="flex fixed top-[72px] z-50 bg-white shadow-md py-2 left-[290px] w-[1230px] justify-around border-t-small">
+      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[290px] w-[1230px] justify-around border-t-small">
         {[1, 2].map((tab) => (
           <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
             <Button
