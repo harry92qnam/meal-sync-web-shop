@@ -49,6 +49,27 @@ export const formatPhoneNumber = (phone: string) => {
   return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
 };
 
+export function formatTimeFrame(startTime?: number, endTime?: number): string {
+  if (!startTime || !endTime) {
+    return '';
+  }
+  const formatTime = (time: number): string => {
+    const hours = Math.floor(time / 100);
+    const minutes = time % 100;
+
+    // Ensure hours and minutes are two digits
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}`;
+  };
+
+  const formattedStartTime = formatTime(startTime);
+  const formattedEndTime = formatTime(endTime);
+
+  return `${formattedStartTime}-${formattedEndTime}`;
+}
+
 export const toast = (icon: 'success' | 'error', content: string) =>
   Swal.fire({
     position: 'center',

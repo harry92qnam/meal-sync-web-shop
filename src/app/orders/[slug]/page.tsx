@@ -7,6 +7,7 @@ import {
   formatCurrency,
   formatNumber,
   formatPhoneNumber,
+  formatTimeFrame,
   formatTimeToSeconds,
   toast,
 } from '@/utils/MyUtils';
@@ -51,6 +52,10 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
         <div className="px-8 py-4 shadow-md rounded-lg">
           <div className="flex flex-col mr-auto text-lg gap-2">
             <div className="flex justify-between">
+              <p>Mã đơn hàng:</p>
+              <p className="font-semibold">MS-{data?.id}</p>
+            </div>
+            <div className="flex justify-between">
               <p>Tên người nhận hàng:</p>
               <p className="font-semibold">{data?.customer.fullName}</p>
             </div>
@@ -66,7 +71,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
             </div>
             <div className="flex justify-between">
               <p>Khung giờ nhận hàng</p>
-              <p className="font-semibold">{data?.timeFrameFormat}</p>
+              <p className="font-semibold">{formatTimeFrame(data?.startTime, data?.endTime)}</p>
             </div>
             <div className="flex justify-between">
               <p>Thời gian giao dịch:</p>

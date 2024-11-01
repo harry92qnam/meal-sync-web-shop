@@ -10,6 +10,8 @@ export default interface OrderModel {
   orderDate: string;
   intendedReceiveDate: string;
   createdDate: string;
+  startTime: number;
+  endTime: number;
   timeFrameFormat: string;
   note: string;
   shopDeliveryStaff: {

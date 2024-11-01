@@ -220,7 +220,7 @@ export default function TableCustom({
         selectionMode={selectionMode}
         topContent={topContent}
         topContentPlacement="outside"
-        layout={selectionMode === 'single' ? 'fixed' : 'auto'}
+        layout="auto"
         shadow="md"
         onSelectionChange={setSelectedKeys}
       >
