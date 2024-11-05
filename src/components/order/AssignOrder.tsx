@@ -26,7 +26,7 @@ import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
-export default function AssignOrder({ queryPreparing }) {
+export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQuery }) {
   const [query, setQuery] = useState<OrderQuery>(queryPreparing);
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [frames, setFrames] = useState([]);
@@ -224,7 +224,7 @@ export default function AssignOrder({ queryPreparing }) {
                   setIsActiveTab(index + 1);
                 }
                 setStartTime(frame?.startTime);
-                setEndTime(frame.endTime === 0 ? 2400 : frame.endTime);
+                setEndTime(frame?.endTime === 0 ? 2400 : frame?.endTime);
               }}
               className={`${isActiveTab === index + 1 ? 'text-primary' : 'text-black'} w-[160px] bg-transparent text-lg font-medium rounded-full`}
             >

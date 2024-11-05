@@ -22,7 +22,7 @@ import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
-export default function ManageAssign({ queryAssign }) {
+export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuery }) {
   const [query, setQuery] = useState<PackageQuery>(queryAssign);
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [frames, setFrames] = useState([]);
