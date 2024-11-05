@@ -25,13 +25,31 @@ import {
 import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import FrameModel from '@/types/models/FrameModel';
+import DeliveryPackageModel from '@/types/models/DeliveryPackageModel';
 
-export default function AssignOrder({ queryPreparing }) {
+export type Staff = {
+  total: number;
+  waiting: number;
+  delivering: number;
+  successful: number;
+  failed: number;
+  staffInfor: {
+    id: number;
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+    avatarUrl?: string;
+    isShopOwner: boolean;
+  };
+};
+
+export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQuery }) {
   const [query, setQuery] = useState<OrderQuery>(queryPreparing);
   const [isActiveTab, setIsActiveTab] = useState(1);
-  const [frames, setFrames] = useState([]);
-  const [staffList, setStaffList] = useState([]);
-  const [deliveryPackages, setDeliveryPackages] = useState([]);
+  const [frames, setFrames] = useState<FrameModel[]>([]);
+  const [staffList, setStaffList] = useState<Staff[]>([]);
+  const [deliveryPackages, setDeliveryPackages] = useState<DeliveryPackageModel>();
   const dateInBangkok = getBangkokDate();
   const { isRefetch, setIsRefetch } = useRefetch();
   const [startTime, setStartTime] = useState(0);
@@ -224,7 +242,7 @@ export default function AssignOrder({ queryPreparing }) {
                   setIsActiveTab(index + 1);
                 }
                 setStartTime(frame?.startTime);
-                setEndTime(frame.endTime === 0 ? 2400 : frame.endTime);
+                setEndTime(frame?.endTime === 0 ? 2400 : frame?.endTime);
               }}
               className={`${isActiveTab === index + 1 ? 'text-primary' : 'text-black'} w-[160px] bg-transparent text-lg font-medium rounded-full`}
             >
@@ -235,7 +253,7 @@ export default function AssignOrder({ queryPreparing }) {
       </div>
 
       <div className="flex gap-8 py-6 overflow-x-scroll">
-        {deliveryPackages.deliveryPackageGroups?.map((packageGroup) => (
+        {deliveryPackages?.deliveryPackageGroups?.map((packageGroup) => (
           <div
             key={packageGroup?.shopDeliveryStaff?.id}
             className="shadow-md bg-slate-100 rounded-md p-2 min-w-[320px]"
@@ -262,10 +280,10 @@ export default function AssignOrder({ queryPreparing }) {
               ))}
           </div>
         ))}
-        {deliveryPackages?.unassignOrders?.length > 0 && (
+        {deliveryPackages?.unassignOrders?.length && (
           <div className="shadow-md bg-slate-100 rounded-md p-2 min-w-[320px]">
             <p className="font-bold text-center text-primary mb-4 text-xl">Chưa có người giao</p>
-            {deliveryPackages.unassignOrders?.map((order) => (
+            {deliveryPackages?.unassignOrders?.map((order) => (
               <Card
                 key={order?.id}
                 className="max-w-[320px] rounded-md flex justify-center items-center mx-2 my-2"

@@ -22,7 +22,7 @@ import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
-export default function ManageAssign({ queryAssign }) {
+export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuery }) {
   const [query, setQuery] = useState<PackageQuery>(queryAssign);
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [frames, setFrames] = useState([]);
@@ -47,7 +47,7 @@ export default function ManageAssign({ queryAssign }) {
   );
   console.log(packages);
 
-  const deliveryPackagesCell = useCallback((packages, columnKey: React.Key): ReactNode => {
+  const deliveryPackagesCell = useCallback((packages: any, columnKey: React.Key): ReactNode => {
     switch (columnKey) {
       case 'id':
         return (
@@ -140,11 +140,11 @@ export default function ManageAssign({ queryAssign }) {
         <TableCustom
           placeHolderSearch="Tìm kiếm gói hàng..."
           description="gói hàng"
-          total={packages?.value?.length ?? 0}
+          total={packages?.value?.totalCount ?? 0}
           columns={ASSIGN_COLUMNS}
           arrayData={packages?.value?.items ?? []}
           searchHandler={(value: string) => {
-            setQuery({ ...query, id: value, staffName: value });
+            setQuery({ ...query, id: value });
           }}
           pagination={packages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -162,7 +162,7 @@ export default function ManageAssign({ queryAssign }) {
           columns={PREPARING_ORDER_COLUMNS}
           arrayData={packages?.value?.items ?? []}
           searchHandler={(value: string) => {
-            setQuery({ ...query, id: value, staffName: value });
+            setQuery({ ...query, id: value });
           }}
           pagination={packages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}

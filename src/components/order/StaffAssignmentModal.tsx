@@ -1,10 +1,23 @@
+import { Staff } from '@/components/order/AssignOrder';
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import { toast } from '@/utils/MyUtils';
 import { Avatar, Modal, ModalBody, ModalContent } from '@nextui-org/react';
 import Swal from 'sweetalert2';
 
-export const StaffAssignmentModal = ({ isOpen, onClose, staffList, orderId }) => {
+type StaffAssignmentModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  staffList: Staff[];
+  orderId: number;
+};
+
+export const StaffAssignmentModal = ({
+  isOpen,
+  onClose,
+  staffList,
+  orderId,
+}: StaffAssignmentModalProps) => {
   const { setIsRefetch } = useRefetch();
   const assignOrder = async (staffId: number) => {
     const payload = {
