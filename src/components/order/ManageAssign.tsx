@@ -140,7 +140,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         <TableCustom
           placeHolderSearch="Tìm kiếm gói hàng..."
           description="gói hàng"
-          total={packages?.value?.length ?? 0}
+          total={packages?.value?.totalCount ?? 0}
           columns={ASSIGN_COLUMNS}
           arrayData={packages?.value?.items ?? []}
           searchHandler={(value: string) => {
