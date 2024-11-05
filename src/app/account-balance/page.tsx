@@ -126,6 +126,7 @@ export default function Orders() {
         description="sản phẩm"
         columns={REPORT_COLUMNS}
         // arrayData={reports?.value?.items ?? []}
+        total={20}
         arrayData={reports}
         searchHandler={(value: string) => {
           setQuery({ ...query, name: value });

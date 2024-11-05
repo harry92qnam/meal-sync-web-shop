@@ -176,6 +176,7 @@ export default function Staffs() {
         placeHolderSearch="Tìm kiếm nhân viên..."
         description="nhân viên"
         columns={STAFF_COLUMNS}
+        total={20}
         // arrayData={staffs?.value?.items ?? []}
         arrayData={staffList}
         searchHandler={(value: string) => {

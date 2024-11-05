@@ -110,6 +110,7 @@ export default function Reports() {
         placeHolderSearch="Tìm kiếm báo cáo..."
         description="báo cáo"
         columns={REPORT_COLUMNS}
+        total={20}
         // arrayData={reports?.value?.items ?? []}
         arrayData={reports}
         searchHandler={(value: string) => {
