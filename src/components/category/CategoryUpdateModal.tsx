@@ -77,7 +77,7 @@ export default function CategoryUpdateModal({
         }
       }
     } catch (error) {
-      console.log(error.statusCode);
+      console.log(error);
     }
   };
 
