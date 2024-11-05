@@ -47,7 +47,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
   );
   console.log(packages);
 
-  const deliveryPackagesCell = useCallback((packages, columnKey: React.Key): ReactNode => {
+  const deliveryPackagesCell = useCallback((packages: any, columnKey: React.Key): ReactNode => {
     switch (columnKey) {
       case 'id':
         return (
@@ -144,7 +144,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
           columns={ASSIGN_COLUMNS}
           arrayData={packages?.value?.items ?? []}
           searchHandler={(value: string) => {
-            setQuery({ ...query, id: value, staffName: value });
+            setQuery({ ...query, id: value });
           }}
           pagination={packages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -162,7 +162,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
           columns={PREPARING_ORDER_COLUMNS}
           arrayData={packages?.value?.items ?? []}
           searchHandler={(value: string) => {
-            setQuery({ ...query, id: value, staffName: value });
+            setQuery({ ...query, id: value });
           }}
           pagination={packages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
