@@ -20,6 +20,27 @@ const CONFIRMED_ORDER_COLUMNS = [
   { key: 'actions', name: 'Thao tác' },
 ];
 
+const PREPARING_ORDER_COLUMNS = [
+  { key: 'id', name: 'Mã đơn hàng' },
+  { key: 'customerName', name: 'Tên khách hàng' },
+  { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'dormitory', name: 'Khu vực' },
+  { key: 'totalPrice', name: 'Tổng hóa đơn' },
+  // { key: 'frame', name: 'Khung giờ nhận hàng' },
+  { key: 'staff', name: 'Nhân viên giao hàng' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const ASSIGN_COLUMNS = [
+  { key: 'id', name: 'Mã gói hàng' },
+  { key: 'staff', name: 'Nhân viên giao hàng' },
+  { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'numberOfOrders', name: 'Số lượng đơn hàng' },
+  { key: 'frame', name: 'Khung giờ giao hàng' },
+  { key: 'createdDate', name: 'Ngày giao hàng' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
 const DELIVERING_ORDER_COLUMNS = [
   { key: 'id', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên khách hàng' },
@@ -82,6 +103,7 @@ const PRODUCT_COLUMNS = [
 const PRODUCT_STATUS = [
   { key: 1, desc: 'Đang mở bán' },
   { key: 2, desc: 'Tạm hết hàng' },
+  { key: 3, desc: 'Tạm ẩn' },
 ];
 
 // Manage option groups
@@ -156,6 +178,8 @@ const STAFF_ACTIVE_STATUS = [
 export {
   INCOMING_ORDER_COLUMNS,
   CONFIRMED_ORDER_COLUMNS,
+  PREPARING_ORDER_COLUMNS,
+  ASSIGN_COLUMNS,
   DELIVERING_ORDER_COLUMNS,
   HISTORY_ORDER_COLUMNS,
   DELIVERY_STATUS,

@@ -35,6 +35,7 @@ type TableCustomProps = {
   description: string;
   columns: Array<{ name: string; key: string; sortable?: boolean }>;
   arrayData: { [key: string]: any }[];
+  total: number;
   // arrayDataColumns: Array<{ name: string; uid: string; sortable?: boolean; imageable?: boolean }>;
   renderCell: (item: any, columnKey: React.Key) => ReactNode;
   selectionMode: 'multiple' | 'single';
@@ -59,6 +60,7 @@ export default function TableCustom({
   description,
   columns,
   arrayData,
+  total,
   renderCell,
   selectionMode,
 
@@ -159,7 +161,7 @@ export default function TableCustom({
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <span className="text-default-400 text-small mr-4">
-              Tổng cộng có {arrayData?.length} {description}
+              Tổng cộng có {total} {description}
             </span>
             {selectionMode === 'multiple' && selectedKeys && (
               <Button className="block">Nhận tất cả</Button>

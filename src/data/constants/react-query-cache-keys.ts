@@ -1,5 +1,6 @@
 const REACT_QUERY_CACHE_KEYS = {
   ORDERS: ['orders'],
+  PACKAGES: ['packages'],
   REPORTS: ['reports'],
   PRODUCTS: ['products'],
   OPTIONS: ['options'],

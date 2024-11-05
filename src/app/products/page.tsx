@@ -92,14 +92,14 @@ export default function Orders() {
 
   const [productQuery, setProductQuery] = useState<ProductQuery>({
     name: '',
-    status: 1,
+    statusMode: 0,
     pageIndex: 1,
     pageSize: 10,
   } as ProductQuery);
 
   const [optionGroupQuery, setOptionGroupQuery] = useState<OptionGroupQuery>({
     title: '',
-    status: 1,
+    status: 0,
     pageIndex: 1,
     pageSize: 10,
   } as OptionGroupQuery);
@@ -129,7 +129,7 @@ export default function Orders() {
     handleFunc: (values: Selection) => {
       const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
       setStatuses(values);
-      setProductQuery({ ...productQuery, status: value });
+      setProductQuery({ ...productQuery, statusMode: value });
     },
   } as TableCustomFilter;
 
@@ -149,6 +149,8 @@ export default function Orders() {
       setOptionGroupQuery({ ...optionGroupQuery, status: value });
     },
   } as TableCustomFilter;
+  console.log(filterOptions, 'filterOptions');
+
   console.log(productQuery);
   console.log(optionGroupQuery);
 
@@ -178,12 +180,20 @@ export default function Orders() {
         return (
           <Chip
             className={`capitalize ${
-              product.status === 1 ? 'bg-green-200 text-green-600' : 'bg-red-200 text-rose-600'
+              product.status === 1 && !product.isSoldOut
+                ? 'bg-green-200 text-green-600'
+                : product.status === 1 && product.isSoldOut
+                  ? 'bg-gray-200 text-gray-600'
+                  : 'bg-red-200 text-rose-600'
             }`}
             size="sm"
             variant="flat"
           >
-            {PRODUCT_STATUS.find((item) => item.key == product.status)?.desc}
+            {product.status === 1 && !product.isSoldOut
+              ? 'Đang mở bán'
+              : product.status === 1 && product.isSoldOut
+                ? 'Tạm hết hàng'
+                : 'Đã tạm ẩn'}
           </Chip>
         );
       case 'slot':
@@ -321,6 +331,7 @@ export default function Orders() {
           description="món ăn"
           columns={PRODUCT_COLUMNS}
           arrayData={products?.value?.items ?? []}
+          total={products?.value?.totalCount ?? 0}
           searchHandler={(value: string) => {
             setProductQuery({ ...productQuery, name: value });
           }}
@@ -340,6 +351,7 @@ export default function Orders() {
             description="nhóm lựa chọn"
             columns={OPTION_GROUP_COLUMNS}
             arrayData={optionList?.value?.items ?? []}
+            total={optionList?.value?.totalCount ?? 0}
             searchHandler={(value: string) => {
               setOptionGroupQuery({ ...optionGroupQuery, title: value });
             }}

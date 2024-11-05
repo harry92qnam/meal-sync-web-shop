@@ -201,6 +201,7 @@ export default function Promotions() {
         placeHolderSearch="Tìm kiếm khuyến mãi..."
         description="khuyến mãi"
         columns={PROMOTION_COLUMNS}
+        total={20}
         // arrayData={promotions?.value?.items ?? []}
         arrayData={promotions}
         searchHandler={(value: string) => {

@@ -1,3 +1,4 @@
+import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import { toast } from '@/utils/MyUtils';
 import {
@@ -11,10 +12,11 @@ import {
   ModalHeader,
 } from '@nextui-org/react';
 import { useFormik } from 'formik';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import * as yup from 'yup';
 
 interface CategoryModalProps {
+  category: any;
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: (isOpen: boolean) => void;
@@ -31,17 +33,28 @@ const validationSchema = yup.object().shape({
     .max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
 });
 
-export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalProps) {
+export default function CategoryUpdateModal({
+  category,
+  isOpen,
+  onOpenChange,
+}: CategoryModalProps) {
+  const { setIsRefetch } = useRefetch();
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [urlFile, setUrlFile] = useState('');
+  const [urlFile, setUrlFile] = useState(category?.imageUrl || '');
+
+  useEffect(() => {
+    setUrlFile(category?.imageUrl || '');
+  }, [category]);
+
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      name: '',
-      description: '',
+      name: category?.name || '',
+      description: category?.description || '',
     },
     validationSchema,
-    onSubmit: (values) => {
-      handleCreate(values);
+    onSubmit: async (values) => {
+      await handleUpdate(values);
     },
   });
 
@@ -55,6 +68,8 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
             'Content-Type': 'multipart/form-data',
           },
         });
+        console.log(responseData);
+
         if (!responseData.data.isSuccess) {
           toast('error', responseData.data.error.message);
         } else {
@@ -66,24 +81,24 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
     }
   };
 
-  const handleCreate = async (values: any) => {
+  const handleUpdate = async (values: any) => {
     try {
-      const url = await uploadImage(avatar);
+      const url = avatar ? await uploadImage(avatar) : urlFile;
       const payload = {
         name: values.name,
         description: values.description,
         imageUrl: url,
       };
 
-      const responseData = await apiClient.post('shop-owner/category/create', payload);
-      console.log(responseData);
+      const responseData = await apiClient.put(`shop-owner/category/${category.id}`, payload);
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {
-        toast('success', 'Tạo mới danh mục thành công');
+        setIsRefetch();
+        toast('success', 'Cập nhật danh mục thành công');
       }
     } catch (error: any) {
-      console.log(error);
+      toast('error', error.response.data.error.message);
     }
     onOpenChange(false);
     formik.resetForm();
@@ -112,7 +127,7 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
         {(onClose) => (
           <React.Fragment>
             <ModalHeader className="flex flex-col text-2xl text-center">
-              Tạo thể loại mới
+              Sửa đổi danh mục
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col items-center">
@@ -164,7 +179,7 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
                 Đóng
               </Button>
               <Button type="button" color="primary" onClick={() => formik.handleSubmit()}>
-                Tạo
+                Cập nhật
               </Button>
             </ModalFooter>
           </React.Fragment>
