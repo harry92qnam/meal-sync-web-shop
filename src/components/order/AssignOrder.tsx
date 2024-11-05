@@ -28,11 +28,27 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import FrameModel from '@/types/models/FrameModel';
 import DeliveryPackageModel from '@/types/models/DeliveryPackageModel';
 
+export type Staff = {
+  total: number;
+  waiting: number;
+  delivering: number;
+  successful: number;
+  failed: number;
+  staffInfor: {
+    id: number;
+    fullName: string;
+    phoneNumber: string;
+    email: string;
+    avatarUrl?: string;
+    isShopOwner: boolean;
+  };
+};
+
 export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQuery }) {
   const [query, setQuery] = useState<OrderQuery>(queryPreparing);
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [frames, setFrames] = useState<FrameModel[]>([]);
-  const [staffList, setStaffList] = useState([]);
+  const [staffList, setStaffList] = useState<Staff[]>([]);
   const [deliveryPackages, setDeliveryPackages] = useState<DeliveryPackageModel>();
   const dateInBangkok = getBangkokDate();
   const { isRefetch, setIsRefetch } = useRefetch();
