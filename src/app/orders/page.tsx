@@ -90,9 +90,8 @@ export default function Orders() {
   } as TableCustomFilter;
 
   console.log(Number(Array.from(statusFilter.selectedValues)[0]), 'statusFilter');
-
   useEffect(() => {
-    let statusArray = [];
+    let statusArray: number[] = [];
     switch (isActiveTab) {
       case 1:
         statusArray = [1];
