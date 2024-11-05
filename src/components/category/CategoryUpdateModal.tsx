@@ -154,7 +154,11 @@ export default function CategoryUpdateModal({
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.name && !!formik.errors.name}
-                  errorMessage={formik.touched.name && formik.errors.name}
+                  errorMessage={
+                    formik.touched.name && typeof formik.errors.name === 'string'
+                      ? formik.errors.name
+                      : ''
+                  }
                 />
                 <Input
                   type="text"
@@ -165,7 +169,11 @@ export default function CategoryUpdateModal({
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.description && !!formik.errors.description}
-                  errorMessage={formik.touched.description && formik.errors.description}
+                  errorMessage={
+                    formik.touched.description && typeof formik.errors.description === 'string'
+                      ? formik.errors.description
+                      : ''
+                  }
                 />
               </form>
             </ModalBody>
