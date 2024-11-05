@@ -1,3 +1,4 @@
+import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import { toast } from '@/utils/MyUtils';
 import {
@@ -31,7 +32,8 @@ const validationSchema = yup.object().shape({
     .max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
 });
 
-export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalProps) {
+export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryModalProps) {
+  const { setIsRefetch } = useRefetch();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [urlFile, setUrlFile] = useState('');
   const formik = useFormik({
@@ -80,10 +82,11 @@ export default function CategoryModal({ isOpen, onOpenChange }: CategoryModalPro
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {
+        setIsRefetch();
         toast('success', 'Tạo mới danh mục thành công');
       }
     } catch (error: any) {
-      console.log(error);
+      toast('error', error.response.data.error.message);
     }
     onOpenChange(false);
     formik.resetForm();

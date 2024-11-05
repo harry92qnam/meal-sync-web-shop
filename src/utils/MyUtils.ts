@@ -1,14 +1,26 @@
-import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 export const formatTimeToSeconds = (dateString: string) => {
   const d = new Date(dateString);
-  return `${d.toTimeString().slice(0, 8)} - ${d.toLocaleDateString('en-GB')}`;
+
+  // Adjusting for UTC+7
+  const utcOffset = 7 * 60; // +7 hours in minutes
+  const localDate = new Date(d.getTime() + utcOffset * 60 * 1000);
+
+  return `${localDate.toTimeString().slice(0, 8)} - ${localDate.toLocaleDateString('en-GB')}`;
 };
 
-export const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('en-GB');
+export const formatDate = (dateString: string) => {
+  const d = new Date(dateString);
+
+  // Adjusting for UTC+7
+  const utcOffset = 7 * 60; // +7 hours in minutes
+  const localDate = new Date(d.getTime() + utcOffset * 60 * 1000);
+
+  return localDate.toLocaleDateString('en-GB');
+};
 
 export const formatTimeAgo = (date: Date) => {
   const now = new Date();
@@ -79,20 +91,12 @@ export const toast = (icon: 'success' | 'error', content: string) =>
     timer: 2000,
   });
 
-// calculate coordinates base on address
-export const getCoordinates = async (address: string) => {
-  const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your Google Maps API key
-  const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json`, {
-    params: {
-      address: address,
-      key: apiKey,
-    },
-  });
+export function getBangkokDate() {
+  const now = new Date();
+  // Create a new date object adjusted for Bangkok's time zone
+  const bangkokDate = new Date(now.getTime() + 7 * 60 * 60 * 1000); // +7 hours
 
-  if (response.data.status === 'OK') {
-    const location = response.data.results[0].geometry.location;
-    return { latitude: location.lat, longitude: location.lng };
-  } else {
-    throw new Error('Unable to get coordinates');
-  }
-};
+  // Format the date as YYYY-MM-DD
+  const formattedDate = bangkokDate.toISOString().split('T')[0];
+  return formattedDate;
+}

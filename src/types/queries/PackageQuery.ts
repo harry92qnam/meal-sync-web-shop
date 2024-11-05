@@ -1,8 +1,8 @@
 import PagingRequestQuery from './PagingRequestQuery';
 
-export default interface OrderQuery extends PagingRequestQuery {
+export default interface PackageQuery extends PagingRequestQuery {
   id: string;
-  phoneNumber: string;
+  staffName: string;
   status: number[];
   dateFrom: Date;
   dateTo: Date;

@@ -7,9 +7,11 @@ import ProductModel from '@/types/models/ProductModel';
 import PromotionModel from '@/types/models/PromotionModel';
 import StaffModel from '@/types/models/StaffModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
+import PackageModel from '@/types/models/PackageModel';
 
 export const endpoints = {
   ORDERS: 'web/shop-owner/order',
+  ASSIGN: 'shop-owner/delivery-package-group/interval',
   REPORTS: 'shop-owner/report',
   PRODUCTS: 'web/shop-owner/food',
   OPTIONS: 'shop-owner/option-group',
@@ -24,6 +26,22 @@ export const orderApiService = (statuses: number[]) => {
   return createHttpService<OrderModel>(
     apiClient,
     `${endpoints.ORDERS}?StartTime=0&EndTime=2400&${statusQuery}`,
+  );
+};
+export const assignOrderApiService = (date: string) => {
+  return createHttpService<PackageModel>(
+    apiClient,
+    `${endpoints.ASSIGN}?StartTime=0&EndTime=2400&IntendedReceiveDate=${date}`,
+  );
+};
+export const preparingOrderApiService = (
+  startTime: number = 0,
+  endTime: number = 0,
+  date: string,
+) => {
+  return createHttpService<OrderModel>(
+    apiClient,
+    `${endpoints.ORDERS}?StartTime=${startTime}&EndTime=${endTime}&IntendedReceiveDate=${date}&status=5`,
   );
 };
 export const reportApiService = createHttpService<ReportModel>(apiClient, endpoints.REPORTS);

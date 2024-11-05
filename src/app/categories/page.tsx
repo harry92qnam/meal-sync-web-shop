@@ -1,11 +1,13 @@
 'use client';
-import CategoryModal from '@/components/category/CategoryModal';
+import CategoryCreateModal from '@/components/category/CategoryCreateModal';
+import CategoryUpdateModal from '@/components/category/CategoryUpdateModal';
 import Header from '@/components/common/Header';
 import TableCustom from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
 import { CATEGORY_COLUMNS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
+import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import { categoryApiService } from '@/services/api-services/api-service-instances';
 import CategoryModel from '@/types/models/CategoryModel';
@@ -21,15 +23,23 @@ import {
   useDisclosure,
   User,
 } from '@nextui-org/react';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Categories() {
+  const { isRefetch, setIsRefetch } = useRefetch();
+  const [categoryDetail, setCategoryDetail] = useState<CategoryModel | null>(null);
   const {
     isOpen: isCreateOpen,
     onOpen: onCreateOpen,
     onOpenChange: onCreateOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isUpdateOpen,
+    onOpen: onUpdateOpen,
+    onOpenChange: onUpdateOpenChange,
   } = useDisclosure();
 
   const [query, setQuery] = useState<CategoryQuery>({
@@ -38,18 +48,33 @@ export default function Categories() {
     pageSize: 10,
   } as CategoryQuery);
 
-  const { data: categories } = useFetchWithRQ<CategoryModel, CategoryQuery>(
+  const { data: categories, refetch } = useFetchWithRQ<CategoryModel, CategoryQuery>(
     REACT_QUERY_CACHE_KEYS.CATEGORIES,
     categoryApiService,
     query,
   );
 
+  useEffect(() => {
+    refetch();
+  }, [isRefetch]);
+
   const handleAddNewCategory = () => {
     onCreateOpen();
   };
 
-  const handleUpdate = async () => {
-    // todo update category
+  const handleUpdate = async (id: number) => {
+    try {
+      const responseData = await apiClient.get(`shop-owner/category/${id}`);
+
+      if (responseData.data.isSuccess) {
+        setCategoryDetail(responseData.data.value);
+        onUpdateOpen(); // Open the update modal with the fetched data
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -65,9 +90,8 @@ export default function Categories() {
       if (result.isConfirmed) {
         try {
           const responseData = await apiClient.delete(`shop-owner/category/${id}`);
-          console.log(responseData);
-
           if (responseData.data.isSuccess) {
+            setIsRefetch();
             toast('success', responseData.data.value.message ?? 'Xóa danh mục thành công');
           }
         } catch (error: any) {
@@ -121,7 +145,7 @@ export default function Categories() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={() => handleUpdate()}>Sửa danh mục</DropdownItem>
+                <DropdownItem onClick={() => handleUpdate(category.id)}>Sửa danh mục</DropdownItem>
                 <DropdownItem onClick={() => handleDelete(category.id)}>Xóa danh mục</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -142,6 +166,7 @@ export default function Categories() {
         description="danh mục"
         columns={CATEGORY_COLUMNS}
         arrayData={categories?.value.items ?? []}
+        total={categories?.value?.totalCount ?? 0}
         searchHandler={(value: string) => {
           setQuery({ ...query, name: value });
         }}
@@ -153,10 +178,17 @@ export default function Categories() {
         handleAddNew={handleAddNewCategory}
       />
 
-      <CategoryModal
+      <CategoryCreateModal
         isOpen={isCreateOpen}
         onOpen={onCreateOpen}
         onOpenChange={onCreateOpenChange}
+      />
+
+      <CategoryUpdateModal
+        category={categoryDetail}
+        isOpen={isUpdateOpen} // Control visibility of the update modal
+        onOpen={onUpdateOpen}
+        onOpenChange={onUpdateOpenChange}
       />
     </MainLayout>
   );
