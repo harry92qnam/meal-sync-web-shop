@@ -102,15 +102,15 @@ export default function Login() {
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.password && !!formik.errors.password}
             errorMessage={formik.touched.password && formik.errors.password}
-            endContent={
-              <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-                {isVisible ? (
-                  <FaEye className="text-2xl text-default-400" />
-                ) : (
-                  <FaEyeSlash className="text-2xl text-default-400" />
-                )}
-              </button>
-            }
+            // endContent={
+            //   <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+            //     {isVisible ? (
+            //       <FaEye className="text-2xl text-default-400" />
+            //     ) : (
+            //       <FaEyeSlash className="text-2xl text-default-400" />
+            //     )}
+            //   </button>
+            // }
           />
           {error && <p className="text-sm text-danger text-center">{error}</p>}
           <div className="flex justify-end">

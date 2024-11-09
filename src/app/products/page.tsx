@@ -2,6 +2,8 @@
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
+import ProductCreateModal from '@/components/product/ProductCreateModal';
+import ProductUpdateModal from '@/components/product/ProductUpdateModal';
 import {
   OPTION_GROUP_COLUMNS,
   OPTION_GROUP_STATUS,
@@ -10,13 +12,15 @@ import {
 } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
+import useRefetch from '@/hooks/states/useRefetch';
+import apiClient from '@/services/api-services/api-client';
 import { optionApiService, productApiService } from '@/services/api-services/api-service-instances';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 import PageableModel from '@/types/models/PageableModel';
 import ProductModel from '@/types/models/ProductModel';
 import OptionGroupQuery from '@/types/queries/OptionGroupQuery';
 import ProductQuery from '@/types/queries/ProductQuery';
-import { formatCurrency, formatDate, formatNumber } from '@/utils/MyUtils';
+import { formatCurrency, formatDate, formatNumber, toast } from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -25,49 +29,126 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Selection,
+  useDisclosure,
   User,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Orders() {
   const router = useRouter();
   const [isActiveTab, setIsActiveTab] = useState(1);
-  const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
+  const [productStatuses, setProductStatuses] = useState<Selection>(new Set(['0']));
+  const [optionStatuses, setOptionStatuses] = useState<Selection>(new Set(['0']));
+  const { isRefetch, setIsRefetch } = useRefetch();
+  const [productDetail, setProductDetail] = useState<ProductModel | null>(null);
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onOpenChange: onCreateOpenChange,
+  } = useDisclosure();
 
+  const {
+    isOpen: isUpdateOpen,
+    onOpen: onUpdateOpen,
+    onOpenChange: onUpdateOpenChange,
+  } = useDisclosure();
+
+  /**
+   * Product action
+   */
   const handleAddNewProduct = async () => {
-    alert('add new product');
+    onCreateOpen();
   };
 
-  const handleDisable = async () => {
-    // todo disable product
+  const handleDisableProduct = async (id: number) => {
+    try {
+      const payload = {
+        status: 2,
+        isSoldOut: false,
+      };
+      const responseData = await apiClient.put(`shop-owner/food/${id}/status`, payload);
+      if (responseData.data.isSuccess) {
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    }
   };
 
-  const handleEnable = async () => {
-    // todo enable product
+  const handleActiveProduct = async (id: number) => {
+    try {
+      const payload = {
+        status: 1,
+        isSoldOut: false,
+      };
+      const responseData = await apiClient.put(`shop-owner/food/${id}/status`, payload);
+      if (responseData.data.isSuccess) {
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    }
   };
 
-  const handleUpdate = async () => {
-    // todo update product
+  const handleSoldOutProduct = async (id: number) => {
+    try {
+      const payload = {
+        status: 1,
+        isSoldOut: true,
+      };
+      const responseData = await apiClient.put(`shop-owner/food/${id}/status`, payload);
+      if (responseData.data.isSuccess) {
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    }
   };
 
-  const handleDelete = async () => {
+  const handleUpdateProduct = async (id: number) => {
+    try {
+      const responseData = await apiClient.get(`shop-owner/food/${id}/detail`);
+      if (responseData.data.isSuccess) {
+        setProductDetail(responseData.data.value);
+        onUpdateOpen(); // Open the update modal with the fetched data
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
+    }
+  };
+
+  const handleDeleteProduct = async (id: number) => {
     await Swal.fire({
       title: 'Bạn có chắc muốn xóa món ăn này không?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#94a3b8',
-      confirmButtonText: 'Xóa',
-      cancelButtonText: 'Không',
-    }).then((result) => {
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          text: 'Đã xóa thành công!',
-          icon: 'success',
-        });
+        const responseData = await apiClient.delete(`shop-owner/food/${id}`);
+        if (responseData.data.isSuccess) {
+          toast('success', responseData.data.value.message);
+          setIsRefetch();
+        } else {
+          toast('error', responseData.data.error.message);
+        }
       }
     });
   };
@@ -80,6 +161,62 @@ export default function Orders() {
     // router.push('products/product-detail');
   };
 
+  /**
+   * Option group action
+   */
+
+  const handleDisableOption = async (id: number) => {};
+  const handleEnableOption = async (id: number) => {};
+  const handleUpdateOption = async (id: number) => {};
+  const handleDeleteOption = async (id: number) => {
+    try {
+      const responseData = await apiClient.delete(`shop-owner/option-group/${id}`, {
+        data: {
+          id: id,
+          isConfirm: false,
+        },
+      });
+      console.log(responseData);
+
+      if (responseData.data.isWarning) {
+        await Swal.fire({
+          text: responseData.data.value.message,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#94a3b8',
+          confirmButtonText: 'Xác nhận',
+          cancelButtonText: 'Hủy',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const responseData = await apiClient.delete(`shop-owner/option-group/${id}`, {
+              data: {
+                id: id,
+                isConfirm: true,
+              },
+            });
+            console.log(responseData, 'responseData');
+
+            if (responseData.data.isSuccess) {
+              toast('success', responseData.data.value.message);
+              setIsRefetch();
+            } else {
+              toast('error', responseData.data.error.message);
+            }
+          } else {
+            return;
+          }
+        });
+      } else if (responseData.data.isSuccess) {
+        toast('success', responseData.data.value.message);
+        setIsRefetch();
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error) {
+      console.log('>>> error', error);
+    }
+  };
   // option groups
   const openOptionModal = (id: number) => {
     // onOpen();
@@ -90,31 +227,51 @@ export default function Orders() {
     alert('add new option');
   };
 
-  const [productQuery, setProductQuery] = useState<ProductQuery>({
+  const initQuery = {
+    pageIndex: 1,
+    pageSize: 10,
+  };
+
+  const initProductQuery = {
+    ...initQuery,
     name: '',
     statusMode: 0,
-    pageIndex: 1,
-    pageSize: 10,
-  } as ProductQuery);
+  } as ProductQuery;
 
-  const [optionGroupQuery, setOptionGroupQuery] = useState<OptionGroupQuery>({
+  const initOptionQuery = {
+    ...initQuery,
     title: '',
     status: 0,
-    pageIndex: 1,
-    pageSize: 10,
-  } as OptionGroupQuery);
+  } as OptionGroupQuery;
+  const [productQuery, setProductQuery] = useState<ProductQuery>(initProductQuery);
 
-  const { data: products } = useFetchWithRQ<ProductModel, ProductQuery>(
+  const [optionGroupQuery, setOptionGroupQuery] = useState<OptionGroupQuery>(initOptionQuery);
+
+  const { data: products, refetch: refetchProducts } = useFetchWithRQ<ProductModel, ProductQuery>(
     REACT_QUERY_CACHE_KEYS.PRODUCTS,
     productApiService,
     productQuery,
   );
 
-  const { data: optionList } = useFetchWithRQ<OptionGroupModel, OptionGroupQuery>(
-    REACT_QUERY_CACHE_KEYS.OPTIONS,
-    optionApiService,
-    optionGroupQuery,
-  );
+  const { data: optionList, refetch: refetchOptions } = useFetchWithRQ<
+    OptionGroupModel,
+    OptionGroupQuery
+  >(REACT_QUERY_CACHE_KEYS.OPTIONS, optionApiService, optionGroupQuery);
+
+  useEffect(() => {
+    if (isActiveTab === 1) {
+      refetchProducts();
+    } else {
+      refetchOptions();
+    }
+  }, [isRefetch, isActiveTab]);
+
+  useEffect(() => {
+    setProductStatuses(new Set(['0']));
+    setOptionStatuses(new Set(['0']));
+    setProductQuery(initProductQuery);
+    setOptionGroupQuery(initOptionQuery);
+  }, [isActiveTab]);
 
   const statusFilterProducts = [{ key: 0, desc: 'Tất cả' }].concat(
     PRODUCT_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
@@ -125,10 +282,10 @@ export default function Orders() {
     mappingField: 'status',
     selectionMode: 1,
     options: statusFilterProducts,
-    selectedValues: statuses,
+    selectedValues: productStatuses,
     handleFunc: (values: Selection) => {
       const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
-      setStatuses(values);
+      setProductStatuses(values);
       setProductQuery({ ...productQuery, statusMode: value });
     },
   } as TableCustomFilter;
@@ -142,17 +299,13 @@ export default function Orders() {
     mappingField: 'status',
     selectionMode: 1,
     options: statusFilterOptions,
-    selectedValues: statuses,
+    selectedValues: optionStatuses,
     handleFunc: (values: Selection) => {
       const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
-      setStatuses(values);
+      setOptionStatuses(values);
       setOptionGroupQuery({ ...optionGroupQuery, status: value });
     },
   } as TableCustomFilter;
-  console.log(filterOptions, 'filterOptions');
-
-  console.log(productQuery);
-  console.log(optionGroupQuery);
 
   const productTable = useCallback((product: ProductModel, columnKey: React.Key): ReactNode => {
     switch (columnKey) {
@@ -183,8 +336,8 @@ export default function Orders() {
               product.status === 1 && !product.isSoldOut
                 ? 'bg-green-200 text-green-600'
                 : product.status === 1 && product.isSoldOut
-                  ? 'bg-gray-200 text-gray-600'
-                  : 'bg-red-200 text-rose-600'
+                  ? 'bg-red-200 text-rose-600'
+                  : 'bg-gray-200 text-gray-600'
             }`}
             size="sm"
             variant="flat"
@@ -209,7 +362,7 @@ export default function Orders() {
       case 'shopCategory':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{product.shopCategory.name}</p>
+            <p className="text-small">{product?.shopCategory?.name}</p>
           </div>
         );
       case 'actions':
@@ -222,13 +375,35 @@ export default function Orders() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                {product.status === 1 ? (
-                  <DropdownItem onClick={handleDisable}>Tạm hết hàng</DropdownItem>
+                {product.status === 2 ? (
+                  <DropdownItem onClick={() => handleActiveProduct(product.id)}>
+                    Mở bán lại
+                  </DropdownItem>
                 ) : (
-                  <DropdownItem onClick={handleEnable}>Mở bán lại</DropdownItem>
+                  <DropdownItem onClick={() => handleDisableProduct(product.id)}>
+                    Tạm ẩn
+                  </DropdownItem>
                 )}
-                <DropdownItem onClick={handleUpdate}>Sửa món ăn</DropdownItem>
-                <DropdownItem onClick={handleDelete}>Xóa món ăn</DropdownItem>
+                {product.status === 1 && !product.isSoldOut ? (
+                  <DropdownItem onClick={() => handleSoldOutProduct(product.id)}>
+                    Tạm hết hàng
+                  </DropdownItem>
+                ) : product.status === 1 && product.isSoldOut ? (
+                  <DropdownItem onClick={() => handleActiveProduct(product.id)}>
+                    Mở bán lại
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem onClick={() => handleSoldOutProduct(product.id)}>
+                    Tạm hết hàng
+                  </DropdownItem>
+                )}
+
+                <DropdownItem onClick={() => handleUpdateProduct(product.id)}>
+                  Sửa món ăn
+                </DropdownItem>
+                <DropdownItem onClick={() => handleDeleteProduct(product.id)}>
+                  Xóa món ăn
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -287,12 +462,18 @@ export default function Orders() {
               </DropdownTrigger>
               <DropdownMenu>
                 {option.status === 1 ? (
-                  <DropdownItem onClick={handleDisable}>Tạm ẩn</DropdownItem>
+                  <DropdownItem onClick={() => handleDisableOption(option.id)}>Tạm ẩn</DropdownItem>
                 ) : (
-                  <DropdownItem onClick={handleEnable}>Hoạt động lại</DropdownItem>
+                  <DropdownItem onClick={() => handleEnableOption(option.id)}>
+                    Hoạt động lại
+                  </DropdownItem>
                 )}
-                <DropdownItem onClick={handleUpdate}>Sửa lựa chọn</DropdownItem>
-                <DropdownItem onClick={handleDelete}>Xóa lựa chọn</DropdownItem>
+                <DropdownItem onClick={() => handleUpdateOption(option.id)}>
+                  Sửa lựa chọn
+                </DropdownItem>
+                <DropdownItem onClick={() => handleDeleteOption(option.id)}>
+                  Xóa lựa chọn
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -326,24 +507,38 @@ export default function Orders() {
       </div>
 
       {isActiveTab === 1 ? (
-        <TableCustom
-          placeHolderSearch="Tìm kiếm món ăn..."
-          description="món ăn"
-          columns={PRODUCT_COLUMNS}
-          arrayData={products?.value?.items ?? []}
-          total={products?.value?.totalCount ?? 0}
-          searchHandler={(value: string) => {
-            setProductQuery({ ...productQuery, name: value });
-          }}
-          pagination={products?.value as PageableModel}
-          goToPage={(index: number) => setProductQuery({ ...productQuery, pageIndex: index })}
-          setPageSize={(size: number) => setProductQuery({ ...productQuery, pageSize: size })}
-          selectionMode="single"
-          filters={[filterProducts]}
-          renderCell={productTable}
-          handleRowClick={openProductDetail}
-          handleAddNew={handleAddNewProduct}
-        />
+        <>
+          <TableCustom
+            placeHolderSearch="Tìm kiếm món ăn..."
+            description="món ăn"
+            columns={PRODUCT_COLUMNS}
+            arrayData={products?.value?.items ?? []}
+            total={products?.value?.totalCount ?? 0}
+            searchHandler={(value: string) => {
+              setProductQuery({ ...productQuery, name: value });
+            }}
+            pagination={products?.value as PageableModel}
+            goToPage={(index: number) => setProductQuery({ ...productQuery, pageIndex: index })}
+            setPageSize={(size: number) => setProductQuery({ ...productQuery, pageSize: size })}
+            selectionMode="single"
+            filters={[filterProducts]}
+            renderCell={productTable}
+            handleRowClick={openProductDetail}
+            handleAddNew={handleAddNewProduct}
+          />
+          <ProductCreateModal
+            isOpen={isCreateOpen}
+            onOpen={onCreateOpen}
+            onOpenChange={onCreateOpenChange}
+          />
+
+          <ProductUpdateModal
+            product={productDetail}
+            isOpen={isUpdateOpen}
+            onOpen={onUpdateOpen}
+            onOpenChange={onUpdateOpenChange}
+          />
+        </>
       ) : (
         <>
           <TableCustom

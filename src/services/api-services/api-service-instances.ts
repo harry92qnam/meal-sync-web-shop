@@ -11,7 +11,8 @@ import PackageModel from '@/types/models/PackageModel';
 
 export const endpoints = {
   ORDERS: 'web/shop-owner/order',
-  ASSIGN: 'shop-owner/delivery-package-group/interval',
+  ALL: 'web/shop-owner/delivery-package',
+  OWNER: 'web/shop-owner/delivery-package/own',
   REPORTS: 'shop-owner/report',
   PRODUCTS: 'web/shop-owner/food',
   OPTIONS: 'shop-owner/option-group',
@@ -28,10 +29,20 @@ export const orderApiService = (statuses: number[]) => {
     `${endpoints.ORDERS}?StartTime=0&EndTime=2400&${statusQuery}`,
   );
 };
-export const assignOrderApiService = (date: string) => {
+export const allOrderApiService = (currentTime: number, date: string) => {
+  console.log(currentTime, 'currentTime');
+
   return createHttpService<PackageModel>(
     apiClient,
-    `${endpoints.ASSIGN}?StartTime=0&EndTime=2400&IntendedReceiveDate=${date}`,
+    `${endpoints.ALL}?StartTime=${currentTime}&EndTime=2400&IntendedReceiveDate=${date}`,
+  );
+};
+export const ownerOrderApiService = (currentTime: number, date: string) => {
+  console.log(currentTime, 'currentTime');
+
+  return createHttpService<PackageModel>(
+    apiClient,
+    `${endpoints.OWNER}?StartTime=${currentTime}&EndTime=2400&IntendedReceiveDate=${date}&Status=1&Status=2&Status=3`,
   );
 };
 export const preparingOrderApiService = (

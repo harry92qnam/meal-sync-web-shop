@@ -3,13 +3,23 @@ import { ASSIGN_COLUMNS, PREPARING_ORDER_COLUMNS } from '@/data/constants/consta
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import useRefetch from '@/hooks/states/useRefetch';
-import { assignOrderApiService } from '@/services/api-services/api-service-instances';
+import {
+  allOrderApiService,
+  ownerOrderApiService,
+} from '@/services/api-services/api-service-instances';
 import OrderModel from '@/types/models/OrderModel';
 import PackageModel from '@/types/models/PackageModel';
 import PageableModel from '@/types/models/PageableModel';
 import OrderQuery from '@/types/queries/OrderQuery';
 import PackageQuery from '@/types/queries/PackageQuery';
-import { formatDate, formatNumber, formatPhoneNumber, getBangkokDate } from '@/utils/MyUtils';
+import {
+  formatDate,
+  formatNumber,
+  formatPhoneNumber,
+  formatTimeFrame,
+  getBangkokDate,
+  getFormattedCurrentTime,
+} from '@/utils/MyUtils';
 import {
   Button,
   Dropdown,
@@ -19,103 +29,116 @@ import {
   User,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
 export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuery }) {
-  const [query, setQuery] = useState<PackageQuery>(queryAssign);
+  const { dateFrom, dateTo, ...filteredQuery } = queryAssign;
+  const [query, setQuery] = useState<PackageQuery>(filteredQuery as PackageQuery);
   const [isActiveTab, setIsActiveTab] = useState(1);
-  const [frames, setFrames] = useState([]);
-  const [staffList, setStaffList] = useState([]);
-  const [deliveryPackages, setDeliveryPackages] = useState([]);
   const dateInBangkok = getBangkokDate();
   const { isRefetch, setIsRefetch } = useRefetch();
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(0);
+  const currentTime: number = getFormattedCurrentTime();
 
   const openOrderDetail = (id: number) => {
     router.push(`orders/${id}`);
   };
 
-  const { data: packages, refetch } = useFetchWithRQ<PackageModel, PackageQuery>(
-    REACT_QUERY_CACHE_KEYS.PACKAGES,
-    assignOrderApiService(dateInBangkok),
-    query,
-  );
-  console.log(packages);
+  const { data: allPackages, refetch: refetchAllPackages } = useFetchWithRQ<
+    PackageModel,
+    PackageQuery
+  >(REACT_QUERY_CACHE_KEYS.PACKAGES, allOrderApiService(currentTime, dateInBangkok), query);
 
-  const deliveryPackagesCell = useCallback((packages: any, columnKey: React.Key): ReactNode => {
-    switch (columnKey) {
-      case 'id':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">MS-{packages.id}</p>
-          </div>
-        );
-      case 'staff':
-        return (
-          <User
-            avatarProps={{
-              radius: 'full',
-              src: packages?.shopDeliveryStaff?.avatarUrl,
-              size: 'md',
-            }}
-            name={packages?.shopDeliveryStaff?.fullName ?? 'Chưa có người giao'}
-            className="flex justify-start ml-8 gap-4 cursor-pointer"
-          />
-        );
-      case 'phoneNumber':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">
-              {formatPhoneNumber(packages.customer.phoneNumber)}
-            </p>
-          </div>
-        );
-      case 'numberOfOrders':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">
-              {formatNumber(packages?.numberOfOrders)}
-            </p>
-          </div>
-        );
-      case 'frame':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{packages.timeFrameFormat}</p>
-          </div>
-        );
-      case 'createdDate':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{formatDate(packages.createdDate)}</p>
-          </div>
-        );
-      case 'actions':
-        return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Dropdown className="bg-background border-1 border-default-200">
-              <DropdownTrigger>
-                <Button isIconOnly radius="full" size="sm" variant="light">
-                  <BsThreeDotsVertical className="text-default-400" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem onClick={() => openOrderDetail(packages.id)}>
-                  Xem chi tiết
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
-      default:
-        break;
+  const { data: ownerPackages, refetch: refetchOwnPackages } = useFetchWithRQ<
+    PackageModel,
+    PackageQuery
+  >(REACT_QUERY_CACHE_KEYS.PACKAGES, ownerOrderApiService(currentTime, dateInBangkok), query);
+
+  useEffect(() => {
+    if (isActiveTab === 1) {
+      refetchAllPackages();
+    } else {
+      refetchOwnPackages();
     }
-  }, []);
+  }, [isRefetch, isActiveTab]);
+
+  const deliveryPackagesCell = useCallback(
+    (packages: PackageModel, columnKey: React.Key): ReactNode => {
+      switch (columnKey) {
+        case 'id':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-small">DP-{packages?.deliveryPackageId}</p>
+            </div>
+          );
+        case 'shopDeliveryStaff':
+          return (
+            <User
+              avatarProps={{
+                radius: 'full',
+                src: packages?.shopDeliveryStaff?.avatarUrl ?? '',
+                size: 'md',
+              }}
+              name={packages?.shopDeliveryStaff?.fullName ?? 'Chưa có người giao'}
+              className="flex justify-start ml-8 gap-4 cursor-pointer"
+            />
+          );
+        case 'numberOfOrders':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-small capitalize">
+                {formatNumber(packages?.orders.length)}
+              </p>
+            </div>
+          );
+        case 'frame':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-small">
+                {formatTimeFrame(packages?.orders[0]?.startTime, packages?.orders[0]?.endTime)}
+              </p>
+            </div>
+          );
+        case 'buildingName':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-small">{packages?.orders[0]?.buildingName}</p>
+            </div>
+          );
+        case 'intendedReceiveDate':
+          return (
+            <div className="flex flex-col">
+              <p className="text-bold text-small">
+                {new Date(packages?.orders[0]?.intendedReceiveDate).toLocaleDateString('en-GB')}
+              </p>
+            </div>
+          );
+        case 'actions':
+          return (
+            <div className="relative flex justify-end items-center gap-2">
+              <Dropdown className="bg-background border-1 border-default-200">
+                <DropdownTrigger>
+                  <Button isIconOnly radius="full" size="sm" variant="light">
+                    <BsThreeDotsVertical className="text-default-400" />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => openOrderDetail(packages?.deliveryPackageId)}>
+                    Xem chi tiết
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          );
+        default:
+          break;
+      }
+    },
+    [],
+  );
 
   return (
     <div className="mt-24">
@@ -130,7 +153,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
               }}
               className={`${isActiveTab === tab ? 'text-primary' : 'text-black'} w-[245px] bg-transparent text-lg font-medium`}
             >
-              {tab === 1 ? 'Các gói hàng đã tạo' : 'Gói hàng của bạn'}
+              {tab === 1 ? 'Các gói hàng hôm nay' : 'Gói hàng hôm nay của bạn'}
             </Button>
           </div>
         ))}
@@ -140,13 +163,13 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         <TableCustom
           placeHolderSearch="Tìm kiếm gói hàng..."
           description="gói hàng"
-          total={packages?.value?.totalCount ?? 0}
+          total={allPackages?.value?.totalCount ?? 0}
           columns={ASSIGN_COLUMNS}
-          arrayData={packages?.value?.items ?? []}
+          arrayData={allPackages?.value?.items ?? []}
           searchHandler={(value: string) => {
             setQuery({ ...query, id: value });
           }}
-          pagination={packages?.value as PageableModel}
+          pagination={allPackages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
           setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
           selectionMode="single"
@@ -156,15 +179,15 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         />
       ) : (
         <TableCustom
-          placeHolderSearch="Tìm kiếm đơn hàng..."
-          description="đơn hàng"
-          total={packages?.value?.totalCount ?? 0}
-          columns={PREPARING_ORDER_COLUMNS}
-          arrayData={packages?.value?.items ?? []}
+          placeHolderSearch="Tìm kiếm gói hàng..."
+          description="gói hàng"
+          total={ownerPackages?.value?.totalCount ?? 0}
+          columns={ASSIGN_COLUMNS}
+          arrayData={ownerPackages?.value.items ?? []}
           searchHandler={(value: string) => {
             setQuery({ ...query, id: value });
           }}
-          pagination={packages?.value as PageableModel}
+          pagination={ownerPackages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
           setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
           selectionMode="single"

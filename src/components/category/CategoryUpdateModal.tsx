@@ -1,5 +1,6 @@
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
+import CategoryModel from '@/types/models/CategoryModel';
 import { toast } from '@/utils/MyUtils';
 import {
   Avatar,
@@ -10,13 +11,14 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Textarea,
 } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import * as yup from 'yup';
 
 interface CategoryModalProps {
-  category: any;
+  category: CategoryModel | null;
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: (isOpen: boolean) => void;
@@ -27,10 +29,7 @@ const validationSchema = yup.object().shape({
     .string()
     .required('Vui lòng nhập tên danh mục')
     .max(30, 'Tên danh mục chỉ có tối đa 30 ký tự'),
-  description: yup
-    .string()
-    .required('Vui lòng nhập mô tả')
-    .max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
+  description: yup.string().max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
 });
 
 export default function CategoryUpdateModal({
@@ -40,17 +39,17 @@ export default function CategoryUpdateModal({
 }: CategoryModalProps) {
   const { setIsRefetch } = useRefetch();
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [urlFile, setUrlFile] = useState(category?.imageUrl || '');
+  const [urlFile, setUrlFile] = useState(category?.imageUrl);
 
   useEffect(() => {
-    setUrlFile(category?.imageUrl || '');
+    setUrlFile(category?.imageUrl);
   }, [category]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: category?.name || '',
-      description: category?.description || '',
+      name: category?.name,
+      description: category?.description,
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -90,7 +89,7 @@ export default function CategoryUpdateModal({
         imageUrl: url,
       };
 
-      const responseData = await apiClient.put(`shop-owner/category/${category.id}`, payload);
+      const responseData = await apiClient.put(`shop-owner/category/${category?.id}`, payload);
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {
@@ -160,7 +159,7 @@ export default function CategoryUpdateModal({
                       : ''
                   }
                 />
-                <Input
+                <Textarea
                   type="text"
                   name="description"
                   label="Mô tả"
