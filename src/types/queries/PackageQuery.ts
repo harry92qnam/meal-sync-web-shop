@@ -1,9 +1,9 @@
 import PagingRequestQuery from './PagingRequestQuery';
 
 export default interface PackageQuery extends PagingRequestQuery {
-  id: string;
-  // staffName: string;
-  status: number[];
+  deliveryPackageId: string;
+  deliveryShopStaffFullName: string;
+  // frame: string;
   dateFrom?: Date;
   dateTo?: Date;
 }

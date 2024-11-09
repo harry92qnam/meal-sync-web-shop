@@ -35,10 +35,8 @@ export default function Shop() {
         status: status === 2 ? 3 : 2,
         isConfirm: false,
       };
-      console.log(payload);
 
       const responseData = await apiClient.put('shop-owner/shop-owner/active-inactive', payload);
-      console.log(responseData);
       if (!responseData.data.isSuccess) {
         console.log(responseData.data.error.message);
       } else {

@@ -1,5 +1,5 @@
 import TableCustom from '@/components/common/TableCustom';
-import { ASSIGN_COLUMNS, PREPARING_ORDER_COLUMNS } from '@/data/constants/constants';
+import { ALL_PACKAGES_COLUMNS, OWN_PACKAGES_COLUMNS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import useRefetch from '@/hooks/states/useRefetch';
@@ -7,10 +7,8 @@ import {
   allOrderApiService,
   ownerOrderApiService,
 } from '@/services/api-services/api-service-instances';
-import OrderModel from '@/types/models/OrderModel';
 import PackageModel from '@/types/models/PackageModel';
 import PageableModel from '@/types/models/PageableModel';
-import OrderQuery from '@/types/queries/OrderQuery';
 import PackageQuery from '@/types/queries/PackageQuery';
 import {
   formatDate,
@@ -63,9 +61,89 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
     } else {
       refetchOwnPackages();
     }
-  }, [isRefetch, isActiveTab]);
+  }, [isRefetch, isActiveTab, query]);
 
-  const deliveryPackagesCell = useCallback(
+  const allPackagesCell = useCallback((packages: PackageModel, columnKey: React.Key): ReactNode => {
+    switch (columnKey) {
+      case 'id':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small">DP-{packages?.deliveryPackageId}</p>
+          </div>
+        );
+      case 'shopDeliveryStaff':
+        return (
+          <User
+            avatarProps={{
+              radius: 'full',
+              src: packages?.shopDeliveryStaff?.avatarUrl ?? '',
+              size: 'md',
+            }}
+            name={
+              packages.shopDeliveryStaff.isShopOwnerShip
+                ? 'Tôi'
+                : packages?.shopDeliveryStaff?.fullName
+            }
+            className="flex justify-start ml-8 gap-4 cursor-pointer"
+          />
+        );
+      case 'numberOfOrders':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">
+              {formatNumber(packages?.orders.length)}
+            </p>
+          </div>
+        );
+      case 'frame':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small">
+              {formatTimeFrame(packages?.orders[0]?.startTime, packages?.orders[0]?.endTime)}
+            </p>
+          </div>
+        );
+      case 'buildingName':
+        return (
+          <div className="flex flex-col">
+            <ul className="text-small">
+              {packages?.orders.map((order) => (
+                <li key={order.buildingId}>{order.buildingName}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      case 'intendedReceiveDate':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small">
+              {new Date(packages?.orders[0]?.intendedReceiveDate).toLocaleDateString('en-GB')}
+            </p>
+          </div>
+        );
+      case 'actions':
+        return (
+          <div className="relative flex justify-end items-center gap-2">
+            <Dropdown className="bg-background border-1 border-default-200">
+              <DropdownTrigger>
+                <Button isIconOnly radius="full" size="sm" variant="light">
+                  <BsThreeDotsVertical className="text-default-400" />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem onClick={() => openOrderDetail(packages?.deliveryPackageId)}>
+                  Xem chi tiết
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        );
+      default:
+        break;
+    }
+  }, []);
+
+  const ownerPackagesCell = useCallback(
     (packages: PackageModel, columnKey: React.Key): ReactNode => {
       switch (columnKey) {
         case 'id':
@@ -73,18 +151,6 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
             <div className="flex flex-col">
               <p className="text-bold text-small">DP-{packages?.deliveryPackageId}</p>
             </div>
-          );
-        case 'shopDeliveryStaff':
-          return (
-            <User
-              avatarProps={{
-                radius: 'full',
-                src: packages?.shopDeliveryStaff?.avatarUrl ?? '',
-                size: 'md',
-              }}
-              name={packages?.shopDeliveryStaff?.fullName ?? 'Chưa có người giao'}
-              className="flex justify-start ml-8 gap-4 cursor-pointer"
-            />
           );
         case 'numberOfOrders':
           return (
@@ -105,7 +171,11 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         case 'buildingName':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small">{packages?.orders[0]?.buildingName}</p>
+              <ul className="text-small">
+                {packages?.orders.map((order) => (
+                  <li key={order.buildingId}>{order.buildingName}</li>
+                ))}
+              </ul>
             </div>
           );
         case 'intendedReceiveDate':
@@ -153,7 +223,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
               }}
               className={`${isActiveTab === tab ? 'text-primary' : 'text-black'} w-[245px] bg-transparent text-lg font-medium`}
             >
-              {tab === 1 ? 'Các gói hàng hôm nay' : 'Gói hàng hôm nay của bạn'}
+              {tab === 1 ? 'Các gói hàng hôm nay' : 'Gói hàng hôm nay của tôi'}
             </Button>
           </div>
         ))}
@@ -164,10 +234,15 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
           placeHolderSearch="Tìm kiếm gói hàng..."
           description="gói hàng"
           total={allPackages?.value?.totalCount ?? 0}
-          columns={ASSIGN_COLUMNS}
+          columns={ALL_PACKAGES_COLUMNS}
           arrayData={allPackages?.value?.items ?? []}
           searchHandler={(value: string) => {
-            setQuery({ ...query, id: value });
+            const isNumeric = !isNaN(Number(value));
+            setQuery({
+              ...query,
+              deliveryPackageId: isNumeric ? value : '',
+              deliveryShopStaffFullName: isNumeric ? '' : value,
+            });
           }}
           pagination={allPackages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -175,17 +250,17 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
           selectionMode="single"
           // filters={[statusFilter]}
           isFilter={false}
-          renderCell={deliveryPackagesCell}
+          renderCell={allPackagesCell}
         />
       ) : (
         <TableCustom
           placeHolderSearch="Tìm kiếm gói hàng..."
           description="gói hàng"
           total={ownerPackages?.value?.totalCount ?? 0}
-          columns={ASSIGN_COLUMNS}
+          columns={OWN_PACKAGES_COLUMNS}
           arrayData={ownerPackages?.value.items ?? []}
           searchHandler={(value: string) => {
-            setQuery({ ...query, id: value });
+            setQuery({ ...query, deliveryPackageId: value });
           }}
           pagination={ownerPackages?.value as PageableModel}
           goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
@@ -193,7 +268,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
           selectionMode="single"
           // filters={[statusFilter]}
           isFilter={false}
-          renderCell={deliveryPackagesCell}
+          renderCell={ownerPackagesCell}
         />
       )}
     </div>

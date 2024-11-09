@@ -21,8 +21,6 @@ export const CategoryAssignmentModal = ({
   const { setIsRefetch } = useRefetch();
   const [data, setData] = useState<CategoryModel[]>([]);
 
-  console.log(categoryName);
-
   useEffect(() => {
     (async () => {
       try {

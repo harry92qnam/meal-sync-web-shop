@@ -85,7 +85,7 @@ export const StaffAssignmentModal = ({
                   alt="Avatar"
                   className="rounded-full w-8 h-8"
                 />
-                <p>{staff?.staffInfor?.fullName}</p>
+                <p>{staff?.staffInfor.isShopOwner ? 'Tôi' : staff?.staffInfor?.fullName}</p>
               </div>
             ))}
             {staffList.length === 0 && (
