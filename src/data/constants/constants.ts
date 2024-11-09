@@ -33,11 +33,11 @@ const PREPARING_ORDER_COLUMNS = [
 
 const ASSIGN_COLUMNS = [
   { key: 'id', name: 'Mã gói hàng' },
-  { key: 'staff', name: 'Nhân viên giao hàng' },
-  { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'shopDeliveryStaff', name: 'Nhân viên giao hàng' },
   { key: 'numberOfOrders', name: 'Số lượng đơn hàng' },
   { key: 'frame', name: 'Khung giờ giao hàng' },
-  { key: 'createdDate', name: 'Ngày giao hàng' },
+  { key: 'buildingName', name: 'Địa chỉ nhận hàng' },
+  { key: 'intendedReceiveDate', name: 'Ngày giao hàng' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -76,7 +76,7 @@ const ORDER_STATUS = [
 
 // Manage reports
 const REPORT_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã báo cáo' },
   { key: 'orderId', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên người báo cáo' },
   { key: 'reason', name: 'Lý do' },
@@ -91,7 +91,7 @@ const REPORT_STATUS = [
 
 // Manage products
 const PRODUCT_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã sản phẩm' },
   { key: 'name', name: 'Tên sản phẩm' },
   { key: 'price', name: 'Giá bán' },
   { key: 'status', name: 'Trạng thái' },
@@ -108,7 +108,7 @@ const PRODUCT_STATUS = [
 
 // Manage option groups
 const OPTION_GROUP_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã nhóm lựa chọn' },
   { key: 'title', name: 'Tên nhóm' },
   { key: 'numOfItemLinked', name: 'Số sản phẩm liên kết' },
   { key: 'status', name: 'Trạng thái' },
@@ -123,7 +123,7 @@ const OPTION_GROUP_STATUS = [
 
 // Manage categories
 const CATEGORY_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã danh mục' },
   { key: 'name', name: 'Tên danh mục' },
   { key: 'description', name: 'Mô tả' },
   { key: 'numberFoodLinked', name: 'Số sản phẩm liên kết' },
@@ -133,7 +133,7 @@ const CATEGORY_COLUMNS = [
 
 // Manage promotions
 const PROMOTION_COLUMNS = [
-  { key: 'id', name: 'Thứ tự' },
+  { key: 'id', name: 'Mã khuyến mãi' },
   { key: 'title', name: 'Tên khuyến mãi' },
   { key: 'type', name: 'Loại áp dụng' },
   { key: 'startDate', name: 'Ngày bắt đầu' },

@@ -55,6 +55,8 @@ export const StaffAssignmentModal = ({
             return;
           }
         });
+      } else {
+        toast('error', responseData.data.error.message);
       }
     } catch (error) {
       console.log(error);

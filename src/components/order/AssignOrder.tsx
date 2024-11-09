@@ -45,7 +45,8 @@ export type Staff = {
 };
 
 export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQuery }) {
-  const [query, setQuery] = useState<OrderQuery>(queryPreparing);
+  const { dateFrom, dateTo, ...filteredQuery } = queryPreparing;
+  const [query, setQuery] = useState<OrderQuery>(filteredQuery as OrderQuery);
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [frames, setFrames] = useState<FrameModel[]>([]);
   const [staffList, setStaffList] = useState<Staff[]>([]);
@@ -135,7 +136,6 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
     };
 
     fetchStaffs();
-    refetch();
   }, [startTime, endTime, dateInBangkok]);
 
   useEffect(() => {
@@ -202,12 +202,6 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
             }}
           />
         );
-      // case 'frame':
-      //   return (
-      //     <div className="flex flex-col">
-      //       <p className="text-bold text-small">{order.timeFrameFormat}</p>
-      //     </div>
-      //   );
       case 'actions':
         return (
           <div className="relative flex justify-end items-center gap-2">
@@ -280,7 +274,7 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
               ))}
           </div>
         ))}
-        {deliveryPackages?.unassignOrders?.length && (
+        {deliveryPackages!.unassignOrders!.length > 0 && (
           <div className="shadow-md bg-slate-100 rounded-md p-2 min-w-[320px]">
             <p className="font-bold text-center text-primary mb-4 text-xl">Chưa có người giao</p>
             {deliveryPackages?.unassignOrders?.map((order) => (

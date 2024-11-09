@@ -4,6 +4,6 @@ export default interface OrderQuery extends PagingRequestQuery {
   id: string;
   phoneNumber: string;
   status: number[];
-  dateFrom: Date;
-  dateTo: Date;
+  dateFrom?: Date;
+  dateTo?: Date;
 }

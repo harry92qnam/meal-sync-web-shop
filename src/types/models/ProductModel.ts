@@ -2,6 +2,7 @@ export default interface ProductModel {
   id: number;
   shopId: number;
   platformCategoryId: number;
+  shopCategoryId: number;
   shopCategory: {
     id: number;
     shopId: number;
@@ -19,6 +20,7 @@ export default interface ProductModel {
       timeFrameFormat: string;
     },
   ];
+  optionGroups: [];
   name: string;
   description: string;
   price: number;

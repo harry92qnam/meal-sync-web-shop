@@ -23,12 +23,14 @@ import {
   useDisclosure,
   User,
 } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Categories() {
   const { isRefetch, setIsRefetch } = useRefetch();
+  const router = useRouter();
   const [categoryDetail, setCategoryDetail] = useState<CategoryModel | null>(null);
   const {
     isOpen: isCreateOpen,
@@ -53,6 +55,10 @@ export default function Categories() {
     categoryApiService,
     query,
   );
+
+  const openCategoryDetail = (id: number) => {
+    router.push(`categories/${id}`);
+  };
 
   useEffect(() => {
     refetch();
@@ -176,6 +182,7 @@ export default function Categories() {
         selectionMode="single"
         renderCell={renderCell}
         handleAddNew={handleAddNewCategory}
+        handleRowClick={openCategoryDetail}
       />
 
       <CategoryCreateModal

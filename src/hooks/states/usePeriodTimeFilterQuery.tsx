@@ -8,6 +8,12 @@ const getDateMinusDays = (date: Date, days: number): Date => {
   return newDate;
 };
 
+const getDateWithTimezoneOffset = (date: Date, offsetHours: number): Date => {
+  const offsetDate = new Date(date);
+  offsetDate.setHours(offsetDate.getHours() + offsetHours);
+  return offsetDate;
+};
+
 const getThisYear = () => new Date().getFullYear();
 
 export interface PeriodTimeFilterQueryState {
@@ -23,7 +29,7 @@ export interface PeriodTimeFilterQueryState {
 const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
   range: {
     dateFrom: getDateMinusDays(new Date(), 29),
-    dateTo: new Date(),
+    dateTo: getDateWithTimezoneOffset(new Date(), 7),
   } as PeriodTimeFilterQuery,
   selected: 3,
   isSpecificTimeFilter: false,
@@ -35,7 +41,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
     })),
   setDateTo: (date) =>
     set((state) => ({
-      range: { ...state.range, dateTo: date },
+      range: { ...state.range, dateTo: getDateWithTimezoneOffset(date, 7) },
     })),
   setSelected: (choice: number) => {
     {
@@ -45,7 +51,10 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             ...state,
             selected: choice,
             isSpecificTimeFilter: false,
-            range: { dateFrom: new Date(2024, 0, 1), dateTo: new Date() },
+            range: {
+              dateFrom: new Date(2024, 0, 1),
+              dateTo: getDateWithTimezoneOffset(new Date(), 7),
+            },
           }));
           break;
         case 2:
@@ -55,7 +64,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             isSpecificTimeFilter: false,
             range: {
               dateFrom: getDateMinusDays(new Date(), 6),
-              dateTo: new Date(),
+              dateTo: getDateWithTimezoneOffset(new Date(), 7),
             },
           }));
           break;
@@ -66,7 +75,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             isSpecificTimeFilter: false,
             range: {
               dateFrom: getDateMinusDays(new Date(), 29),
-              dateTo: new Date(),
+              dateTo: getDateWithTimezoneOffset(new Date(), 7),
             },
           }));
           break;
@@ -77,7 +86,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             isSpecificTimeFilter: false,
             range: {
               dateFrom: new Date(getThisYear(), 0, 1),
-              dateTo: new Date(),
+              dateTo: getDateWithTimezoneOffset(new Date(), 7),
             },
           }));
 
@@ -89,7 +98,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             isSpecificTimeFilter: false,
             range: {
               dateFrom: new Date(getThisYear() - 1, 0, 1),
-              dateTo: new Date(getThisYear() - 1, 11, 31),
+              dateTo: getDateWithTimezoneOffset(new Date(getThisYear() - 1, 11, 31), 7),
             },
           }));
           break;

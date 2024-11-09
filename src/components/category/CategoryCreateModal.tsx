@@ -10,6 +10,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Textarea,
 } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import React, { ChangeEvent, useState } from 'react';
@@ -26,10 +27,7 @@ const validationSchema = yup.object().shape({
     .string()
     .required('Vui lòng nhập tên danh mục')
     .max(30, 'Tên danh mục chỉ có tối đa 30 ký tự'),
-  description: yup
-    .string()
-    .required('Vui lòng nhập mô tả')
-    .max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
+  description: yup.string().max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
 });
 
 export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryModalProps) {
@@ -131,7 +129,7 @@ export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryMo
                   Chọn hình ảnh
                 </label>
               </div>
-              <form onSubmit={formik.handleSubmit} className="space-y-4">
+              <form className="space-y-4">
                 <Input
                   isRequired
                   type="text"
@@ -144,7 +142,7 @@ export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryMo
                   isInvalid={formik.touched.name && !!formik.errors.name}
                   errorMessage={formik.touched.name && formik.errors.name}
                 />
-                <Input
+                <Textarea
                   type="text"
                   name="description"
                   label="Mô tả"

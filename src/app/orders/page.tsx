@@ -60,7 +60,7 @@ export default function Orders() {
   const [query, setQuery] = useState<OrderQuery>({
     id: '',
     phoneNumber: '',
-    status: [1],
+    status: [0],
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
     pageIndex: 1,
@@ -89,7 +89,6 @@ export default function Orders() {
     },
   } as TableCustomFilter;
 
-  console.log(Number(Array.from(statusFilter.selectedValues)[0]), 'statusFilter');
   useEffect(() => {
     let statusArray: number[] = [];
     switch (isActiveTab) {
@@ -136,7 +135,9 @@ export default function Orders() {
   }, [status, range]);
 
   useEffect(() => {
-    refetch();
+    if (isActiveTab !== 3) {
+      refetch();
+    }
   }, [isRefetch]);
 
   const { data: orders, refetch } = useFetchWithRQ<OrderModel, OrderQuery>(
@@ -221,6 +222,13 @@ export default function Orders() {
             return;
           }
         });
+      } else if (responseData.data.isSuccess) {
+        console.log('success');
+
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
       }
     } catch (error) {
       console.log('>>> error', error);
@@ -261,6 +269,11 @@ export default function Orders() {
             return;
           }
         });
+      } else if (responseData.data.isSuccess) {
+        toast('success', responseData.data.value.message);
+        setIsRefetch();
+      } else {
+        toast('error', responseData.data.error.message);
       }
     } catch (error) {
       console.log('>>> error', error);

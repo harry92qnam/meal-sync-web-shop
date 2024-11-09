@@ -62,9 +62,6 @@ export const formatPhoneNumber = (phone: string) => {
 };
 
 export function formatTimeFrame(startTime?: number, endTime?: number): string {
-  if (!startTime || !endTime) {
-    return '';
-  }
   const formatTime = (time: number): string => {
     const hours = Math.floor(time / 100);
     const minutes = time % 100;
@@ -76,8 +73,8 @@ export function formatTimeFrame(startTime?: number, endTime?: number): string {
     return `${formattedHours}:${formattedMinutes}`;
   };
 
-  const formattedStartTime = formatTime(startTime);
-  const formattedEndTime = formatTime(endTime);
+  const formattedStartTime = formatTime(startTime!);
+  const formattedEndTime = formatTime(endTime!);
 
   return `${formattedStartTime}-${formattedEndTime}`;
 }
@@ -99,4 +96,25 @@ export function getBangkokDate() {
   // Format the date as YYYY-MM-DD
   const formattedDate = bangkokDate.toISOString().split('T')[0];
   return formattedDate;
+}
+
+export function getFormattedCurrentTime() {
+  const now = new Date();
+  const hours = now.getHours();
+  let minutes = now.getMinutes();
+
+  // Round the minutes to either 00 or 30
+  if (minutes < 30) {
+    minutes = 0;
+  } else {
+    minutes = 30;
+  }
+
+  const currentTime = hours * 100 + minutes;
+  return currentTime;
+}
+
+export function formatPriceForInput(value: string) {
+  const number = value.replace(/[^\d]/g, '');
+  return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
