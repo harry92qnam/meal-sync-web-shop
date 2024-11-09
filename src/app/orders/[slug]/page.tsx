@@ -36,8 +36,6 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
     })();
   }, []);
 
-  console.log(data);
-
   return (
     <MainLayout activeContentIndex={1}>
       <div className="md:col-span-1 pb-16">

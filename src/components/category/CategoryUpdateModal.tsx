@@ -67,7 +67,6 @@ export default function CategoryUpdateModal({
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log(responseData);
 
         if (!responseData.data.isSuccess) {
           toast('error', responseData.data.error.message);

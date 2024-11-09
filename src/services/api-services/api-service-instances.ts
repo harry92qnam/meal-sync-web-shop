@@ -30,16 +30,12 @@ export const orderApiService = (statuses: number[]) => {
   );
 };
 export const allOrderApiService = (currentTime: number, date: string) => {
-  console.log(currentTime, 'currentTime');
-
   return createHttpService<PackageModel>(
     apiClient,
     `${endpoints.ALL}?StartTime=${currentTime}&EndTime=2400&IntendedReceiveDate=${date}`,
   );
 };
 export const ownerOrderApiService = (currentTime: number, date: string) => {
-  console.log(currentTime, 'currentTime');
-
   return createHttpService<PackageModel>(
     apiClient,
     `${endpoints.OWNER}?StartTime=${currentTime}&EndTime=2400&IntendedReceiveDate=${date}&Status=1&Status=2&Status=3`,

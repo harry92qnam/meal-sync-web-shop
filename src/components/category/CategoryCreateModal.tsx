@@ -76,7 +76,6 @@ export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryMo
       };
 
       const responseData = await apiClient.post('shop-owner/category/create', payload);
-      console.log(responseData);
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {

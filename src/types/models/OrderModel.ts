@@ -17,7 +17,8 @@ export default interface OrderModel {
   shopDeliveryStaff: {
     id: number;
     fullName: string;
-    avatarUrl: string;
+    avatarUrl?: string;
+    isShopOwnerShip?: boolean;
   };
   customer: {
     id: number;

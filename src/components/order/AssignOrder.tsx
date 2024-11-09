@@ -52,30 +52,12 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const [deliveryPackages, setDeliveryPackages] = useState<DeliveryPackageModel>();
   const dateInBangkok = getBangkokDate();
-  const { isRefetch, setIsRefetch } = useRefetch();
+  const { isRefetch } = useRefetch();
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(0);
-  // const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
-
-  // const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
-  //   DELIVERY_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
-  // );
-
-  // const statusFilter = {
-  //   label: 'Trạng thái',
-  //   mappingField: 'status',
-  //   selectionMode: 1,
-  //   options: statusFilterOptions,
-  //   selectedValues: statuses,
-  //   handleFunc: (values: Selection) => {
-  //     const selectedStatuses = Array.from(values).map((val) => parseInt(val.toString()));
-  //     setStatuses(values);
-  //     setQuery((prevQuery) => ({ ...prevQuery, status: selectedStatuses, ...range }));
-  //   },
-  // } as TableCustomFilter;
 
   const openOrderDetail = (id: number) => {
     router.push(`orders/${id}`);
@@ -179,10 +161,10 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
             </p>
           </div>
         );
-      case 'dormitory':
+      case 'buildingName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.dormitoryName}</p>
+            <p className="text-bold text-small capitalize">{order.buildingName}</p>
           </div>
         );
       case 'totalPrice':
@@ -195,7 +177,11 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
         return (
           <User
             avatarProps={{ radius: 'full', src: order?.shopDeliveryStaff?.avatarUrl, size: 'md' }}
-            name={order?.shopDeliveryStaff?.fullName ?? 'Chưa có người giao'}
+            name={
+              order?.shopDeliveryStaff?.isShopOwnerShip
+                ? 'Tôi'
+                : (order?.shopDeliveryStaff?.fullName ?? 'Chưa có người giao')
+            }
             className="flex justify-start ml-8 gap-4 cursor-pointer"
             onClick={() => {
               handleAssign(order.id);
@@ -253,7 +239,9 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
             className="shadow-md bg-slate-100 rounded-md p-2 min-w-[320px]"
           >
             <p className="font-bold text-center text-primary mb-4 text-xl">
-              {packageGroup?.shopDeliveryStaff?.fullName}
+              {packageGroup?.shopDeliveryStaff?.isShopOwnerShip
+                ? 'Tôi'
+                : packageGroup?.shopDeliveryStaff?.fullName}
             </p>
             {packageGroup.orders &&
               packageGroup.orders.map((order) => (
@@ -268,16 +256,16 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
                   <CardBody className="flex justify-center">
                     <p>Tên khách hàng: {order?.customer?.fullName}</p>
                     <p>Số điện thoại: {order?.customer?.phoneNumber}</p>
-                    <p>Khu vực: {order?.dormitoryName}</p>
+                    <p>Địa chỉ nhận hàng: {order?.buildingName}</p>
                   </CardBody>
                 </Card>
               ))}
           </div>
         ))}
-        {deliveryPackages!.unassignOrders!.length > 0 && (
+        {deliveryPackages?.unassignOrders && deliveryPackages.unassignOrders.length > 0 && (
           <div className="shadow-md bg-slate-100 rounded-md p-2 min-w-[320px]">
             <p className="font-bold text-center text-primary mb-4 text-xl">Chưa có người giao</p>
-            {deliveryPackages?.unassignOrders?.map((order) => (
+            {deliveryPackages.unassignOrders.map((order) => (
               <Card
                 key={order?.id}
                 className="max-w-[320px] rounded-md flex justify-center items-center mx-2 my-2"
@@ -310,7 +298,6 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"
-        // filters={[statusFilter]}
         isFilter={false}
         renderCell={preparingOrdersCell}
       />

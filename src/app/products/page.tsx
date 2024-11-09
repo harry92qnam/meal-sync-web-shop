@@ -176,7 +176,6 @@ export default function Orders() {
           isConfirm: false,
         },
       });
-      console.log(responseData);
 
       if (responseData.data.isWarning) {
         await Swal.fire({
@@ -195,8 +194,6 @@ export default function Orders() {
                 isConfirm: true,
               },
             });
-            console.log(responseData, 'responseData');
-
             if (responseData.data.isSuccess) {
               toast('success', responseData.data.value.message);
               setIsRefetch();

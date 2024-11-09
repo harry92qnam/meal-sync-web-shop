@@ -178,7 +178,6 @@ export default function Orders() {
         reason,
       };
       const responseData = await apiClient.put(`shop-owner/order/${rejectOrderId}/reject`, payload);
-      console.log(responseData);
       if (responseData.data.isSuccess) {
         setIsRefetch();
         toast('success', responseData.data.value.message);
@@ -223,8 +222,6 @@ export default function Orders() {
           }
         });
       } else if (responseData.data.isSuccess) {
-        console.log('success');
-
         setIsRefetch();
         toast('success', responseData.data.value.message);
       } else {
@@ -309,10 +306,10 @@ export default function Orders() {
             </p>
           </div>
         );
-      case 'dormitory':
+      case 'buildingName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.dormitoryName}</p>
+            <p className="text-bold text-small capitalize">{order.buildingName}</p>
           </div>
         );
       case 'totalPrice':
@@ -384,10 +381,10 @@ export default function Orders() {
             </p>
           </div>
         );
-      case 'dormitory':
+      case 'buildingName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.dormitoryName}</p>
+            <p className="text-bold text-small capitalize">{order.buildingName}</p>
           </div>
         );
       case 'totalPrice':

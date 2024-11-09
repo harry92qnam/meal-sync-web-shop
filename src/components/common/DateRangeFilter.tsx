@@ -29,9 +29,6 @@ const DateRangeFilter = () => {
   //event handling
   const onChangeDashboardTimeFilterQuery = (key: number) => {
     setSelected(key);
-    console.log(key, 'key');
-    console.log(selected, 'selected');
-    console.log(range, 'range');
   };
 
   const onDateRangePickerChange = (range: RangeValue<DateValue>) => {
