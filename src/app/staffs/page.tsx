@@ -6,7 +6,6 @@ import StaffCreateModal from '@/components/staff/StaffCreateModal';
 import StaffUpdateModal from '@/components/staff/StafffUpdateModal';
 import { STAFF_COLUMNS, STAFF_STATUS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
-import { sampleStaff } from '@/data/TestData';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
@@ -296,7 +295,7 @@ export default function Staffs() {
         searchHandler={(value: string) => {
           setQuery({ ...query, searchValue: value });
         }}
-        pagination={sampleStaff.value as PageableModel}
+        pagination={staffList?.value as PageableModel}
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"

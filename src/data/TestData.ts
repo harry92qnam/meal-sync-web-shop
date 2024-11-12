@@ -1,6 +1,5 @@
 import PromotionModel from '@/types/models/PromotionModel';
 import ReportModel from '@/types/models/ReportModel';
-import StaffModel from '@/types/models/StaffModel';
 import FetchResponse from '@/types/responses/FetchResponse';
 
 export const sampleNotifications = [
@@ -262,85 +261,6 @@ export const sampleReports: FetchResponse<ReportModel> = {
   isFailure: false,
   isWarning: false,
   error: { code: '', message: '' },
-};
-
-export const sampleStaff: FetchResponse<StaffModel> = {
-  value: {
-    items: [
-      {
-        id: 1,
-        name: 'Alice Johnson',
-        status: 1,
-        active: 1,
-        createdDate: '2023-01-01',
-      },
-      {
-        id: 2,
-        name: 'Bob Smith',
-        status: 1,
-        active: 2,
-        createdDate: '2023-02-15',
-      },
-      {
-        id: 3,
-        name: 'Charlie Brown',
-        status: 2,
-        active: 3,
-        createdDate: '2023-03-10',
-      },
-      {
-        id: 4,
-        name: 'Diana Evans',
-        status: 1,
-        active: 2,
-        createdDate: '2023-04-20',
-      },
-      {
-        id: 5,
-        name: 'Eve White',
-        status: 2,
-        active: 3,
-        createdDate: '2023-05-30',
-      },
-      {
-        id: 6,
-        name: 'Eve White',
-        status: 2,
-        active: 3,
-        createdDate: '2023-05-30',
-      },
-      {
-        id: 7,
-        name: 'Eve White',
-        status: 1,
-        active: 1,
-        createdDate: '2023-05-30',
-      },
-      {
-        id: 8,
-        name: 'Eve White',
-        status: 1,
-        active: 1,
-        createdDate: '2023-05-30',
-      },
-    ] as StaffModel[],
-    pageIndex: 1,
-    pageSize: 10,
-    totalCount: 15,
-    totalPages: 1,
-    hasPrevious: false,
-    hasNext: true,
-  },
-  isSuccess: true,
-  isFailure: false,
-  isWarning: false,
-  error: { code: '', message: '' },
-};
-
-export const ACCOUNT_INFO = {
-  name: 'Harry',
-  email: 'phuothuynh2002@gmail.com',
-  phoneNumber: '0372485570',
 };
 
 export const samplePromotions: FetchResponse<PromotionModel> = {
