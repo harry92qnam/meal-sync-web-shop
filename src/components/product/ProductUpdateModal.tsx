@@ -64,30 +64,45 @@ type PlatCategory = {
 export default function ProductUpdateModal({ product, isOpen, onOpenChange }: ProductModalProps) {
   const { setIsRefetch } = useRefetch();
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [urlFile, setUrlFile] = useState(product?.imageUrl || '');
+  const [urlFile, setUrlFile] = useState(product?.imageUrl);
 
   const [operatingSlots, setOperatingSlots] = useState<OperatingSlot[]>([]);
   const [platformCategories, setPlatformCategories] = useState<PlatCategory[]>([]);
   const [shopCategories, setShopCategories] = useState<ShopCategory[]>([]);
   const [optionGroups, setOptionGroups] = useState<OptionGroupModel[]>([]);
 
-  console.log(product);
+  useEffect(() => {
+    setUrlFile(product?.imageUrl);
+    formik.setFieldValue(
+      'operatingSlots',
+      product?.operatingSlots.map((slot) => slot.id),
+    );
+    formik.setFieldValue('platformCategoryId', product?.platformCategoryId);
+    formik.setFieldValue('shopCategoryId', product?.shopCategoryId);
+    formik.setFieldValue(
+      'optionGroups',
+      product?.optionGroups.map((option) => option.optionGroupId),
+    );
+  }, [product]);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       name: product?.name,
       price: product?.price,
-      operatingSlots: product?.operatingSlots,
+      operatingSlots: product?.operatingSlots.map((slot) => slot.id),
       platformCategoryId: product?.platformCategoryId,
       shopCategoryId: product?.shopCategoryId,
       description: product?.description,
-      optionGroups: product?.optionGroups,
+      optionGroups: product?.optionGroups.map((option) => option.optionGroupId),
     },
     validationSchema,
     onSubmit: (values) => {
-      handleCreate(values);
+      handleUpdate(values);
     },
   });
+
+  console.log(formik.initialValues, 'formik');
 
   useEffect(() => {
     async function fetchData() {
@@ -130,30 +145,36 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
       console.log(error);
     }
   };
-  const handleCreate = async (values: any) => {
+  const handleUpdate = async (values: any) => {
+    console.log(values, 'values');
     try {
-      const url = await uploadImage(avatar);
+      const url = avatar ? await uploadImage(avatar) : urlFile;
       const payload = {
+        id: product?.id,
         name: values.name,
-        description: values?.description,
-        price: Number(values?.price),
+        description: values.description,
+        price: Number(values.price),
         imgUrl: url,
         operatingSlots: Array.from(values.operatingSlots).map(Number),
-        shopCategoryId: Number(values.shopCategoryId.currentKey),
-        platformCategoryId: Number(values.platformCategoryId.currentKey),
-        optionGroups: Array.from(values.optionGroups).map(Number),
+        shopCategoryId: values.shopCategoryId.currentKey
+          ? Number(values.shopCategoryId.currentKey)
+          : values.shopCategoryId,
+        platformCategoryId: values.platformCategoryId.currentKey
+          ? Number(values.platformCategoryId.currentKey)
+          : values.platformCategoryId,
+        foodOptionGroups: Array.from(values.optionGroups).map(Number),
         status: 1,
       };
 
-      console.dir(payload);
+      console.log(payload, 'payload');
 
-      const responseData = await apiClient.post('shop-owner/food/create', payload);
+      const responseData = await apiClient.put('shop-owner/food/update', payload);
       console.log(responseData);
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {
         setIsRefetch();
-        toast('success', 'Tạo món ăn thành công');
+        toast('success', 'Cập nhật món ăn thành công');
         onOpenChange(false);
         formik.resetForm();
         setAvatar(null);
@@ -191,7 +212,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
         {(onClose) => (
           <React.Fragment>
             <ModalHeader className="flex flex-col text-2xl text-center">
-              Tạo thực đơn mới
+              Sửa đổi thực đơn
             </ModalHeader>
             <ModalBody className="overflow-y-auto">
               <div className="flex flex-col items-center">
@@ -243,7 +264,10 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
                   isRequired
                   name="operatingSlots"
                   label="Khung giờ mở bán"
-                  onSelectionChange={(value) => formik.setFieldValue('operatingSlots', value)}
+                  onSelectionChange={(value) => {
+                    formik.setFieldValue('operatingSlots', value);
+                  }}
+                  // defaultSelectedKeys={formik.values.operatingSlots}
                   isMultiline
                   renderValue={(selected) => (
                     <div className="flex flex-wrap gap-2">
@@ -267,6 +291,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
                   name="platformCategoryId"
                   label="Danh mục hệ thống"
                   onSelectionChange={(value) => formik.setFieldValue('platformCategoryId', value)}
+                  // defaultSelectedKeys={formik.values.platformCategoryId ? [formik.values.platformCategoryId] : []}
                 >
                   {platformCategories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
@@ -291,8 +316,12 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
                   selectionMode="multiple"
                   name="optionGroups"
                   label="Nhóm lựa chọn"
+                  // defaultSelectedKeys={formik.values.optionGroups}
                   isMultiline
-                  onSelectionChange={(value) => formik.setFieldValue('optionGroups', value)}
+                  onSelectionChange={(value) => {
+                    console.log(formik.values.optionGroups, 'formik.values.optionGroups');
+                    formik.setFieldValue('optionGroups', value);
+                  }}
                   renderValue={(selected) => (
                     <div className="flex flex-wrap gap-2">
                       {selected.map((option) => (
@@ -332,7 +361,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
                 Đóng
               </Button>
               <Button type="button" color="primary" onClick={() => formik.handleSubmit()}>
-                Tạo
+                Cập nhật
               </Button>
             </ModalFooter>
           </React.Fragment>

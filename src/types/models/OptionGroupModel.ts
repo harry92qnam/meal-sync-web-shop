@@ -18,6 +18,17 @@ interface OptionGroupModel {
       status: number;
     },
   ];
+  foods: [
+    {
+      id: number;
+      name: string;
+      price: number;
+      description: string;
+      imageUrl: string;
+      isSoldOut: boolean;
+      status: number;
+    },
+  ];
   createdDate: string;
 }
 

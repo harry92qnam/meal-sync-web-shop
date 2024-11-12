@@ -19,7 +19,7 @@ export const endpoints = {
   CATEGORIES: 'web/shop-owner/category',
   CATEGORY_IMAGE_UPLOAD: 'shop-owner/category/upload',
   PROMOTIONS: 'shop-owner/promotion',
-  STAFFS: 'shop-owner/staff',
+  STAFFS: 'shop-owner/delivery-staff',
 };
 
 export const orderApiService = (statuses: number[]) => {

@@ -52,8 +52,8 @@ export default function CategoryUpdateModal({
       description: category?.description,
     },
     validationSchema,
-    onSubmit: async (values) => {
-      await handleUpdate(values);
+    onSubmit: (values) => {
+      handleUpdate(values);
     },
   });
 
@@ -129,7 +129,11 @@ export default function CategoryUpdateModal({
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col items-center">
-                <Avatar src={urlFile} alt="Avatar" className="rounded-full w-24 h-24" />
+                <Avatar
+                  src={urlFile || 'https://www.949vans.com/images/products/detail/E60195ABKS.2.jpg'}
+                  alt="Category Image"
+                  className={`rounded-full w-32 h-32 ${urlFile ? '' : 'border-medium'}`}
+                />
                 <input
                   type="file"
                   accept="image/*"

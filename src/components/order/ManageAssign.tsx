@@ -1,4 +1,5 @@
 import TableCustom from '@/components/common/TableCustom';
+import ChangeStatusToDelivery from '@/components/order/ChangeStatusToDelivery';
 import { ALL_PACKAGES_COLUMNS, OWN_PACKAGES_COLUMNS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
@@ -11,9 +12,7 @@ import PackageModel from '@/types/models/PackageModel';
 import PageableModel from '@/types/models/PageableModel';
 import PackageQuery from '@/types/queries/PackageQuery';
 import {
-  formatDate,
   formatNumber,
-  formatPhoneNumber,
   formatTimeFrame,
   getBangkokDate,
   getFormattedCurrentTime,
@@ -36,13 +35,13 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
   const [isActiveTab, setIsActiveTab] = useState(1);
   const dateInBangkok = getBangkokDate();
   const { isRefetch, setIsRefetch } = useRefetch();
-  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState(0);
+  const [selectedDeliveryPackageId, setSelectedDeliveryPackageId] = useState(0);
   const currentTime: number = getFormattedCurrentTime();
 
-  const openOrderDetail = (id: number) => {
-    router.push(`orders/${id}`);
+  const openDeliveryPackageDetail = (id: number) => {
+    setIsModalOpen(true);
+    setSelectedDeliveryPackageId(id);
   };
 
   const { data: allPackages, refetch: refetchAllPackages } = useFetchWithRQ<
@@ -107,9 +106,11 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         return (
           <div className="flex flex-col">
             <ul className="text-small">
-              {packages?.orders.map((order) => (
-                <li key={order.buildingId}>{order.buildingName}</li>
-              ))}
+              {Array.from(new Set(packages?.orders.map((order) => order.buildingName))).map(
+                (buildingName, index) => (
+                  <li key={index}>{buildingName}</li>
+                ),
+              )}
             </ul>
           </div>
         );
@@ -131,7 +132,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={() => openOrderDetail(packages?.deliveryPackageId)}>
+                <DropdownItem onClick={() => openDeliveryPackageDetail(packages.id)}>
                   Xem chi tiết
                 </DropdownItem>
               </DropdownMenu>
@@ -172,9 +173,11 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
           return (
             <div className="flex flex-col">
               <ul className="text-small">
-                {packages?.orders.map((order) => (
-                  <li key={order.buildingId}>{order.buildingName}</li>
-                ))}
+                {Array.from(new Set(packages?.orders.map((order) => order.buildingName))).map(
+                  (buildingName, index) => (
+                    <li key={index}>{buildingName}</li>
+                  ),
+                )}
               </ul>
             </div>
           );
@@ -196,7 +199,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => openOrderDetail(packages?.deliveryPackageId)}>
+                  <DropdownItem onClick={() => openDeliveryPackageDetail(packages.id)}>
                     Xem chi tiết
                   </DropdownItem>
                 </DropdownMenu>
@@ -230,46 +233,62 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
       </div>
 
       {isActiveTab === 1 ? (
-        <TableCustom
-          placeHolderSearch="Tìm kiếm gói hàng..."
-          description="gói hàng"
-          total={allPackages?.value?.totalCount ?? 0}
-          columns={ALL_PACKAGES_COLUMNS}
-          arrayData={allPackages?.value?.items ?? []}
-          searchHandler={(value: string) => {
-            const isNumeric = !isNaN(Number(value));
-            setQuery({
-              ...query,
-              deliveryPackageId: isNumeric ? value : '',
-              deliveryShopStaffFullName: isNumeric ? '' : value,
-            });
-          }}
-          pagination={allPackages?.value as PageableModel}
-          goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
-          setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-          selectionMode="single"
-          // filters={[statusFilter]}
-          isFilter={false}
-          renderCell={allPackagesCell}
-        />
+        <>
+          <TableCustom
+            placeHolderSearch="Tìm kiếm gói hàng..."
+            description="gói hàng"
+            total={allPackages?.value?.totalCount ?? 0}
+            columns={ALL_PACKAGES_COLUMNS}
+            arrayData={allPackages?.value?.items ?? []}
+            searchHandler={(value: string) => {
+              const isNumeric = !isNaN(Number(value)) || value.toLowerCase().startsWith('dp');
+              setQuery({
+                ...query,
+                deliveryPackageId: isNumeric ? value : '',
+                deliveryShopStaffFullName: isNumeric ? '' : value,
+              });
+            }}
+            pagination={allPackages?.value as PageableModel}
+            goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
+            setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
+            selectionMode="single"
+            // filters={[statusFilter]}
+            isFilter={false}
+            renderCell={allPackagesCell}
+            handleRowClick={openDeliveryPackageDetail}
+          />
+          <ChangeStatusToDelivery
+            id={selectedDeliveryPackageId}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </>
       ) : (
-        <TableCustom
-          placeHolderSearch="Tìm kiếm gói hàng..."
-          description="gói hàng"
-          total={ownerPackages?.value?.totalCount ?? 0}
-          columns={OWN_PACKAGES_COLUMNS}
-          arrayData={ownerPackages?.value.items ?? []}
-          searchHandler={(value: string) => {
-            setQuery({ ...query, deliveryPackageId: value });
-          }}
-          pagination={ownerPackages?.value as PageableModel}
-          goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
-          setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-          selectionMode="single"
-          // filters={[statusFilter]}
-          isFilter={false}
-          renderCell={ownerPackagesCell}
-        />
+        <>
+          <TableCustom
+            placeHolderSearch="Tìm kiếm gói hàng..."
+            description="gói hàng"
+            total={ownerPackages?.value?.totalCount ?? 0}
+            columns={OWN_PACKAGES_COLUMNS}
+            arrayData={ownerPackages?.value.items ?? []}
+            searchHandler={(value: string) => {
+              setQuery({ ...query, deliveryPackageId: value });
+            }}
+            pagination={ownerPackages?.value as PageableModel}
+            goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
+            setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
+            selectionMode="single"
+            // filters={[statusFilter]}
+            isFilter={false}
+            renderCell={ownerPackagesCell}
+            handleRowClick={openDeliveryPackageDetail}
+          />
+          <ChangeStatusToDelivery
+            id={selectedDeliveryPackageId}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </>
       )}
     </div>
   );

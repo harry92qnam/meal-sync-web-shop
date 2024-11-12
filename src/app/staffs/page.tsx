@@ -2,12 +2,19 @@
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
-import { STAFF_ACTIVE_STATUS, STAFF_COLUMNS, STAFF_STATUS } from '@/data/constants/constants';
+import StaffCreateModal from '@/components/staff/StaffCreateModal';
+import StaffUpdateModal from '@/components/staff/StafffUpdateModal';
+import { STAFF_COLUMNS, STAFF_STATUS } from '@/data/constants/constants';
+import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import { sampleStaff } from '@/data/TestData';
+import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
+import useRefetch from '@/hooks/states/useRefetch';
+import apiClient from '@/services/api-services/api-client';
+import { staffApiService } from '@/services/api-services/api-service-instances';
 import PageableModel from '@/types/models/PageableModel';
 import StaffModel from '@/types/models/StaffModel';
 import StaffQuery from '@/types/queries/StaffQuery';
-import { formatDate } from '@/utils/MyUtils';
+import { formatDate, formatPhoneNumber, toast } from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -16,53 +23,50 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Selection,
+  useDisclosure,
+  User,
 } from '@nextui-org/react';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Staffs() {
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
-  const [active, setActive] = useState<Selection>(new Set(['0']));
+  const [staffDetail, setStaffDetail] = useState<StaffModel | null>(null);
+  const { isRefetch, setIsRefetch } = useRefetch();
 
-  const handleUpdate = async () => {};
-
-  const handleDelete = async () => {
-    await Swal.fire({
-      title: 'Bạn có chắc muốn xóa nhân viên này không?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#94a3b8',
-      confirmButtonText: 'Xóa',
-      cancelButtonText: 'Không',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          text: 'Đã xóa thành công!',
-          icon: 'success',
-        });
-      }
-    });
+  const handleCreateNewStaff = async () => {
+    onCreateOpen();
   };
 
-  const handleAddNewStaff = async () => {
-    alert('add new staff');
-  };
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onOpenChange: onCreateOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isUpdateOpen,
+    onOpen: onUpdateOpen,
+    onOpenChange: onUpdateOpenChange,
+  } = useDisclosure();
 
   const [query, setQuery] = useState<StaffQuery>({
-    name: '',
+    searchValue: '',
     status: 0,
     pageIndex: 1,
     pageSize: 10,
   } as StaffQuery);
 
-  const staffList = sampleStaff.value.items;
-  // const { data: staffList } = useFetchWithRQ<StaffModel, StaffQuery>(
-  //   REACT_QUERY_CACHE_KEYS.STAFFS,
-  //   staffApiService,
-  //   query,
-  // );
+  const { data: staffList, refetch } = useFetchWithRQ<StaffModel, StaffQuery>(
+    REACT_QUERY_CACHE_KEYS.STAFFS,
+    staffApiService,
+    query,
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [isRefetch]);
 
   const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
     STAFF_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
@@ -81,22 +85,112 @@ export default function Staffs() {
     },
   } as TableCustomFilter;
 
-  const activeFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
-    STAFF_ACTIVE_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
-  );
+  const handleLock = async (id: number, name: string) => {
+    await Swal.fire({
+      title: `Bạn có chắc muốn khóa nhân viên ${name} không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Không',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          id,
+          isConfirm: true,
+          status: 3,
+        };
+        try {
+          const responseData = await apiClient.put('shop-owner/delivery-staff/status', payload);
+          if (responseData.data.isSuccess) {
+            setIsRefetch();
+            toast('success', `Khóa nhân viên ${name} thành công`);
+          } else {
+            toast('error', responseData.data.error.message);
+          }
+        } catch (error: any) {
+          toast('error', error.response.data.error.message);
+        }
+      }
+    });
+  };
 
-  const activeFilter = {
-    label: 'Hoạt động',
-    mappingField: 'active',
-    selectionMode: 1,
-    options: activeFilterOptions,
-    selectedValues: active,
-    handleFunc: (values: Selection) => {
-      const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
-      setActive(values);
-      setQuery({ ...query, active: value });
-    },
-  } as TableCustomFilter;
+  const handleUnLock = async (id: number, name: string) => {
+    await Swal.fire({
+      title: `Bạn có chắc muốn mở khóa nhân viên ${name} không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Không',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          id,
+          isConfirm: true,
+          status: 1,
+        };
+        try {
+          const responseData = await apiClient.put('shop-owner/delivery-staff/status', payload);
+          if (responseData.data.isSuccess) {
+            setIsRefetch();
+            toast('success', `Mở khóa nhân viên ${name} thành công`);
+          } else {
+            toast('error', responseData.data.error.message);
+          }
+        } catch (error: any) {
+          toast('error', error.response.data.error.message);
+        }
+      }
+    });
+  };
+
+  const handleUpdate = async (id: number) => {
+    try {
+      const responseData = await apiClient.get(`shop-owner/delivery-staff/${id}`);
+
+      if (responseData.data.isSuccess) {
+        setStaffDetail(responseData.data.value);
+        onUpdateOpen();
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      console.log(error, '>>> error');
+    }
+  };
+
+  const handleDelete = async (id: number, name: string) => {
+    await Swal.fire({
+      title: 'Bạn có chắc muốn xóa nhân viên này không?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Không',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const payload = {
+          id,
+          isConfirm: true,
+        };
+        try {
+          const responseData = await apiClient.put('shop-owner/delivery-staff/delete', payload);
+          if (responseData.data.isSuccess) {
+            setIsRefetch();
+            toast('success', `Xóa nhân viên ${name} thành công`);
+          } else {
+            toast('error', responseData.data.error.message);
+          }
+        } catch (error: any) {
+          toast('error', error.response.data.error.message);
+        }
+      }
+    });
+  };
 
   const renderCell = useCallback((staff: StaffModel, columnKey: React.Key): ReactNode => {
     switch (columnKey) {
@@ -106,38 +200,46 @@ export default function Staffs() {
             <p className="text-bold text-small">{staff.id}</p>
           </div>
         );
-      case 'name':
+      case 'fullName':
+        return (
+          <User
+            avatarProps={{ radius: 'full', src: staff.avatarUrl }}
+            name={staff.fullName}
+            className="flex justify-start ml-12 gap-4"
+          />
+        );
+      case 'phoneNumber':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{staff.name}</p>
+            <p className="text-bold text-small capitalize">
+              {formatPhoneNumber(staff.phoneNumber)}
+            </p>
           </div>
         );
-      case 'status':
+      case 'email':
         return (
-          <Chip
-            className={`capitalize ${
-              staff.status === 1 ? 'bg-green-200 text-green-600' : 'bg-gray-200 text-gray-600'
-            }`}
-            size="sm"
-            variant="flat"
-          >
-            {STAFF_STATUS.find((item) => item.key === staff.status)?.desc}
-          </Chip>
+          <div className="flex flex-col">
+            <p className="text-bold text-small">{staff.email}</p>
+          </div>
         );
-      case 'active':
+      case 'shopDeliveryStaffStatus':
         return (
           <Chip
             className={`capitalize ${
-              staff.active === 1
+              staff.shopDeliveryStaffStatus === 1
                 ? 'bg-green-200 text-green-600'
-                : staff.active === 2
-                  ? 'bg-yellow-200 text-yellow-600'
-                  : 'bg-gray-200 text-gray-600'
+                : staff.shopDeliveryStaffStatus === 2
+                  ? 'bg-gray-200 text-gray-600'
+                  : 'bg-red-200 text-red-600'
             }`}
             size="sm"
             variant="flat"
           >
-            {STAFF_ACTIVE_STATUS.find((item) => item.key === staff.active)?.desc}
+            {staff.shopDeliveryStaffStatus === 1
+              ? 'Đang hoạt động'
+              : staff.shopDeliveryStaffStatus === 2
+                ? 'Ngoại tuyến'
+                : 'Đã khóa'}
           </Chip>
         );
       case 'createdDate':
@@ -156,8 +258,21 @@ export default function Staffs() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={handleUpdate}>Thay đổi</DropdownItem>
-                <DropdownItem onClick={handleDelete}>Xóa nhân viên</DropdownItem>
+                <DropdownItem onClick={() => handleUpdate(staff.id)}>
+                  Cập nhật thông tin
+                </DropdownItem>
+                {staff.shopDeliveryStaffStatus === 3 ? (
+                  <DropdownItem onClick={() => handleUnLock(staff.id, staff.fullName)}>
+                    Mở khóa
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem onClick={() => handleLock(staff.id, staff.fullName)}>
+                    Khóa tài khoản
+                  </DropdownItem>
+                )}
+                <DropdownItem onClick={() => handleDelete(staff.id, staff.fullName)}>
+                  Xóa nhân viên
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -176,19 +291,30 @@ export default function Staffs() {
         placeHolderSearch="Tìm kiếm nhân viên..."
         description="nhân viên"
         columns={STAFF_COLUMNS}
-        total={20}
-        // arrayData={staffs?.value?.items ?? []}
-        arrayData={staffList}
+        total={staffList?.value?.totalCount ?? 0}
+        arrayData={staffList?.value.items ?? []}
         searchHandler={(value: string) => {
-          setQuery({ ...query, name: value });
+          setQuery({ ...query, searchValue: value });
         }}
         pagination={sampleStaff.value as PageableModel}
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"
-        filters={[statusFilter, activeFilter]}
+        filters={[statusFilter]}
         renderCell={renderCell}
-        handleAddNew={handleAddNewStaff}
+        handleAddNew={handleCreateNewStaff}
+      />
+      <StaffCreateModal
+        isOpen={isCreateOpen}
+        onOpen={onCreateOpen}
+        onOpenChange={onCreateOpenChange}
+      />
+
+      <StaffUpdateModal
+        staff={staffDetail}
+        isOpen={isUpdateOpen}
+        onOpen={onUpdateOpen}
+        onOpenChange={onUpdateOpenChange}
       />
     </MainLayout>
   );
