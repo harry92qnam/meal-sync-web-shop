@@ -237,7 +237,7 @@ export default function Staffs() {
             {staff.shopDeliveryStaffStatus === 1
               ? 'Đang hoạt động'
               : staff.shopDeliveryStaffStatus === 2
-                ? 'Ngoại tuyến'
+                ? 'Nghỉ phép'
                 : 'Đã khóa'}
           </Chip>
         );

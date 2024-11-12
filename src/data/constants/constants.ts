@@ -100,13 +100,13 @@ const REPORT_STATUS = [
 
 // Manage products
 const PRODUCT_COLUMNS = [
-  // { key: 'id', name: 'Mã sản phẩm' },
+  { key: 'id', name: 'Mã sản phẩm' },
   { key: 'name', name: 'Tên sản phẩm' },
   { key: 'price', name: 'Giá bán' },
   { key: 'status', name: 'Trạng thái' },
   { key: 'slot', name: 'Khung giờ mở bán' },
   { key: 'shopCategory', name: 'Danh mục liên kết' },
-  { key: 'numberOfOptionGroup', name: 'Số nhóm lựa chọn' },
+  { key: 'optionGroups', name: 'Số nhóm lựa chọn' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -177,7 +177,7 @@ const STAFF_COLUMNS = [
 
 const STAFF_STATUS = [
   { key: 1, desc: 'Đang hoạt động' },
-  { key: 2, desc: 'Ngoại tuyến' },
+  { key: 2, desc: 'Nghỉ phép' },
   { key: 3, desc: 'Đã khóa' },
 ];
 

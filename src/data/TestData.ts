@@ -263,6 +263,12 @@ export const sampleReports: FetchResponse<ReportModel> = {
   error: { code: '', message: '' },
 };
 
+export const ACCOUNT_INFO = {
+  name: 'Harry',
+  email: 'phuothuynh2002@gmail.com',
+  phoneNumber: '0372485570',
+};
+
 export const samplePromotions: FetchResponse<PromotionModel> = {
   value: {
     items: [

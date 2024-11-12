@@ -398,10 +398,10 @@ export default function Orders() {
             <p className="text-small">{formatCurrency(product.price)}</p>
           </div>
         );
-      case 'price':
+      case 'optionGroups':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{product.optionGroups.length}</p>
+            <p className="text-small">{product.optionGroups?.length}</p>
           </div>
         );
       case 'status':
