@@ -74,7 +74,7 @@ export default function Categories() {
 
       if (responseData.data.isSuccess) {
         setCategoryDetail(responseData.data.value);
-        onUpdateOpen(); // Open the update modal with the fetched data
+        onUpdateOpen();
       } else {
         toast('error', responseData.data.error.message);
       }

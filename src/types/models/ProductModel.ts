@@ -20,7 +20,26 @@ export default interface ProductModel {
       timeFrameFormat: string;
     },
   ];
-  optionGroups: [];
+  optionGroups: [
+    {
+      id: number;
+      optionGroupId: number;
+      title: string;
+      isRequire: boolean;
+      status: number;
+      option: [
+        {
+          id: number;
+          title: string;
+          price: number;
+          status: number;
+          isDefault: boolean;
+          isCalculatePrice: boolean;
+          imageUrl: string;
+        },
+      ];
+    },
+  ];
   name: string;
   description: string;
   price: number;

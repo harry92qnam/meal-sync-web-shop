@@ -2,6 +2,8 @@
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
+import OptionGroupCreateModal from '@/components/option-groups/OptionGroupCreateModal';
+import OptionGroupUpdateModal from '@/components/option-groups/OptionGroupUpdateModal';
 import ProductCreateModal from '@/components/product/ProductCreateModal';
 import ProductUpdateModal from '@/components/product/ProductUpdateModal';
 import {
@@ -44,23 +46,36 @@ export default function Orders() {
   const [optionStatuses, setOptionStatuses] = useState<Selection>(new Set(['0']));
   const { isRefetch, setIsRefetch } = useRefetch();
   const [productDetail, setProductDetail] = useState<ProductModel | null>(null);
+  const [optionGroupDetail, setOptionGroupDetail] = useState<OptionGroupModel | null>(null);
   const {
-    isOpen: isCreateOpen,
-    onOpen: onCreateOpen,
-    onOpenChange: onCreateOpenChange,
+    isOpen: isProductCreateOpen,
+    onOpen: onProductCreateOpen,
+    onOpenChange: onProductCreateOpenChange,
   } = useDisclosure();
 
   const {
-    isOpen: isUpdateOpen,
-    onOpen: onUpdateOpen,
-    onOpenChange: onUpdateOpenChange,
+    isOpen: isProductUpdateOpen,
+    onOpen: onProductUpdateOpen,
+    onOpenChange: onProductUpdateOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOptionGroupCreateOpen,
+    onOpen: onOptionGroupCreateOpen,
+    onOpenChange: onOptionGroupCreateOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOptionGroupUpdateOpen,
+    onOpen: onOptionGroupUpdateOpen,
+    onOpenChange: onOptionGroupUpdateOpenChange,
   } = useDisclosure();
 
   /**
    * Product action
    */
-  const handleAddNewProduct = async () => {
-    onCreateOpen();
+  const handleAddNewProduct = () => {
+    onProductCreateOpen();
   };
 
   const handleDisableProduct = async (id: number) => {
@@ -122,7 +137,7 @@ export default function Orders() {
       const responseData = await apiClient.get(`shop-owner/food/${id}/detail`);
       if (responseData.data.isSuccess) {
         setProductDetail(responseData.data.value);
-        onUpdateOpen(); // Open the update modal with the fetched data
+        onProductUpdateOpen(); // Open the update modal with the fetched data
       } else {
         toast('error', responseData.data.error.message);
       }
@@ -154,19 +169,76 @@ export default function Orders() {
   };
 
   const openProductDetail = (id: number) => {
-    // const product = products.find((item) => item.id === id);
-    // if (!product) {
-    //   router.push('/');
-    // }
-    // router.push('products/product-detail');
+    router.push(`products/${id}`);
   };
 
   /**
    * Option group action
    */
 
-  const handleDisableOption = async (id: number) => {};
-  const handleEnableOption = async (id: number) => {};
+  const handleDisableOption = async (id: number, numberOfLinked: number) => {
+    if (numberOfLinked) {
+      await Swal.fire({
+        text: `Lựa chọn này đang có ${numberOfLinked} món ăn liên kết. Bạn có muốn ẩn những sản phẩm liên kết đến không?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#94a3b8',
+        confirmButtonText: 'Xác nhận',
+        cancelButtonText: 'Hủy',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const responseData = await apiClient.put(`shop-owner/option-group/${id}/status`, {
+              status: 2,
+            });
+            console.log(responseData.data, 'responseData.data');
+            if (responseData.data.isSuccess) {
+              setIsRefetch();
+              toast('success', responseData.data.value.message);
+            } else {
+              toast('error', responseData.data.error.message);
+            }
+          } catch (error: any) {
+            console.log(error);
+          }
+        } else {
+          return;
+        }
+      });
+    } else {
+      try {
+        const responseData = await apiClient.put(`shop-owner/option-group/${id}/status`, {
+          status: 2,
+        });
+        console.log(responseData.data, 'responseData.data');
+        if (responseData.data.isSuccess) {
+          setIsRefetch();
+          toast('success', responseData.data.value.message);
+        } else {
+          toast('error', responseData.data.error.message);
+        }
+      } catch (error: any) {
+        console.log(error);
+      }
+    }
+  };
+  const handleEnableOption = async (id: number) => {
+    try {
+      const responseData = await apiClient.put(`shop-owner/option-group/${id}/status`, {
+        status: 1,
+      });
+      console.log(responseData.data, 'responseData.data');
+      if (responseData.data.isSuccess) {
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
   const handleUpdateOption = async (id: number) => {};
   const handleDeleteOption = async (id: number) => {
     try {
@@ -221,7 +293,7 @@ export default function Orders() {
   };
 
   const handleAddNewOptionGroup = () => {
-    alert('add new option');
+    onOptionGroupCreateOpen();
   };
 
   const initQuery = {
@@ -324,6 +396,12 @@ export default function Orders() {
         return (
           <div className="flex flex-col">
             <p className="text-small">{formatCurrency(product.price)}</p>
+          </div>
+        );
+      case 'optionGroups':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{product.optionGroups?.length}</p>
           </div>
         );
       case 'status':
@@ -459,7 +537,11 @@ export default function Orders() {
               </DropdownTrigger>
               <DropdownMenu>
                 {option.status === 1 ? (
-                  <DropdownItem onClick={() => handleDisableOption(option.id)}>Tạm ẩn</DropdownItem>
+                  <DropdownItem
+                    onClick={() => handleDisableOption(option.id, option.numOfItemLinked)}
+                  >
+                    Tạm ẩn
+                  </DropdownItem>
                 ) : (
                   <DropdownItem onClick={() => handleEnableOption(option.id)}>
                     Hoạt động lại
@@ -506,8 +588,8 @@ export default function Orders() {
       {isActiveTab === 1 ? (
         <>
           <TableCustom
-            placeHolderSearch="Tìm kiếm món ăn..."
-            description="món ăn"
+            placeHolderSearch="Tìm kiếm thực đơn..."
+            description="thực đơn"
             columns={PRODUCT_COLUMNS}
             arrayData={products?.value?.items ?? []}
             total={products?.value?.totalCount ?? 0}
@@ -524,16 +606,16 @@ export default function Orders() {
             handleAddNew={handleAddNewProduct}
           />
           <ProductCreateModal
-            isOpen={isCreateOpen}
-            onOpen={onCreateOpen}
-            onOpenChange={onCreateOpenChange}
+            isOpen={isProductCreateOpen}
+            onOpen={onProductCreateOpen}
+            onOpenChange={onProductCreateOpenChange}
           />
 
           <ProductUpdateModal
             product={productDetail}
-            isOpen={isUpdateOpen}
-            onOpen={onUpdateOpen}
-            onOpenChange={onUpdateOpenChange}
+            isOpen={isProductUpdateOpen}
+            onOpen={onProductUpdateOpen}
+            onOpenChange={onProductUpdateOpenChange}
           />
         </>
       ) : (
@@ -557,8 +639,19 @@ export default function Orders() {
             selectionMode="single"
             filters={[filterOptions]}
             renderCell={optionTable}
-            handleRowClick={openOptionModal}
             handleAddNew={handleAddNewOptionGroup}
+          />
+          <OptionGroupCreateModal
+            isOpen={isOptionGroupCreateOpen}
+            onOpen={onOptionGroupCreateOpen}
+            onOpenChange={onOptionGroupCreateOpenChange}
+          />
+
+          <OptionGroupUpdateModal
+            optionGroup={optionGroupDetail}
+            isOpen={isOptionGroupUpdateOpen}
+            onOpen={onOptionGroupUpdateOpen}
+            onOpenChange={onOptionGroupUpdateOpenChange}
           />
         </>
       )}

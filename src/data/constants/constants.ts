@@ -106,6 +106,7 @@ const PRODUCT_COLUMNS = [
   { key: 'status', name: 'Trạng thái' },
   { key: 'slot', name: 'Khung giờ mở bán' },
   { key: 'shopCategory', name: 'Danh mục liên kết' },
+  { key: 'optionGroups', name: 'Số nhóm lựa chọn' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -166,45 +167,40 @@ const PROMOTION_STATUS = [
 // Manage staffs
 const STAFF_COLUMNS = [
   { key: 'id', name: 'Thứ tự' },
-  { key: 'name', name: 'Tên nhân viên' },
-  { key: 'status', name: 'Trạng thái' },
-  { key: 'active', name: 'Hoạt động' },
+  { key: 'fullName', name: 'Tên nhân viên' },
+  { key: 'email', name: 'Email' },
+  { key: 'phoneNumber', name: 'Số điện thoại' },
+  { key: 'shopDeliveryStaffStatus', name: 'Trạng thái' },
   { key: 'createdDate', name: 'Thời gian tạo tài khoản' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
 const STAFF_STATUS = [
   { key: 1, desc: 'Đang hoạt động' },
-  { key: 2, desc: 'Không hoạt động' },
-];
-
-const STAFF_ACTIVE_STATUS = [
-  { key: 1, desc: 'Đang rảnh' },
-  { key: 2, desc: 'Đang giao hàng' },
-  { key: 3, desc: 'Không hoạt động' },
+  { key: 2, desc: 'Nghỉ phép' },
+  { key: 3, desc: 'Đã khóa' },
 ];
 
 export {
-  INCOMING_ORDER_COLUMNS,
-  CONFIRMED_ORDER_COLUMNS,
-  PREPARING_ORDER_COLUMNS,
   ALL_PACKAGES_COLUMNS,
-  OWN_PACKAGES_COLUMNS,
+  CATEGORY_COLUMNS,
+  CONFIRMED_ORDER_COLUMNS,
   DELIVERING_ORDER_COLUMNS,
-  HISTORY_ORDER_COLUMNS,
   DELIVERY_STATUS,
-  ORDER_STATUS,
-  REPORT_COLUMNS,
-  REPORT_STATUS,
-  PRODUCT_COLUMNS,
-  PRODUCT_STATUS,
+  HISTORY_ORDER_COLUMNS,
+  INCOMING_ORDER_COLUMNS,
   OPTION_GROUP_COLUMNS,
   OPTION_GROUP_STATUS,
-  CATEGORY_COLUMNS,
+  ORDER_STATUS,
+  OWN_PACKAGES_COLUMNS,
+  PREPARING_ORDER_COLUMNS,
+  PRODUCT_COLUMNS,
+  PRODUCT_STATUS,
   PROMOTION_COLUMNS,
-  PROMOTION_TYPE,
   PROMOTION_STATUS,
+  PROMOTION_TYPE,
+  REPORT_COLUMNS,
+  REPORT_STATUS,
   STAFF_COLUMNS,
   STAFF_STATUS,
-  STAFF_ACTIVE_STATUS,
 };

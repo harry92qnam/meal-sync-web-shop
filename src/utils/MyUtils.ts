@@ -2,23 +2,18 @@ import Swal from 'sweetalert2';
 
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export const formatTimeToSeconds = (dateString: string) => {
-  const d = new Date(dateString);
+export const formatTimeToSeconds = (dateString: string): string => {
+  const date = new Date(dateString);
+  const localDate = new Date(date.getTime());
+  const time = localDate.toTimeString().slice(0, 8);
+  const formattedDate = localDate.toLocaleDateString('en-GB');
 
-  // Adjusting for UTC+7
-  const utcOffset = 7 * 60; // +7 hours in minutes
-  const localDate = new Date(d.getTime() + utcOffset * 60 * 1000);
-
-  return `${localDate.toTimeString().slice(0, 8)} - ${localDate.toLocaleDateString('en-GB')}`;
+  return `${time} - ${formattedDate}`;
 };
 
-export const formatDate = (dateString: string) => {
-  const d = new Date(dateString);
-
-  // Adjusting for UTC+7
-  const utcOffset = 7 * 60; // +7 hours in minutes
-  const localDate = new Date(d.getTime() + utcOffset * 60 * 1000);
-
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  const localDate = new Date(date.getTime());
   return localDate.toLocaleDateString('en-GB');
 };
 

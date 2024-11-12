@@ -50,7 +50,7 @@ export default function Login() {
         //   return;
         // }
         localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
-        router.push('/products');
+        router.push('/orders');
       }
     } catch (error) {
       console.log(error);
