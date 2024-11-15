@@ -3,7 +3,6 @@ import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
 import { REPORT_COLUMNS, REPORT_STATUS } from '@/data/constants/constants';
-import { sampleReports } from '@/data/TestData';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
 import PageableModel from '@/types/models/PageableModel';
 import ReportModel from '@/types/models/ReportModel';
@@ -13,90 +12,90 @@ import { Button, Chip, Selection } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useState } from 'react';
 
-export default function Orders() {
+export default function AccountBalance() {
   const router = useRouter();
   const { range } = usePeriodTimeFilterState();
   const [isActiveTab, setIsActiveTab] = useState(1);
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
 
-  const [query, setQuery] = useState<ReportQuery>({
-    name: '',
-    description: '',
-    status: 1,
-    dateFrom: range.dateFrom,
-    dateTo: range.dateTo,
-    pageIndex: 1,
-    pageSize: 10,
-  } as ReportQuery);
+  // const [query, setQuery] = useState<ReportQuery>({
+  //   name: '',
+  //   description: '',
+  //   status: 1,
+  //   dateFrom: range.dateFrom,
+  //   dateTo: range.dateTo,
+  //   pageIndex: 1,
+  //   pageSize: 10,
+  // } as ReportQuery);
 
-  const reports = sampleReports.value.items;
-  // const { data: reports } = useFetchWithRQ<ReportModel, ReportQuery>(
-  //   REACT_QUERY_CACHE_KEYS.REPORTS,
-  //   reportApiService,
-  //   query,
+  // const reports = sampleReports.value.items;
+  // // const { data: reports } = useFetchWithRQ<ReportModel, ReportQuery>(
+  // //   REACT_QUERY_CACHE_KEYS.REPORTS,
+  // //   reportApiService,
+  // //   query,
+  // // );
+
+  // const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
+  //   REPORT_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
   // );
 
-  const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
-    REPORT_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
-  );
+  // const statusFilter = {
+  //   label: 'Trạng thái',
+  //   mappingField: 'status',
+  //   selectionMode: 1,
+  //   options: statusFilterOptions,
+  //   selectedValues: statuses,
+  //   handleFunc: (values: Selection) => {
+  //     const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
+  //     setStatuses(values);
+  //     setQuery({ ...query, status: value, ...range });
+  //   },
+  // } as TableCustomFilter;
 
-  const statusFilter = {
-    label: 'Trạng thái',
-    mappingField: 'status',
-    selectionMode: 1,
-    options: statusFilterOptions,
-    selectedValues: statuses,
-    handleFunc: (values: Selection) => {
-      const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
-      setStatuses(values);
-      setQuery({ ...query, status: value, ...range });
-    },
-  } as TableCustomFilter;
+  // const openReportDetail = (id: number) => {
+  //   const report = reports.find((item) => item.id === id);
+  //   if (!report) {
+  //     router.push('/');
+  //   }
+  //   router.push('reports/report-detail');
+  // };
 
-  const openReportDetail = (id: number) => {
-    const report = reports.find((item) => item.id === id);
-    if (!report) {
-      router.push('/');
-    }
-    router.push('reports/report-detail');
-  };
-
-  const renderCell = useCallback((report: ReportModel, columnKey: React.Key): ReactNode => {
-    switch (columnKey) {
-      case 'id':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{report.id}</p>
-          </div>
-        );
-      case 'customerName':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{report.customerId}</p>
-          </div>
-        );
-      case 'status':
-        return (
-          <Chip
-            className={`capitalize ${
-              report.status === 1 ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
-            }`}
-            size="sm"
-            variant="flat"
-          >
-            {REPORT_STATUS.find((item) => item.key == report.status)?.desc}
-          </Chip>
-        );
-      case 'createdDate':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(report.createdDate)}</p>
-          </div>
-        );
-      default:
-        break;
-    }
-  }, []);
+  // const renderCell = useCallback((report: ReportModel, columnKey: React.Key): ReactNode => {
+  //   switch (columnKey) {
+  //     case 'id':
+  //       return (
+  //         <div className="flex flex-col">
+  //           <p className="text-bold text-small">{report.id}</p>
+  //         </div>
+  //       );
+  //     case 'customerName':
+  //       return (
+  //         <div className="flex flex-col">
+  //           <p className="text-bold text-small capitalize">{report.customerId}</p>
+  //         </div>
+  //       );
+  //     case 'status':
+  //       return (
+  //         <Chip
+  //           className={`capitalize ${
+  //             report.status === 1 ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
+  //           }`}
+  //           size="sm"
+  //           variant="flat"
+  //         >
+  //           {REPORT_STATUS.find((item) => item.key == report.status)?.desc}
+  //         </Chip>
+  //       );
+  //     case 'createdDate':
+  //       return (
+  //         <div className="flex flex-col">
+  //           <p className="text-bold text-small">{formatTimeToSeconds(report.createdDate)}</p>
+  //         </div>
+  //       );
+  //     default:
+  //       break;
+  //   }
+  // }, []);
 
   return (
     <MainLayout activeContentIndex={7}>
@@ -121,7 +120,7 @@ export default function Orders() {
         ))}
       </div>
 
-      <TableCustom
+      {/* <TableCustom
         placeHolderSearch="Tìm kiếm sản phẩm..."
         description="sản phẩm"
         columns={REPORT_COLUMNS}
@@ -138,7 +137,7 @@ export default function Orders() {
         filters={[statusFilter]}
         renderCell={renderCell}
         handleRowClick={openReportDetail}
-      />
+      /> */}
     </MainLayout>
   );
 }

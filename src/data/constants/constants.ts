@@ -6,7 +6,7 @@ const INCOMING_ORDER_COLUMNS = [
   { key: 'buildingName', name: 'Địa chỉ nhận hàng' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
   { key: 'frame', name: 'Khung giờ nhận hàng' },
-  { key: 'createdDate', name: 'Thời gian đặt đơn' },
+  { key: 'orderDate', name: 'Thời gian đặt đơn' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -26,7 +26,6 @@ const PREPARING_ORDER_COLUMNS = [
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'buildingName', name: 'Địa chỉ nhận hàng' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
-  // { key: 'frame', name: 'Khung giờ nhận hàng' },
   { key: 'staff', name: 'Người giao hàng' },
   { key: 'actions', name: 'Thao tác' },
 ];
@@ -56,7 +55,7 @@ const DELIVERING_ORDER_COLUMNS = [
   { key: 'staffName', name: 'Tên nhân viên giao hàng' },
   { key: 'status', name: 'Trạng thái giao hàng' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
-  { key: 'createdDate', name: 'Thời gian giao hàng' },
+  { key: 'orderDate', name: 'Thời gian đặt hàng' },
 ];
 
 const HISTORY_ORDER_COLUMNS = [
@@ -65,7 +64,7 @@ const HISTORY_ORDER_COLUMNS = [
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'status', name: 'Trạng thái đơn hàng' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
-  { key: 'createdDate', name: 'Thời gian giao dịch' },
+  { key: 'orderDate', name: 'Thời gian đặt hàng' },
 ];
 
 const DELIVERY_STATUS = [
@@ -106,7 +105,7 @@ const PRODUCT_COLUMNS = [
   { key: 'status', name: 'Trạng thái' },
   { key: 'slot', name: 'Khung giờ mở bán' },
   { key: 'shopCategory', name: 'Danh mục liên kết' },
-  { key: 'optionGroups', name: 'Số nhóm lựa chọn' },
+  { key: 'numberOfOptionGroupLinked', name: 'Số nhóm lựa chọn' },
   { key: 'actions', name: 'Thao tác' },
 ];
 
@@ -145,7 +144,7 @@ const CATEGORY_COLUMNS = [
 const PROMOTION_COLUMNS = [
   { key: 'id', name: 'Mã khuyến mãi' },
   { key: 'title', name: 'Tên khuyến mãi' },
-  { key: 'type', name: 'Loại áp dụng' },
+  { key: 'applyType', name: 'Loại áp dụng' },
   { key: 'startDate', name: 'Ngày bắt đầu' },
   { key: 'endDate', name: 'Ngày kết thúc' },
   { key: 'numberOfUsed', name: 'Số lượng đã dùng' },
@@ -155,13 +154,13 @@ const PROMOTION_COLUMNS = [
 ];
 
 const PROMOTION_TYPE = [
-  { key: 1, desc: 'Giảm bằng tiền' },
-  { key: 2, desc: 'Giảm bằng %' },
+  { key: 1, desc: 'Giảm theo %' },
+  { key: 2, desc: 'Giảm tiền trực tiếp' },
 ];
 
 const PROMOTION_STATUS = [
-  { key: 1, desc: 'Đang khuyến mãi' },
-  { key: 2, desc: 'Đã hết hạn' },
+  { key: 1, desc: 'Khả dụng' },
+  { key: 2, desc: 'Đã tạm ẩn' },
 ];
 
 // Manage staffs

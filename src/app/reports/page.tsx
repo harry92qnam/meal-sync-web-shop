@@ -4,13 +4,14 @@ import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
 import { REPORT_COLUMNS, REPORT_STATUS } from '@/data/constants/constants';
-import { sampleReports } from '@/data/TestData';
+import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
+import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
+import { reportApiService } from '@/services/api-services/api-service-instances';
 import PageableModel from '@/types/models/PageableModel';
 import ReportModel from '@/types/models/ReportModel';
 import ReportQuery from '@/types/queries/ReportQuery';
-import { formatTimeToSeconds } from '@/utils/MyUtils';
-import { Chip, Selection } from '@nextui-org/react';
+import { Selection } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useState } from 'react';
 
@@ -20,8 +21,7 @@ export default function Reports() {
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
 
   const [query, setQuery] = useState<ReportQuery>({
-    name: '',
-    description: '',
+    searchValue: '',
     status: 1,
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
@@ -29,12 +29,11 @@ export default function Reports() {
     pageSize: 10,
   } as ReportQuery);
 
-  const reports = sampleReports.value.items;
-  // const { data: reports } = useFetchWithRQ<ReportModel, ReportQuery>(
-  //   REACT_QUERY_CACHE_KEYS.REPORTS,
-  //   reportApiService,
-  //   query,
-  // );
+  const { data: reports } = useFetchWithRQ<ReportModel, ReportQuery>(
+    REACT_QUERY_CACHE_KEYS.REPORTS,
+    reportApiService,
+    query,
+  );
 
   const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
     REPORT_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
@@ -54,10 +53,10 @@ export default function Reports() {
   } as TableCustomFilter;
 
   const openReportDetail = (id: number) => {
-    const report = reports.find((item) => item.id === id);
-    if (!report) {
-      router.push('/');
-    }
+    // const report = reports.find((item) => item.id === id);
+    // if (!report) {
+    //   router.push('/');
+    // }
     router.push('reports/report-detail');
   };
 
@@ -66,33 +65,33 @@ export default function Reports() {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{report.id}</p>
+            <p className="text-small">{report.id}</p>
           </div>
         );
-      case 'customerName':
+      case 'title':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{report.customerId}</p>
+            <p className="text-small">{report.title}</p>
           </div>
         );
-      case 'status':
-        return (
-          <Chip
-            className={`capitalize ${
-              report.status === 1 ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
-            }`}
-            size="sm"
-            variant="flat"
-          >
-            {REPORT_STATUS.find((item) => item.key == report.status)?.desc}
-          </Chip>
-        );
-      case 'createdDate':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(report.createdDate)}</p>
-          </div>
-        );
+      // case 'status':
+      //   return (
+      //     <Chip
+      //       className={`capitalize ${
+      //         report.status === 1 ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
+      //       }`}
+      //       size="sm"
+      //       variant="flat"
+      //     >
+      //       {REPORT_STATUS.find((item) => item.key == report.status)?.desc}
+      //     </Chip>
+      //   );
+      // case 'createdDate':
+      //   return (
+      //     <div className="flex flex-col">
+      //       <p className="text-small">{formatTimeToSeconds(report.createdDate)}</p>
+      //     </div>
+      //   );
       default:
         break;
     }
@@ -110,13 +109,12 @@ export default function Reports() {
         placeHolderSearch="Tìm kiếm báo cáo..."
         description="báo cáo"
         columns={REPORT_COLUMNS}
-        total={20}
-        // arrayData={reports?.value?.items ?? []}
-        arrayData={reports}
+        total={reports?.value?.totalCount ?? 0}
+        arrayData={reports?.value?.items ?? []}
         searchHandler={(value: string) => {
-          setQuery({ ...query, name: value });
+          setQuery({ ...query, searchValue: value });
         }}
-        pagination={sampleReports.value as PageableModel}
+        pagination={reports?.value as PageableModel}
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"

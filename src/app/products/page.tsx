@@ -239,7 +239,19 @@ export default function Orders() {
       console.log(error);
     }
   };
-  const handleUpdateOption = async (id: number) => {};
+  const handleUpdateOption = async (id: number) => {
+    try {
+      const responseData = await apiClient.get(`shop-owner/option-group/${id}`);
+      if (responseData.data.isSuccess) {
+        setOptionGroupDetail(responseData.data.value);
+        onOptionGroupUpdateOpen();
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
+    }
+  };
   const handleDeleteOption = async (id: number) => {
     try {
       const responseData = await apiClient.delete(`shop-owner/option-group/${id}`, {
@@ -398,10 +410,10 @@ export default function Orders() {
             <p className="text-small">{formatCurrency(product.price)}</p>
           </div>
         );
-      case 'optionGroups':
+      case 'numberOfOptionGroupLinked':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{product.optionGroups?.length}</p>
+            <p className="text-small">{formatNumber(product.numberOfOptionGroupLinked)}</p>
           </div>
         );
       case 'status':

@@ -23,7 +23,14 @@ import { orderApiService } from '@/services/api-services/api-service-instances';
 import OrderModel from '@/types/models/OrderModel';
 import PageableModel from '@/types/models/PageableModel';
 import OrderQuery from '@/types/queries/OrderQuery';
-import { formatCurrency, formatPhoneNumber, formatTimeToSeconds, toast } from '@/utils/MyUtils';
+import {
+  formatCurrency,
+  formatPhoneNumber,
+  formatTimeFrame,
+  formatTimeToSeconds,
+  getBangkokDate,
+  toast,
+} from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -66,6 +73,19 @@ export default function Orders() {
     pageIndex: 1,
     pageSize: 10,
   } as OrderQuery);
+
+  const [customQuery, setCustomQuery] = useState<any>({});
+  useEffect(() => {
+    if (status.includes(6) || status.includes(7) || status.includes(8)) {
+      const { dateFrom, dateTo, ...rest } = query;
+      setCustomQuery({
+        ...rest,
+        IntendedReceiveDate: getBangkokDate(),
+      });
+    } else {
+      setCustomQuery(query);
+    }
+  }, [query, status]);
 
   const statusFilterOptions =
     isActiveTab === 5
@@ -128,7 +148,7 @@ export default function Orders() {
   useEffect(() => {
     setQuery((prevQuery) => ({
       ...prevQuery,
-      status,
+      // status,
       pageIndex: 1,
       ...range,
     }));
@@ -143,7 +163,7 @@ export default function Orders() {
   const { data: orders, refetch } = useFetchWithRQ<OrderModel, OrderQuery>(
     REACT_QUERY_CACHE_KEYS.ORDERS,
     orderApiService(status),
-    query,
+    customQuery,
   );
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,13 +341,15 @@ export default function Orders() {
       case 'frame':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{order.timeFrameFormat}</p>
+            <p className="text-bold text-small">
+              {formatTimeFrame(order.startTime, order.endTime)}
+            </p>
           </div>
         );
-      case 'createdDate':
+      case 'orderDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.createdDate)}</p>
+            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
           </div>
         );
       case 'actions':
@@ -396,7 +418,9 @@ export default function Orders() {
       case 'frame':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{order.timeFrameFormat}</p>
+            <p className="text-bold text-small">
+              {formatTimeFrame(order.startTime, order.endTime)}
+            </p>
           </div>
         );
       case 'actions':
@@ -446,8 +470,10 @@ export default function Orders() {
       case 'staffName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">
-              {order?.shopDeliveryStaff?.fullName ?? 'Tự giao'}
+            <p className="text-bold text-small">
+              {order?.shopDeliveryStaff?.isShopOwnerShip
+                ? 'Tôi (tự giao)'
+                : order?.shopDeliveryStaff?.fullName}
             </p>
           </div>
         );
@@ -474,10 +500,10 @@ export default function Orders() {
             <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
           </div>
         );
-      case 'createdDate':
+      case 'orderDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.createdDate)}</p>
+            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
           </div>
         );
       default:
@@ -533,10 +559,10 @@ export default function Orders() {
             <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
           </div>
         );
-      case 'createdDate':
+      case 'orderDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.createdDate)}</p>
+            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
           </div>
         );
       default:

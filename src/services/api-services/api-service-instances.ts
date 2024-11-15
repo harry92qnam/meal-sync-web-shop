@@ -8,12 +8,13 @@ import PromotionModel from '@/types/models/PromotionModel';
 import StaffModel from '@/types/models/StaffModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 import PackageModel from '@/types/models/PackageModel';
+import { getFormattedCurrentTime } from '@/utils/MyUtils';
 
 export const endpoints = {
   ORDERS: 'web/shop-owner/order',
   ALL: 'web/shop-owner/delivery-package',
   OWNER: 'web/shop-owner/delivery-package/own',
-  REPORTS: 'shop-owner/report',
+  REPORTS: 'shop-owner/order/report',
   PRODUCTS: 'web/shop-owner/food',
   OPTIONS: 'shop-owner/option-group',
   CATEGORIES: 'web/shop-owner/category',
@@ -23,10 +24,11 @@ export const endpoints = {
 };
 
 export const orderApiService = (statuses: number[]) => {
+  const startTime = statuses.includes(1) || statuses.includes(3) ? getFormattedCurrentTime() : 0;
   const statusQuery = statuses.map((status) => `status=${status}`).join('&');
   return createHttpService<OrderModel>(
     apiClient,
-    `${endpoints.ORDERS}?StartTime=0&EndTime=2400&${statusQuery}`,
+    `${endpoints.ORDERS}?StartTime=${startTime}&EndTime=2400&${statusQuery}`,
   );
 };
 export const allOrderApiService = (currentTime: number, date: string) => {
@@ -48,7 +50,7 @@ export const preparingOrderApiService = (
 ) => {
   return createHttpService<OrderModel>(
     apiClient,
-    `${endpoints.ORDERS}?StartTime=${startTime}&EndTime=${endTime}&IntendedReceiveDate=${date}&status=5`,
+    `${endpoints.ORDERS}?StartTime=${startTime}&EndTime=${endTime}&IntendedReceiveDate=${date}&status=5&status=6&status=7`,
   );
 };
 export const reportApiService = createHttpService<ReportModel>(apiClient, endpoints.REPORTS);

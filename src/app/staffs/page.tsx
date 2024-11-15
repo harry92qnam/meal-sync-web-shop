@@ -196,7 +196,7 @@ export default function Staffs() {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{staff.id}</p>
+            <p className="text-small">{staff.id}</p>
           </div>
         );
       case 'fullName':
@@ -210,15 +210,13 @@ export default function Staffs() {
       case 'phoneNumber':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">
-              {formatPhoneNumber(staff.phoneNumber)}
-            </p>
+            <p className="text-small capitalize">{formatPhoneNumber(staff.phoneNumber)}</p>
           </div>
         );
       case 'email':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{staff.email}</p>
+            <p className="text-small">{staff.email}</p>
           </div>
         );
       case 'shopDeliveryStaffStatus':
@@ -244,7 +242,7 @@ export default function Staffs() {
       case 'createdDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatDate(staff.createdDate)}</p>
+            <p className="text-small">{formatDate(staff.createdDate)}</p>
           </div>
         );
       case 'actions':

@@ -3,16 +3,17 @@ export default interface PromotionModel {
   title: string;
   description: string;
   bannerUrl: string;
-  type: number;
+  applyType: number;
   amountRate: number;
   amountValue: number;
   minOrderValue: number;
+  minOrdervalue: number;
   maximumApplyValue: number;
   startDate: string;
   endDate: string;
   usageLimit: number;
+  isAvailable: boolean;
   numberOfUsed: number;
-  applyType: number;
   status: number;
   createdDate: string;
 }
