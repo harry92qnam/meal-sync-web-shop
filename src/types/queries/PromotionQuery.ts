@@ -1,9 +1,9 @@
 import PagingRequestQuery from './PagingRequestQuery';
 
 export default interface PromotionQuery extends PagingRequestQuery {
-  name: string;
+  searchValue: string;
   status: number;
-  type: number;
+  applyType: number;
   dateFrom: Date;
   dateTo: Date;
 }

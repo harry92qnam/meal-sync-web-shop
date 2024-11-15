@@ -79,7 +79,7 @@ export default function Categories() {
         toast('error', responseData.data.error.message);
       }
     } catch (error: any) {
-      toast('error', error.response.data.error.message);
+      console.log(error);
     }
   };
 

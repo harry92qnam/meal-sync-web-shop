@@ -3,13 +3,19 @@ import DateRangeFilter from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
+import PromotionCreateModal from '@/components/promotion/PromotionCreateModal';
+import PromotionUpdateModal from '@/components/promotion/PromotionUpdateModal';
 import { PROMOTION_COLUMNS, PROMOTION_STATUS, PROMOTION_TYPE } from '@/data/constants/constants';
-import { samplePromotions } from '@/data/TestData';
+import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
+import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
+import useRefetch from '@/hooks/states/useRefetch';
+import apiClient from '@/services/api-services/api-client';
+import { promotionApiService } from '@/services/api-services/api-service-instances';
 import PageableModel from '@/types/models/PageableModel';
 import PromotionModel from '@/types/models/PromotionModel';
 import PromotionQuery from '@/types/queries/PromotionQuery';
-import { formatDate } from '@/utils/MyUtils';
+import { formatDate, toast } from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -18,25 +24,117 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Selection,
+  useDisclosure,
 } from '@nextui-org/react';
-import { ReactNode, useCallback, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Swal from 'sweetalert2';
 
 export default function Promotions() {
+  const router = useRouter();
+  const { isRefetch, setIsRefetch } = useRefetch();
   const { range } = usePeriodTimeFilterState();
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
   const [applyTypes, setApplyTypes] = useState<Selection>(new Set(['0']));
+  const [promotionDetail, setPromotionDetail] = useState<PromotionModel | null>(null);
+
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onOpenChange: onCreateOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isUpdateOpen,
+    onOpen: onUpdateOpen,
+    onOpenChange: onUpdateOpenChange,
+  } = useDisclosure();
+
+  const openPromotionDetail = async (id: number) => {
+    router.push(`promotions/${id}`);
+  };
 
   const handleAddNewPromotion = async () => {
-    alert('add new promotion');
+    onCreateOpen();
   };
 
-  const handleUpdate = async () => {
-    // todo update promotion
+  const handleUpdate = async (id: number) => {
+    try {
+      const responseData = await apiClient.get(`shop-owner/promotion/${id}/detail`);
+
+      if (responseData.data.isSuccess) {
+        setPromotionDetail(responseData.data.value);
+        onUpdateOpen();
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
-  const handleDelete = async () => {
+  const handleDisable = async (id: number) => {
+    await Swal.fire({
+      title: 'Bạn có chắc muốn ẩn khuyến mãi này không?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Có',
+      cancelButtonText: 'Không',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const payload = {
+            id,
+            status: 2,
+          };
+          const responseData = await apiClient.put(`shop-owner/promotion/status/update`, payload);
+          if (responseData.data.isSuccess) {
+            setIsRefetch();
+            toast('success', 'Tạm ẩn khuyến mãi thành công');
+          } else {
+            toast('error', responseData.data.error.message);
+          }
+        } catch (error: any) {
+          console.log(error, '>>> error');
+        }
+      }
+    });
+  };
+
+  const handleEnable = async (id: number) => {
+    await Swal.fire({
+      title: 'Bạn có chắc muốn mở lại khuyến mãi này không?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#94a3b8',
+      confirmButtonText: 'Có',
+      cancelButtonText: 'Không',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const payload = {
+            id,
+            status: 1,
+          };
+          const responseData = await apiClient.put(`shop-owner/promotion/status/update`, payload);
+          if (responseData.data.isSuccess) {
+            setIsRefetch();
+            toast('success', 'Mở lại khuyến mãi thành công');
+          } else {
+            toast('error', responseData.data.error.message);
+          }
+        } catch (error: any) {
+          console.log(error, '>>> error');
+        }
+      }
+    });
+  };
+
+  const handleDelete = async (id: number) => {
     await Swal.fire({
       title: 'Bạn có chắc muốn xóa khuyến mãi này không?',
       icon: 'warning',
@@ -45,32 +143,56 @@ export default function Promotions() {
       cancelButtonColor: '#94a3b8',
       confirmButtonText: 'Xóa',
       cancelButtonText: 'Không',
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          text: 'Đã xóa thành công!',
-          icon: 'success',
-        });
+        try {
+          const payload = {
+            id,
+            status: 3,
+          };
+          const responseData = await apiClient.put(`shop-owner/promotion/status/update`, payload);
+          if (responseData.data.isSuccess) {
+            setIsRefetch();
+            toast('success', 'Đã xóa khuyến mãi thành công');
+          } else {
+            toast('error', responseData.data.error.message);
+          }
+        } catch (error: any) {
+          console.log(error, '>>> error');
+        }
       }
     });
   };
 
   const [query, setQuery] = useState<PromotionQuery>({
-    name: '',
-    status: 1,
-    type: 1,
+    searchValue: '',
+    status: 0,
+    applyType: 0,
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
     pageIndex: 1,
     pageSize: 10,
   } as PromotionQuery);
 
-  const promotions = samplePromotions.value.items;
-  // const { data: promotions } = useFetchWithRQ<PromotionModel, PromotionQuery>(
-  //   REACT_QUERY_CACHE_KEYS.PROMOTIONS,
-  //   promotionApiService,
-  //   query,
-  // );
+  const { data: promotions, refetch } = useFetchWithRQ<PromotionModel, PromotionQuery>(
+    REACT_QUERY_CACHE_KEYS.PROMOTIONS,
+    promotionApiService,
+    query,
+  );
+
+  useEffect(() => {
+    setQuery(
+      (prevQuery) =>
+        ({
+          ...prevQuery,
+          ...range,
+        }) as PromotionQuery,
+    );
+  }, [range]);
+
+  useEffect(() => {
+    refetch();
+  }, [isRefetch]);
 
   const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
     PROMOTION_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
@@ -95,14 +217,14 @@ export default function Promotions() {
 
   const applyTypeFilter = {
     label: 'Loại áp dụng',
-    mappingField: 'type',
+    mappingField: 'applyType',
     selectionMode: 1,
     options: applyTypeFilterOptions,
     selectedValues: applyTypes,
     handleFunc: (values: Selection) => {
       const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
       setApplyTypes(values);
-      setQuery({ ...query, type: value, ...range });
+      setQuery({ ...query, applyType: value, ...range });
     },
   } as TableCustomFilter;
 
@@ -132,16 +254,18 @@ export default function Promotions() {
             <p className="text-bold text-small">{formatDate(promotion.endDate)}</p>
           </div>
         );
-      case 'type':
+      case 'applyType':
         return (
           <Chip
             className={`capitalize ${
-              promotion.type === 1 ? 'bg-cyan-200 text-cyan-600' : 'bg-indigo-200 text-indigo-600'
+              promotion.applyType === 1
+                ? 'bg-cyan-200 text-cyan-600'
+                : 'bg-indigo-200 text-indigo-600'
             }`}
             size="sm"
             variant="flat"
           >
-            {PROMOTION_TYPE.find((item) => item.key == promotion.type)?.desc}
+            {PROMOTION_TYPE.find((item) => item.key == promotion.applyType)?.desc}
           </Chip>
         );
       case 'numberOfUsed':
@@ -165,7 +289,7 @@ export default function Promotions() {
             size="sm"
             variant="flat"
           >
-            {PROMOTION_STATUS.find((item) => item.key == promotion.status)?.desc}
+            {promotion.status === 1 ? 'Khả dụng' : 'Đã tạm ẩn'}
           </Chip>
         );
       case 'actions':
@@ -178,8 +302,17 @@ export default function Promotions() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={handleUpdate}>Sửa khuyến mãi</DropdownItem>
-                <DropdownItem onClick={handleDelete}>Xóa khuyến mãi</DropdownItem>
+                {promotion.status === 1 ? (
+                  <DropdownItem onClick={() => handleDisable(promotion.id)}>Tạm ẩn</DropdownItem>
+                ) : (
+                  <DropdownItem onClick={() => handleEnable(promotion.id)}>Bỏ tạm ẩn</DropdownItem>
+                )}
+                <DropdownItem onClick={() => handleUpdate(promotion.id)}>
+                  Sửa khuyến mãi
+                </DropdownItem>
+                <DropdownItem onClick={() => handleDelete(promotion.id)}>
+                  Xóa khuyến mãi
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -201,19 +334,31 @@ export default function Promotions() {
         placeHolderSearch="Tìm kiếm khuyến mãi..."
         description="khuyến mãi"
         columns={PROMOTION_COLUMNS}
-        total={20}
-        // arrayData={promotions?.value?.items ?? []}
-        arrayData={promotions}
+        total={promotions?.value.totalCount ?? 0}
+        arrayData={promotions?.value?.items ?? []}
         searchHandler={(value: string) => {
-          setQuery({ ...query, name: value });
+          setQuery({ ...query, searchValue: value });
         }}
-        pagination={samplePromotions.value as PageableModel}
+        pagination={promotions?.value as PageableModel}
         goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
         setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
         selectionMode="single"
         filters={[statusFilter, applyTypeFilter]}
         renderCell={renderCell}
         handleAddNew={handleAddNewPromotion}
+        handleRowClick={openPromotionDetail}
+      />
+      <PromotionCreateModal
+        isOpen={isCreateOpen}
+        onOpen={onCreateOpen}
+        onOpenChange={onCreateOpenChange}
+      />
+
+      <PromotionUpdateModal
+        promotion={promotionDetail}
+        isOpen={isUpdateOpen} // Control visibility of the update modal
+        onOpen={onUpdateOpen}
+        onOpenChange={onUpdateOpenChange}
       />
     </MainLayout>
   );

@@ -140,20 +140,33 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
         status: 1,
       };
 
-      const responseData = await apiClient.post('shop-owner/food/create', payload);
-      console.log(responseData);
-      if (!responseData.data.isSuccess) {
-        toast('error', responseData.data.error.message);
+      if (!payload.name) {
+        toast('error', 'Vui lòng nhập tên món ăn');
+      } else if (!payload.price) {
+        toast('error', 'Vui lòng nhập giá bán');
+      } else if (!payload.operatingSlots.length) {
+        toast('error', 'Vui lòng chọn khung giờ mở bán');
+      } else if (!payload.platformCategoryId) {
+        toast('error', 'Vui lòng chọn danh mục hệ thống');
+      } else if (!payload.shopCategoryId) {
+        toast('error', 'Vui lòng chọn danh mục cửa hàng');
+      } else if (!payload.imgUrl) {
+        toast('error', 'Vui lòng chọn hình ảnh cho sản phẩm');
       } else {
-        setIsRefetch();
-        toast('success', 'Tạo món ăn thành công');
-        onOpenChange(false);
-        formik.resetForm();
-        setAvatar(null);
-        setUrlFile('');
+        const responseData = await apiClient.post('shop-owner/food/create', payload);
+        if (!responseData.data.isSuccess) {
+          toast('error', responseData.data.error.message);
+        } else {
+          setIsRefetch();
+          toast('success', 'Tạo món ăn thành công');
+          onOpenChange(false);
+          formik.resetForm();
+          setAvatar(null);
+          setUrlFile('');
+        }
       }
     } catch (error: any) {
-      toast('error', 'Thiếu thông tin sản phẩm!');
+      toast('error', 'Vui lòng kiểm tra lại thông tin!');
     }
   };
 

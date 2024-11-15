@@ -49,33 +49,33 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
       <div className="px-4 py-2">
         <div className="px-8 py-4 shadow-md rounded-lg">
           <div className="flex flex-col mr-auto text-lg gap-2">
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Mã đơn hàng:</p>
               <p className="font-semibold">MS-{data?.id}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Tên người nhận hàng:</p>
               <p className="font-semibold">{data?.customer.fullName}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Địa chỉ nhận hàng:</p>
               <p className="font-semibold">{data?.customer?.address}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Số điện thoại người nhận:</p>
               <p className="font-semibold">
                 {formatPhoneNumber(data?.customer?.phoneNumber ?? '')}
               </p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Khung giờ nhận hàng</p>
               <p className="font-semibold">{formatTimeFrame(data?.startTime, data?.endTime)}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Thời gian giao dịch:</p>
               <p className="font-semibold">{formatTimeToSeconds(data?.orderDate ?? '')}</p>
             </div>
-            <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
               <p>Trạng thái đơn hàng:</p>
               <p
                 className={
@@ -156,12 +156,15 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 </div>
                 <strong className="text-xl">{formatCurrency(food.totalPrice)}</strong>
               </div>
+              <p>
+                <strong>Ghi chú món ăn: </strong> <span>{food.note ?? 'Không'}</span>
+              </p>
               <Divider />
             </>
           ))}
           <p className="py-4">
-            <strong>Ghi chú thêm:</strong>
-            {data?.note.split('\n').map((item, index) => <p key={index}>{item}</p>)}
+            <strong>Ghi chú đơn hàng: </strong>
+            {data?.note.split('\n').map((item, index) => <span key={index}>{item}</span>)}
           </p>
           <Divider />
           <div className="flex flex-col ml-auto w-1/3 pt-4 text-lg">

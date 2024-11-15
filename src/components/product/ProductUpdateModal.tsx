@@ -166,22 +166,33 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
         status: 1,
       };
 
-      console.log(payload, 'payload');
-
-      const responseData = await apiClient.put('shop-owner/food/update', payload);
-      console.log(responseData);
-      if (!responseData.data.isSuccess) {
-        toast('error', responseData.data.error.message);
+      if (!payload.name) {
+        toast('error', 'Vui lòng nhập tên món ăn');
+      } else if (!payload.price) {
+        toast('error', 'Vui lòng nhập giá bán');
+      } else if (!payload.operatingSlots.length) {
+        toast('error', 'Vui lòng chọn khung giờ mở bán');
+      } else if (!payload.platformCategoryId) {
+        toast('error', 'Vui lòng chọn danh mục hệ thống');
+      } else if (!payload.shopCategoryId) {
+        toast('error', 'Vui lòng chọn danh mục cửa hàng');
+      } else if (!payload.imgUrl) {
+        toast('error', 'Vui lòng chọn hình ảnh cho sản phẩm');
       } else {
-        setIsRefetch();
-        toast('success', 'Cập nhật món ăn thành công');
-        onOpenChange(false);
-        formik.resetForm();
-        setAvatar(null);
-        setUrlFile('');
+        const responseData = await apiClient.put('shop-owner/food/update', payload);
+        if (!responseData.data.isSuccess) {
+          toast('error', responseData.data.error.message);
+        } else {
+          setIsRefetch();
+          toast('success', 'Cập nhật món ăn thành công');
+          onOpenChange(false);
+          formik.resetForm();
+          setAvatar(null);
+          setUrlFile('');
+        }
       }
     } catch (error: any) {
-      toast('error', 'Thiếu thông tin sản phẩm!');
+      toast('error', 'Vui lòng kiểm tra lại thông tin!');
     }
   };
 
@@ -291,7 +302,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
                   name="platformCategoryId"
                   label="Danh mục hệ thống"
                   onSelectionChange={(value) => formik.setFieldValue('platformCategoryId', value)}
-                  // defaultSelectedKeys={formik.values.platformCategoryId ? [formik.values.platformCategoryId] : []}
+                  value={formik.values.platformCategoryId}
                 >
                   {platformCategories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>

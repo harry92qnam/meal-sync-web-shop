@@ -72,12 +72,12 @@ export default function StaffUpdateModal({ staff, isOpen, onOpenChange }: StaffM
         toast('error', responseData.data.error.message);
       } else {
         setIsRefetch();
-        toast('success', 'Cập nhật món ăn thành công');
+        toast('success', 'Cập nhật nhân viên thành công');
         onOpenChange(false);
         formik.resetForm();
       }
     } catch (error: any) {
-      toast('error', 'Thiếu thông tin sản phẩm!');
+      toast('error', 'Vui lòng kiểm tra lại thông tin!');
     }
   };
 

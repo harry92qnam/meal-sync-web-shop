@@ -144,33 +144,31 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">MS-{order.id}</p>
+            <p className="text-small">MS-{order.id}</p>
           </div>
         );
       case 'customerName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.customer.fullName}</p>
+            <p className="text-small capitalize">{order.customer.fullName}</p>
           </div>
         );
       case 'phoneNumber':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">
-              {formatPhoneNumber(order.customer.phoneNumber)}
-            </p>
+            <p className="text-small capitalize">{formatPhoneNumber(order.customer.phoneNumber)}</p>
           </div>
         );
       case 'buildingName':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{order.buildingName}</p>
+            <p className="text-small capitalize">{order.buildingName}</p>
           </div>
         );
       case 'totalPrice':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
+            <p className="text-small">{formatCurrency(order.totalPrice)}</p>
           </div>
         );
       case 'staff':
@@ -250,7 +248,12 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
                   className="max-w-[320px] rounded-md flex justify-center items-center mx-2 my-2"
                 >
                   <CardHeader className="flex gap-3">
-                    <p className="text-md m-auto font-bold">MS-{order.id}</p>
+                    <p className="text-md m-auto font-bold">
+                      MS-{order.id}{' '}
+                      {order.status === 6 && (
+                        <span className="text-orange-500">(Đang giao hàng)</span>
+                      )}
+                    </p>
                   </CardHeader>
                   <Divider />
                   <CardBody className="flex justify-center">
@@ -277,7 +280,7 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
                 <CardBody className="flex justify-center">
                   <p>Tên khách hàng: {order?.customer?.fullName}</p>
                   <p>Số điện thoại: {order?.customer?.phoneNumber}</p>
-                  <p>Khu vực: {order?.dormitoryName}</p>
+                  <p>Địa chỉ nhận hàng: {order?.buildingName}</p>
                 </CardBody>
               </Card>
             ))}

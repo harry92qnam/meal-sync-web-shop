@@ -14,7 +14,7 @@ export default interface OrderModel {
   endTime: number;
   timeFrameFormat: string;
   note: string;
-  shopDeliveryStaff: {
+  shopDeliveryStaff?: {
     id: number;
     fullName: string;
     avatarUrl?: string;
@@ -45,6 +45,7 @@ export default interface OrderModel {
       quantity: number;
       totalPrice: number;
       basicPrice: number;
+      note: string;
       optionGroups: [
         {
           optionGroupTitle: string;

@@ -67,7 +67,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">DP-{packages?.deliveryPackageId}</p>
+            <p className="text-small">DP-{packages?.deliveryPackageId}</p>
           </div>
         );
       case 'shopDeliveryStaff':
@@ -89,15 +89,13 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
       case 'numberOfOrders':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">
-              {formatNumber(packages?.orders.length)}
-            </p>
+            <p className="text-small capitalize">{formatNumber(packages?.orders?.length)}</p>
           </div>
         );
       case 'frame':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">
+            <p className="text-small">
               {formatTimeFrame(packages?.orders[0]?.startTime, packages?.orders[0]?.endTime)}
             </p>
           </div>
@@ -117,7 +115,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
       case 'intendedReceiveDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">
+            <p className="text-small">
               {new Date(packages?.orders[0]?.intendedReceiveDate).toLocaleDateString('en-GB')}
             </p>
           </div>
@@ -150,21 +148,19 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         case 'id':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small">DP-{packages?.deliveryPackageId}</p>
+              <p className="text-small">DP-{packages?.deliveryPackageId}</p>
             </div>
           );
         case 'numberOfOrders':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small capitalize">
-                {formatNumber(packages?.orders.length)}
-              </p>
+              <p className="text-small capitalize">{formatNumber(packages?.orders.length)}</p>
             </div>
           );
         case 'frame':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small">
+              <p className="text-small">
                 {formatTimeFrame(packages?.orders[0]?.startTime, packages?.orders[0]?.endTime)}
               </p>
             </div>
@@ -184,7 +180,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
         case 'intendedReceiveDate':
           return (
             <div className="flex flex-col">
-              <p className="text-bold text-small">
+              <p className="text-small">
                 {new Date(packages?.orders[0]?.intendedReceiveDate).toLocaleDateString('en-GB')}
               </p>
             </div>
