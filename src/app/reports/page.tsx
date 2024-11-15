@@ -11,8 +11,7 @@ import { reportApiService } from '@/services/api-services/api-service-instances'
 import PageableModel from '@/types/models/PageableModel';
 import ReportModel from '@/types/models/ReportModel';
 import ReportQuery from '@/types/queries/ReportQuery';
-import { formatTimeToSeconds } from '@/utils/MyUtils';
-import { Chip, Selection } from '@nextui-org/react';
+import { Selection } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useState } from 'react';
 
@@ -69,10 +68,10 @@ export default function Reports() {
             <p className="text-small">{report.id}</p>
           </div>
         );
-      case 'description':
+      case 'title':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{report.description}</p>
+            <p className="text-small">{report.title}</p>
           </div>
         );
       // case 'status':
