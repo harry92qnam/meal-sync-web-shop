@@ -311,8 +311,8 @@ export default function PromotionUpdateModal({
                           : ''
                       }
                       onChange={(e) => {
-                        const rawValue = e.target.value.replace(/\./g, '');
-                        formik.setFieldValue('minOrderValue', rawValue);
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        formik.setFieldValue('minOrderValue', value);
                       }}
                       onBlur={formik.handleBlur}
                       isInvalid={formik.touched.minOrderValue && !!formik.errors.minOrderValue}
@@ -332,8 +332,8 @@ export default function PromotionUpdateModal({
                           : ''
                       }
                       onChange={(e) => {
-                        const rawValue = e.target.value.replace(/\./g, '');
-                        formik.setFieldValue('maximumApplyValue', rawValue);
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        formik.setFieldValue('maximumApplyValue', value);
                       }}
                       onBlur={formik.handleBlur}
                       isInvalid={
@@ -378,8 +378,8 @@ export default function PromotionUpdateModal({
                           : ''
                       }
                       onChange={(e) => {
-                        const rawValue = e.target.value.replace(/\./g, '');
-                        formik.setFieldValue('minOrderValue', rawValue);
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        formik.setFieldValue('minOrderValue', value);
                       }}
                       onBlur={formik.handleBlur}
                       isInvalid={formik.touched.minOrderValue && !!formik.errors.minOrderValue}
@@ -399,8 +399,8 @@ export default function PromotionUpdateModal({
                           : ''
                       }
                       onChange={(e) => {
-                        const rawValue = e.target.value.replace(/\./g, '');
-                        formik.setFieldValue('amountValue', rawValue);
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        formik.setFieldValue('amountValue', value);
                       }}
                       onBlur={formik.handleBlur}
                       isInvalid={formik.touched.amountValue && !!formik.errors.amountValue}

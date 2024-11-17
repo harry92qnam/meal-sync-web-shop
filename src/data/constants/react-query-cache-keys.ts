@@ -7,6 +7,7 @@ const REACT_QUERY_CACHE_KEYS = {
   CATEGORIES: ['categories'],
   PROMOTIONS: ['promotions'],
   STAFFS: ['staffs'],
+  WITHDRAWALS: ['withdrawals'],
 };
 
 export default REACT_QUERY_CACHE_KEYS;

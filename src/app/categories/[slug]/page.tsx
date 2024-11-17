@@ -47,7 +47,7 @@ export default function CategoryDetail({ params }: { params: { slug: number } })
         <BreadcrumbItem>Chi tiết danh mục</BreadcrumbItem>
       </Breadcrumbs>
       <div className="px-4 py-2">
-        <div className="px-8 py-4 shadow-md rounded-lg">
+        <div className="px-8 py-4 shadow-md border-small rounded-lg">
           <div className="flex flex-col mr-auto text-lg gap-2">
             <div className="flex gap-2">
               <p>Tên danh mục:</p>
@@ -60,7 +60,6 @@ export default function CategoryDetail({ params }: { params: { slug: number } })
 
             <Divider className="my-3" />
             <p className="text-xl font-bold">Danh sách sản phẩm liên kết:</p>
-            <Divider className="my-2" />
             {!data?.foods.length ? (
               <p className="text-senary text-center">Không có sản phẩm nào đang được liên kết</p>
             ) : (

@@ -47,7 +47,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
       </Breadcrumbs>
       <h1 className="text-2xl font-bold pl-4 py-2">Thông tin đơn hàng</h1>
       <div className="px-4 py-2">
-        <div className="px-8 py-4 shadow-md rounded-lg">
+        <div className="px-8 py-4 shadow-md border-small rounded-lg">
           <div className="flex flex-col mr-auto text-lg gap-2">
             <div className="flex gap-2 items-center">
               <p>Mã đơn hàng:</p>
@@ -123,7 +123,13 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
               <div key={food.id} className="flex justify-between items-center py-4">
                 <div>
                   <div className="flex gap-4">
-                    <Image src={food.imageUrl} alt="Food image" width={120} height={120} />
+                    <Image
+                      src={food.imageUrl}
+                      alt="Food image"
+                      width={120}
+                      height={120}
+                      className="border-small"
+                    />
                     <div className="flex flex-col justify-center">
                       <div className="text-xl">
                         {food.name} ({formatCurrency(food.basicPrice)})
@@ -157,7 +163,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 <strong className="text-xl">{formatCurrency(food.totalPrice)}</strong>
               </div>
               <p>
-                <strong>Ghi chú món ăn: </strong> <span>{food.note ?? 'Không'}</span>
+                <strong>Ghi chú món ăn: </strong> <span>{food.note}</span>
               </p>
               <Divider />
             </>
