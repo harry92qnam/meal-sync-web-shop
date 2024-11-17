@@ -250,10 +250,12 @@ export default function AccountBalance() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                {withdrawal.status === 1 && (
+                {withdrawal.status === 1 ? (
                   <DropdownItem onClick={() => handleCancelRequest(withdrawal.id)}>
                     Hủy yêu cầu
                   </DropdownItem>
+                ) : (
+                  <DropdownItem></DropdownItem>
                 )}
                 <DropdownItem onClick={() => handleOpenDetail(withdrawal.id)}>
                   Xem chi tiết
