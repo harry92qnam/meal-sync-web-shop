@@ -84,7 +84,7 @@ export default function ProductDetail({ params }: { params: { slug: number } }) 
         <BreadcrumbItem>Chi tiết món ăn</BreadcrumbItem>
       </Breadcrumbs>
       <div className="px-4 py-2">
-        <div className="px-8 py-4 shadow-md rounded-lg">
+        <div className="px-8 py-4 shadow-md border-small rounded-lg">
           <div className="flex flex-col mr-auto text-lg gap-2">
             <div className="flex gap-2">
               <p>Tên món ăn:</p>
@@ -117,7 +117,6 @@ export default function ProductDetail({ params }: { params: { slug: number } }) 
                 Thêm nhóm lựa chọn
               </Button>
             </div>
-            <Divider className="my-2" />
             {!data?.optionGroups.length ? (
               <p className="text-senary text-center">
                 Không có nhóm lựa chọn nào đang được liên kết
@@ -127,7 +126,7 @@ export default function ProductDetail({ params }: { params: { slug: number } }) 
                 {data?.optionGroups.map((option) => (
                   <div
                     key={option.optionGroupId}
-                    className="flex items-center py-2 gap-4 justify-between max-w-[500px]"
+                    className="flex items-center py-2 gap-4 justify-between"
                   >
                     <p>{option?.title}</p>
                     <Button

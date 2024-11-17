@@ -300,7 +300,6 @@ export default function Orders() {
   };
 
   const openOrderDetail = (id: number) => {
-    // const order = orders?.value.items.find((item) => item.id === id);
     router.push(`orders/${id}`);
   };
 

@@ -87,14 +87,16 @@ const REPORT_COLUMNS = [
   { key: 'id', name: 'Mã báo cáo' },
   { key: 'orderId', name: 'Mã đơn hàng' },
   { key: 'customerName', name: 'Tên người báo cáo' },
-  { key: 'reason', name: 'Lý do' },
+  { key: 'title', name: 'Loại báo cáo' },
+  { key: 'content', name: 'Lý do cụ thể' },
   { key: 'status', name: 'Trạng thái' },
   { key: 'createdDate', name: 'Thời gian báo cáo' },
 ];
 
 const REPORT_STATUS = [
   { key: 1, desc: 'Đang xử lý' },
-  { key: 2, desc: 'Đã xử lý' },
+  { key: 3, desc: 'Đã phê duyệt' },
+  { key: 2, desc: 'Đã từ chối' },
 ];
 
 // Manage products
@@ -180,6 +182,24 @@ const STAFF_STATUS = [
   { key: 3, desc: 'Đã khóa' },
 ];
 
+const WITHDRAWAL_COLUMNS = [
+  { key: 'id', name: 'Mã yêu cầu' },
+  { key: 'bankShortName', name: 'Tên ngân hàng' },
+  { key: 'bankAccountNumber', name: 'Số tài khoản' },
+  { key: 'amount', name: 'Số tiền muốn rút' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'createdDate', name: 'Thời gian tạo yêu cầu' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const WITHDRAWAL_STATUS = [
+  { key: 1, desc: 'Đang chờ duyệt' },
+  { key: 2, desc: 'Đã hủy' },
+  { key: 3, desc: 'Đang xử lý' },
+  { key: 4, desc: 'Đã phê duyệt' },
+  { key: 5, desc: 'Đã từ chối' },
+];
+
 export {
   ALL_PACKAGES_COLUMNS,
   CATEGORY_COLUMNS,
@@ -202,4 +222,6 @@ export {
   REPORT_STATUS,
   STAFF_COLUMNS,
   STAFF_STATUS,
+  WITHDRAWAL_COLUMNS,
+  WITHDRAWAL_STATUS,
 };

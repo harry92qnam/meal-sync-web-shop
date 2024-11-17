@@ -9,18 +9,20 @@ import StaffModel from '@/types/models/StaffModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 import PackageModel from '@/types/models/PackageModel';
 import { getFormattedCurrentTime } from '@/utils/MyUtils';
+import WithdrawalModel from '@/types/models/WithdrawalModel';
 
 export const endpoints = {
   ORDERS: 'web/shop-owner/order',
   ALL: 'web/shop-owner/delivery-package',
   OWNER: 'web/shop-owner/delivery-package/own',
-  REPORTS: 'shop-owner/order/report',
+  REPORTS: 'web/shop-owner/order/report',
   PRODUCTS: 'web/shop-owner/food',
   OPTIONS: 'shop-owner/option-group',
   CATEGORIES: 'web/shop-owner/category',
   CATEGORY_IMAGE_UPLOAD: 'shop-owner/category/upload',
   PROMOTIONS: 'shop-owner/promotion',
   STAFFS: 'shop-owner/delivery-staff',
+  WITHDRAWALS: 'shop-owner/withdrawal/history',
 };
 
 export const orderApiService = (statuses: number[]) => {
@@ -62,3 +64,7 @@ export const promotionApiService = createHttpService<PromotionModel>(
   endpoints.PROMOTIONS,
 );
 export const staffApiService = createHttpService<StaffModel>(apiClient, endpoints.STAFFS);
+export const withdrawalApiService = createHttpService<WithdrawalModel>(
+  apiClient,
+  endpoints.WITHDRAWALS,
+);

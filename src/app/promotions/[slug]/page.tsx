@@ -3,7 +3,7 @@ import Header from '@/components/common/Header';
 import MainLayout from '@/components/layout/MainLayout';
 import apiClient from '@/services/api-services/api-client';
 import PromotionModel from '@/types/models/PromotionModel';
-import { formatCurrency, formatDate, formatNumber, toast } from '@/utils/MyUtils';
+import { formatDate, formatNumber, toast } from '@/utils/MyUtils';
 import { BreadcrumbItem, Breadcrumbs, Chip } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

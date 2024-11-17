@@ -30,8 +30,9 @@ const validationSchema = yup.object().shape({
 export default function Login() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
-  const toggleVisibility = () => setIsVisible(!isVisible);
   const [error, setError] = useState('');
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleLogin = async (data: { email: string; password: string }) => {
     try {
@@ -41,19 +42,14 @@ export default function Login() {
         password: data.password,
       };
       const responseData = await apiClient.post('auth/login', payload);
-
-      if (!responseData.data.isSuccess) {
-        setError(responseData.data.error.message);
-      } else {
-        // if (responseData.data.value.accountResponse.roleName !== 'ShopOwner') {
-        //   setError('Bạn không có quyền truy cập');
-        //   return;
-        // }
+      if (responseData.data.isSuccess) {
         localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
         router.push('/orders');
+      } else {
+        setError(responseData.data.error.message);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setError(error.response.data.error.message);
     }
   };
 
@@ -102,17 +98,17 @@ export default function Login() {
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.password && !!formik.errors.password}
             errorMessage={formik.touched.password && formik.errors.password}
-            // endContent={
-            //   <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
-            //     {isVisible ? (
-            //       <FaEye className="text-2xl text-default-400" />
-            //     ) : (
-            //       <FaEyeSlash className="text-2xl text-default-400" />
-            //     )}
-            //   </button>
-            // }
+            endContent={
+              <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                {isVisible ? (
+                  <FaEye className="text-2xl text-default-400" />
+                ) : (
+                  <FaEyeSlash className="text-2xl text-default-400" />
+                )}
+              </button>
+            }
           />
-          {error && <p className="text-sm text-danger text-center">{error}</p>}
+          {error && <p className="text-medium text-danger text-center">{error}</p>}
           <div className="flex justify-end">
             <Link href={'/forgot-password'}>
               <p className="underline text-primary text-sm w-28">Quên mật khẩu?</p>

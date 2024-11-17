@@ -191,8 +191,8 @@ export default function OptionGroupUpdateModal({
                     formik.values.price ? formatPriceForInput(formik.values.price.toString()) : ''
                   }
                   onChange={(e) => {
-                    const rawValue = e.target.value.replace(/\./g, '');
-                    formik.setFieldValue('price', rawValue);
+                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    formik.setFieldValue('price', value);
                   }}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.price && !!formik.errors.price}

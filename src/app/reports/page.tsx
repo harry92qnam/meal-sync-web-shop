@@ -7,33 +7,59 @@ import { REPORT_COLUMNS, REPORT_STATUS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
 import usePeriodTimeFilterState from '@/hooks/states/usePeriodTimeFilterQuery';
+import useRefetch from '@/hooks/states/useRefetch';
 import { reportApiService } from '@/services/api-services/api-service-instances';
 import PageableModel from '@/types/models/PageableModel';
 import ReportModel from '@/types/models/ReportModel';
 import ReportQuery from '@/types/queries/ReportQuery';
-import { Selection } from '@nextui-org/react';
+import { formatTimeToSeconds } from '@/utils/MyUtils';
+import {
+  Button,
+  Chip,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Selection,
+} from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 export default function Reports() {
   const router = useRouter();
   const { range } = usePeriodTimeFilterState();
   const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
+  const { isRefetch } = useRefetch();
 
   const [query, setQuery] = useState<ReportQuery>({
     searchValue: '',
-    status: 1,
+    status: 0,
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
     pageIndex: 1,
     pageSize: 10,
   } as ReportQuery);
 
-  const { data: reports } = useFetchWithRQ<ReportModel, ReportQuery>(
+  const { data: reports, refetch } = useFetchWithRQ<ReportModel, ReportQuery>(
     REACT_QUERY_CACHE_KEYS.REPORTS,
     reportApiService,
     query,
   );
+
+  useEffect(() => {
+    setQuery(
+      (prevQuery) =>
+        ({
+          ...prevQuery,
+          ...range,
+        }) as ReportQuery,
+    );
+  }, [range]);
+
+  useEffect(() => {
+    refetch();
+  }, [isRefetch]);
 
   const statusFilterOptions = [{ key: 0, desc: 'Tất cả' }].concat(
     REPORT_STATUS.map((item) => ({ key: item.key, desc: item.desc })),
@@ -53,11 +79,7 @@ export default function Reports() {
   } as TableCustomFilter;
 
   const openReportDetail = (id: number) => {
-    // const report = reports.find((item) => item.id === id);
-    // if (!report) {
-    //   router.push('/');
-    // }
-    router.push('reports/report-detail');
+    router.push(`reports/${id}`);
   };
 
   const renderCell = useCallback((report: ReportModel, columnKey: React.Key): ReactNode => {
@@ -65,7 +87,13 @@ export default function Reports() {
       case 'id':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{report.id}</p>
+            <p className="text-small">RP-{report.id}</p>
+          </div>
+        );
+      case 'orderId':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">MS-{report.orderId}</p>
           </div>
         );
       case 'title':
@@ -74,24 +102,40 @@ export default function Reports() {
             <p className="text-small">{report.title}</p>
           </div>
         );
-      // case 'status':
-      //   return (
-      //     <Chip
-      //       className={`capitalize ${
-      //         report.status === 1 ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
-      //       }`}
-      //       size="sm"
-      //       variant="flat"
-      //     >
-      //       {REPORT_STATUS.find((item) => item.key == report.status)?.desc}
-      //     </Chip>
-      //   );
-      // case 'createdDate':
-      //   return (
-      //     <div className="flex flex-col">
-      //       <p className="text-small">{formatTimeToSeconds(report.createdDate)}</p>
-      //     </div>
-      //   );
+      case 'customerName':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{report.customer.fullName}</p>
+          </div>
+        );
+      case 'content':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{report.content}</p>
+          </div>
+        );
+      case 'status':
+        return (
+          <Chip
+            className={`capitalize ${
+              report.status === 1
+                ? 'bg-gray-200 text-gray-600'
+                : report.status === 3
+                  ? 'bg-green-200 text-green-600'
+                  : 'bg-red-200 text-rose-600'
+            }`}
+            size="sm"
+            variant="flat"
+          >
+            {REPORT_STATUS.find((item) => item.key == report.status)?.desc}
+          </Chip>
+        );
+      case 'createdDate':
+        return (
+          <div className="flex flex-col">
+            <p className="text-small">{formatTimeToSeconds(report.createdDate)}</p>
+          </div>
+        );
       default:
         break;
     }
