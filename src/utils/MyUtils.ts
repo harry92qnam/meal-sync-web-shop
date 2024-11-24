@@ -71,7 +71,7 @@ export function formatTimeFrame(startTime?: number, endTime?: number): string {
   const formattedStartTime = formatTime(startTime!);
   const formattedEndTime = formatTime(endTime!);
 
-  return `${formattedStartTime}-${formattedEndTime}`;
+  return `${formattedStartTime} - ${formattedEndTime}`;
 }
 
 export const toast = (icon: 'success' | 'error', content: string) =>
@@ -113,3 +113,10 @@ export function formatPriceForInput(value: string) {
   const number = value.replace(/[^\d]/g, '');
   return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
+
+export const isLocalImage = (uri: string) => {
+  return (
+    uri.toLocaleLowerCase().startsWith('file://') ||
+    uri.toLocaleLowerCase().startsWith('content://')
+  );
+};

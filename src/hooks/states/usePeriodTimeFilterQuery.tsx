@@ -28,7 +28,7 @@ export interface PeriodTimeFilterQueryState {
 
 const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
   range: {
-    dateFrom: getDateMinusDays(new Date(), 29),
+    dateFrom: new Date(0),
     dateTo: getDateWithTimezoneOffset(new Date(), 7),
   } as PeriodTimeFilterQuery,
   selected: 3,
@@ -52,7 +52,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: new Date(2024, 0, 1),
+              dateFrom: new Date(0),
               dateTo: getDateWithTimezoneOffset(new Date(), 7),
             },
           }));

@@ -36,7 +36,6 @@ type TableCustomProps = {
   columns: Array<{ name: string; key: string; sortable?: boolean }>;
   arrayData: { [key: string]: any }[];
   total: number;
-  // arrayDataColumns: Array<{ name: string; uid: string; sortable?: boolean; imageable?: boolean }>;
   renderCell: (item: any, columnKey: React.Key) => ReactNode;
   selectionMode: 'multiple' | 'single';
 

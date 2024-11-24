@@ -258,7 +258,7 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
                   renderValue={(selected) => (
                     <div className="flex flex-wrap gap-2">
                       {selected.map((slot) => (
-                        <Chip key={slot.key} color="success" className="text-septenary">
+                        <Chip key={slot.key} className="text-green-800 bg-green-300 font-bold">
                           {slot.rendered}
                         </Chip>
                       ))}
@@ -306,7 +306,7 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
                   renderValue={(selected) => (
                     <div className="flex flex-wrap gap-2">
                       {selected.map((option) => (
-                        <Chip key={option.key} color="success">
+                        <Chip key={option.key} className="text-green-800 bg-green-300 font-bold">
                           {option.rendered}
                         </Chip>
                       ))}

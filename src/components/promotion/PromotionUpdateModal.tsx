@@ -109,7 +109,7 @@ export default function PromotionUpdateModal({
           startDate: values.startDate,
           endDate: values.endDate,
           applyType: 1,
-          status: 1,
+          status: 2,
           bannerUrl: url,
         };
       } else {
@@ -125,7 +125,7 @@ export default function PromotionUpdateModal({
           startDate: values.startDate,
           endDate: values.endDate,
           applyType: 2,
-          status: 1,
+          status: 2,
           bannerUrl: url,
         };
       }

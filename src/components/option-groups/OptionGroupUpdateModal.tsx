@@ -1,18 +1,23 @@
+import { PlusIcon } from '@/components/common/PlusIcon';
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
-import { toast } from '@/utils/MyUtils';
+import { formatPriceForInput, toast } from '@/utils/MyUtils';
 import {
+  Avatar,
   Button,
+  Divider,
   Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Radio,
+  RadioGroup,
 } from '@nextui-org/react';
 import { useFormik } from 'formik';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import * as yup from 'yup';
 
 interface OptionGroupModalProps {
@@ -31,39 +36,71 @@ const validationSchema = yup.object().shape({
   description: yup.string().max(100, 'Mô tả chỉ có tối đa 100 ký tự'),
 });
 
+interface Option {
+  isDefault: boolean;
+  title: string;
+  isCalculatePrice: boolean;
+  price: number;
+  imageUrl: string;
+  status: number;
+}
+
 export default function OptionGroupUpdateModal({
   optionGroup,
   isOpen,
   onOpenChange,
 }: OptionGroupModalProps) {
   const { setIsRefetch } = useRefetch();
+  const urlList = optionGroup?.options?.map((option) => option.imageUrl) || [];
 
-  // useEffect(() => {
-  //   setUrlFile(product?.imageUrl);
-  //   formik.setFieldValue(
-  //     'operatingSlots',
-  //     product?.operatingSlots.map((slot) => slot.id),
-  //   );
-  //   formik.setFieldValue('platformCategoryId', product?.platformCategoryId);
-  //   formik.setFieldValue('shopCategoryId', product?.shopCategoryId);
-  //   formik.setFieldValue(
-  //     'optionGroups',
-  //     product?.optionGroups.map((option) => option.optionGroupId),
-  //   );
-  // }, [product]);
+  const [urlFileList, setUrlFileList] = useState<string[]>(urlList);
+  const initOption = {
+    isDefault: false,
+    title: '',
+    isCalculatePrice: false,
+    price: 0,
+    imageUrl: '',
+    status: 1,
+  };
+  const [options, setOptions] = useState<Option[]>(optionGroup?.options ?? []);
+
+  useEffect(() => {
+    if (optionGroup?.options) {
+      setOptions(optionGroup.options);
+      setUrlFileList(optionGroup?.options?.map((option) => option.imageUrl));
+    }
+  }, [optionGroup]);
+  console.log(options, 'optionsoptions');
+
+  const handleAddOption = () => {
+    const newOption = setOptions([
+      ...options,
+      {
+        isDefault: false,
+        title: '',
+        isCalculatePrice: false,
+        price: 0,
+        imageUrl: '',
+        status: 1,
+      },
+    ]);
+    formik.setFieldValue('options', [...options, newOption]);
+  };
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       title: optionGroup?.title,
+      type: optionGroup?.type.toString(),
+      isRequire: optionGroup?.isRequire.toString() === 'false' ? '1' : '2',
+      maxChoices: optionGroup?.maxChoices.toString(),
+      options: optionGroup?.options,
     },
     validationSchema,
     onSubmit: (values) => {
       handleUpdate(values);
     },
   });
-
-  console.log(formik.initialValues, 'formik');
 
   const uploadImage = async (image: File | null) => {
     try {
@@ -87,56 +124,115 @@ export default function OptionGroupUpdateModal({
   };
   const handleUpdate = async (values: any) => {
     console.log(values, 'values');
-    // try {
-    //   const url = avatar ? await uploadImage(avatar) : urlFile;
-    //   const payload = {
-    //     id: product?.id,
-    //     name: values.name,
-    //     description: values.description,
-    //     price: Number(values.price),
-    //     imgUrl: url,
-    //     operatingSlots: Array.from(values.operatingSlots).map(Number),
-    //     shopCategoryId: values.shopCategoryId.currentKey
-    //       ? Number(values.shopCategoryId.currentKey)
-    //       : values.shopCategoryId,
-    //     platformCategoryId: values.platformCategoryId.currentKey
-    //       ? Number(values.platformCategoryId.currentKey)
-    //       : values.platformCategoryId,
-    //     foodOptionGroups: Array.from(values.optionGroups).map(Number),
-    //     status: 1,
-    //   };
+    try {
+      const isRequire = Number(values?.isRequire) === 1 ? false : true;
+      const type = Number(values?.type);
+      const maxChoices = Number(formik.values.maxChoices);
+      let payload;
 
-    //   console.log(payload, 'payload');
+      if (isRequire) {
+        const updatedOptions = [...options];
+        if (type === 1) {
+          updatedOptions[0].isDefault = true;
+        } else if (type === 2) {
+          for (let i = 0; i < maxChoices; i++) {
+            updatedOptions[i].isDefault = true;
+          }
+        }
+        updatedOptions.forEach((option, index) => {
+          option.isCalculatePrice = option.price > 0 ? true : false;
+          option.imageUrl = urlFileList[index];
+        });
+        setOptions(updatedOptions);
+      } else {
+        const updatedOptions = [...options];
+        for (let i = 0; i < updatedOptions.length; i++) {
+          updatedOptions[i].isDefault = false;
+        }
+        updatedOptions.forEach((option, index) => {
+          option.isCalculatePrice = option.price > 0 ? true : false;
+          option.imageUrl = urlFileList[index];
+        });
+        setOptions(updatedOptions);
+      }
 
-    //   const responseData = await apiClient.put('shop-owner/food/update', payload);
-    //   console.log(responseData);
-    //   if (!responseData.data.isSuccess) {
-    //     toast('error', responseData.data.error.message);
-    //   } else {
-    //     setIsRefetch();
-    //     toast('success', 'Cập nhật món ăn thành công');
-    //     onOpenChange(false);
-    //     formik.resetForm();
-    //     setAvatar(null);
-    //     setUrlFile('');
-    //   }
-    // } catch (error: any) {
-    //   toast('error', 'Thiếu thông tin sản phẩm!');
-    // }
+      if (type === 1 && isRequire) {
+        payload = {
+          title: values.title,
+          isRequire: isRequire,
+          type: type,
+          minChoices: 1,
+          maxChoices: 1,
+          status: 2,
+          options: options,
+        };
+      } else if (type === 1 && !isRequire) {
+        payload = {
+          title: values.title,
+          isRequire: isRequire,
+          type: type,
+          minChoices: 0,
+          maxChoices: 1,
+          status: 2,
+          options: options,
+        };
+      } else if (type === 2 && isRequire) {
+        payload = {
+          title: values.title,
+          isRequire: isRequire,
+          type: type,
+          minChoices: 1,
+          maxChoices: Number(values.maxChoices),
+          status: 2,
+          options: options,
+        };
+      } else if (type === 2 && !isRequire) {
+        payload = {
+          title: values.title,
+          isRequire: isRequire,
+          type: type,
+          minChoices: 0,
+          maxChoices: Number(values.maxChoices),
+          status: 2,
+          options: options,
+        };
+      }
+      console.log(payload, 'payloadđ');
+
+      const responseData = await apiClient.put(
+        `shop-owner/option-group/${optionGroup?.id}`,
+        payload,
+      );
+      console.log(responseData);
+      if (!responseData.data.isSuccess) {
+        toast('error', responseData.data.error.message);
+      } else {
+        setIsRefetch();
+        toast('success', 'Sửa đổi nhóm lựa chọn thành công');
+        onOpenChange(false);
+        formik.resetForm();
+        setOptions([initOption]);
+        setUrlFileList([]);
+      }
+    } catch (error: any) {
+      toast('error', 'Vui lòng kiểm tra lại thông tin!');
+    }
   };
 
   const handleCancel = (onClose: () => void) => {
     onClose();
     formik.resetForm();
-    // setAvatar(null);
-    // setUrlFile('');
+    setUrlFileList([]);
+    setOptions([initOption]);
   };
 
-  const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
     if (file) {
-      // setAvatar(file);
-      // setUrlFile(URL.createObjectURL(file));
+      const url = await uploadImage(file);
+      if (url) {
+        setUrlFileList((prevList) => [...prevList, url]);
+      }
     }
   };
 
@@ -152,143 +248,130 @@ export default function OptionGroupUpdateModal({
         {(onClose) => (
           <React.Fragment>
             <ModalHeader className="flex flex-col text-2xl text-center">
-              Sửa đổi thực đơn
+              Sửa nhóm lựa chọn
             </ModalHeader>
             <ModalBody className="overflow-y-auto">
-              <div className="flex flex-col items-center">
-                {/* <Avatar src={urlFile} alt="Avatar" className="rounded-full w-24 h-24" /> */}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  id="file-input"
-                  className="hidden"
-                />
-                <label htmlFor="file-input" className="cursor-pointer text-gray-500 underline my-2">
-                  Chọn hình ảnh
-                </label>
-              </div>
               <form className="space-y-4">
                 <Input
                   isRequired
                   type="text"
                   name="title"
-                  label="Tên món ăn"
-                  placeholder="Nhập tên món ăn"
+                  label="Tên nhóm lựa chọn"
+                  placeholder="Nhập tên nhóm lựa chọn"
                   value={formik.values.title}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.title && !!formik.errors.title}
                   errorMessage={formik.touched.title && formik.errors.title}
                 />
-                {/* <Input
+                <RadioGroup
+                  name="isRequire"
+                  label="Lựa chọn bắt buộc?"
+                  className="text-sm"
+                  size="sm"
+                  defaultValue="1"
                   isRequired
-                  type="text"
-                  name="price"
-                  label="Giá bán"
-                  placeholder="Nhập giá món ăn"
-                  value={
-                    formik.values.price ? formatPriceForInput(formik.values.price.toString()) : ''
-                  }
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/[^0-9]/g, '');
-                    formik.setFieldValue('price', value);
-                  }}
-                  onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.price && !!formik.errors.price}
-                  errorMessage={formik.touched.price && formik.errors.price}
-                  endContent={'VND'}
-                />
-                <Select
-                  selectionMode="multiple"
-                  isRequired
-                  name="operatingSlots"
-                  label="Khung giờ mở bán"
-                  onSelectionChange={(value) => {
-                    formik.setFieldValue('operatingSlots', value);
-                  }}
-                  // defaultSelectedKeys={formik.values.operatingSlots}
-                  isMultiline
-                  renderValue={(selected) => (
-                    <div className="flex flex-wrap gap-2">
-                      {selected.map((slot) => (
-                        <Chip key={slot.key} color="success" className="text-septenary">
-                          {slot.rendered}
-                        </Chip>
-                      ))}
-                    </div>
-                  )}
-                >
-                  {operatingSlots.map((slot) => (
-                    <SelectItem key={slot.id} value={slot.id}>
-                      {slot.frameFormat}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  selectionMode="single"
-                  isRequired
-                  name="platformCategoryId"
-                  label="Danh mục hệ thống"
-                  onSelectionChange={(value) => formik.setFieldValue('platformCategoryId', value)}
-                  // defaultSelectedKeys={formik.values.platformCategoryId}
-                >
-                  {platformCategories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  selectionMode="single"
-                  isRequired
-                  name="shopCategoryId"
-                  label="Danh mục cửa hàng"
-                  onSelectionChange={(value) => formik.setFieldValue('shopCategoryId', value)}
-                >
-                  {shopCategories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Select
-                  selectionMode="multiple"
-                  name="optionGroups"
-                  label="Nhóm lựa chọn"
-                  // defaultSelectedKeys={formik.values.optionGroups}
-                  isMultiline
-                  onSelectionChange={(value) => {
-                    console.log(formik.values.optionGroups, 'formik.values.optionGroups');
-                    formik.setFieldValue('optionGroups', value)
-                  }}
-                  renderValue={(selected) => (
-                    <div className="flex flex-wrap gap-2">
-                      {selected.map((option) => (
-                        <Chip key={option.key} color="success">
-                          {option.rendered}
-                        </Chip>
-                      ))}
-                    </div>
-                  )}
-                >
-                  {optionGroups.map((option) => (
-                    <SelectItem key={option.id} value={option.id}>
-                      {option.title}
-                    </SelectItem>
-                  ))}
-                </Select>
-                <Textarea
-                  type="text"
-                  name="description"
-                  label="Mô tả"
-                  placeholder="Nhập mô tả món ăn"
-                  value={formik.values.description}
+                  value={formik.values.isRequire}
                   onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.description && !!formik.errors.description}
-                  errorMessage={formik.touched.description && formik.errors.description}
-                /> */}
+                >
+                  <div className="flex-row flex gap-4">
+                    <Radio value="1">Không</Radio>
+                    <Radio value="2">Có</Radio>
+                  </div>
+                </RadioGroup>
+                <RadioGroup
+                  name="type"
+                  label="Hình thức lựa chọn"
+                  className="text-sm"
+                  size="sm"
+                  defaultValue="1"
+                  isRequired
+                  value={formik.values.type}
+                  onChange={formik.handleChange}
+                >
+                  <div className="flex-row flex gap-4">
+                    <Radio value="1">Chọn một</Radio>
+                    <Radio value="2">Chọn nhiều</Radio>
+                  </div>
+                </RadioGroup>
+                {formik.values.type === '2' && (
+                  <Input
+                    isRequired
+                    type="text"
+                    name="maxChoices"
+                    label="Số lựa chọn tối đa"
+                    placeholder="Nhập số lựa chọn tối đa có thể chọn"
+                    value={formik.values.maxChoices}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isInvalid={formik.touched.maxChoices && !!formik.errors.maxChoices}
+                    errorMessage={formik.touched.maxChoices && formik.errors.maxChoices}
+                  />
+                )}
+                <Divider />
+                <div className="flex justify-between items-center">
+                  <p className="text-medium font-bold">Danh sách lựa chọn</p>
+                  <Button
+                    onClick={handleAddOption}
+                    size="sm"
+                    endContent={<PlusIcon size={16} />}
+                    className="ml-auto"
+                  >
+                    Thêm
+                  </Button>
+                </div>
+                {options?.map((option, index) => (
+                  <div key={index} className="flex justify-between gap-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => {
+                        handleAvatarChange(event);
+                      }}
+                      id={`file-input-${index}`}
+                      className="hidden"
+                    />
+                    <label htmlFor={`file-input-${index}`} className="cursor-pointer">
+                      <Avatar
+                        src={
+                          urlFileList[index] ||
+                          'https://www.949vans.com/images/products/detail/E60195ABKS.2.jpg'
+                        }
+                        alt="Avatar"
+                        className="rounded-full w-12 h-12 border-small"
+                      />
+                    </label>
+                    <Input
+                      isRequired
+                      type="text"
+                      name={`options[${index}].title`}
+                      label={`Tên lựa chọn`}
+                      placeholder="Nhập tên lựa chọn"
+                      value={option.title}
+                      onChange={(e) => {
+                        const newOptions = [...options];
+                        newOptions[index].title = e.target.value;
+                        setOptions(newOptions);
+                        formik.setFieldValue(`options[${index}].title`, e.target.value);
+                      }}
+                    />
+                    <Input
+                      type="text"
+                      name={`options[${index}].price`}
+                      label={`Giá bán`}
+                      placeholder="Nhập giá"
+                      value={option.price ? formatPriceForInput(option.price.toString()) : '0'}
+                      onChange={(e) => {
+                        const newOptions = [...options];
+                        newOptions[index].price = Number(e.target.value);
+                        setOptions(newOptions);
+                        formik.setFieldValue(`options[${index}].price`, Number(e.target.value));
+                      }}
+                      className="w-2/3"
+                      endContent={'VND'}
+                    />
+                  </div>
+                ))}
               </form>
             </ModalBody>
             <ModalFooter>

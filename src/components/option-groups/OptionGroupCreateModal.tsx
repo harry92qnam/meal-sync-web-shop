@@ -34,8 +34,6 @@ const validationSchema = yup.object().shape({
 
 export default function OptionGroupCreateModal({ isOpen, onOpenChange }: OptionGroupModalProps) {
   const { setIsRefetch } = useRefetch();
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [urlFile, setUrlFile] = useState('');
   const [urlFileList, setUrlFileList] = useState<string[]>([]);
   const initOption = {
     isDefault: false,
@@ -179,8 +177,6 @@ export default function OptionGroupCreateModal({ isOpen, onOpenChange }: OptionG
         toast('success', 'Tạo nhóm lựa chọn thành công');
         onOpenChange(false);
         formik.resetForm();
-        setAvatar(null);
-        setUrlFile('');
         setOptions([initOption]);
         setUrlFileList([]);
       }
@@ -192,8 +188,6 @@ export default function OptionGroupCreateModal({ isOpen, onOpenChange }: OptionG
   const handleCancel = (onClose: () => void) => {
     onClose();
     formik.resetForm();
-    setAvatar(null);
-    setUrlFile('');
     setUrlFileList([]);
     setOptions([initOption]);
   };
@@ -201,9 +195,6 @@ export default function OptionGroupCreateModal({ isOpen, onOpenChange }: OptionG
   const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
     if (file) {
-      setAvatar(file);
-      setUrlFile(URL.createObjectURL(file));
-
       const url = await uploadImage(file);
       if (url) {
         setUrlFileList((prevList) => [...prevList, url]);
@@ -302,7 +293,6 @@ export default function OptionGroupCreateModal({ isOpen, onOpenChange }: OptionG
                       accept="image/*"
                       onChange={(event) => {
                         handleAvatarChange(event);
-                        setUrlFile('');
                       }}
                       id={`file-input-${index}`}
                       className="hidden"

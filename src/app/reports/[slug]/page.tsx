@@ -1,30 +1,16 @@
 'use client';
 import Header from '@/components/common/Header';
 import MainLayout from '@/components/layout/MainLayout';
-import { PROMOTION_TYPE, REPORT_STATUS } from '@/data/constants/constants';
+import { REPORT_STATUS } from '@/data/constants/constants';
+import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
-import {
-  formatDate,
-  formatNumber,
-  formatPhoneNumber,
-  formatTimeToSeconds,
-  toast,
-} from '@/utils/MyUtils';
-import {
-  BreadcrumbItem,
-  Breadcrumbs,
-  Button,
-  Chip,
-  Divider,
-  Input,
-  Textarea,
-} from '@nextui-org/react';
+import { formatPhoneNumber, formatTimeToSeconds, isLocalImage, toast } from '@/utils/MyUtils';
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Divider, Textarea } from '@nextui-org/react';
 import { useFormik } from 'formik';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import * as yup from 'yup';
-import Image from 'next/image';
-import useRefetch from '@/hooks/states/useRefetch';
 
 // Define the new interface for the report detail data
 interface ReportDetailData {
@@ -37,7 +23,7 @@ interface ReportDetailData {
   reason?: string;
   isReportedByCustomer: boolean;
   createdDate: string;
-  shopDeliveryStaff: {
+  shopDeliveryStaffInfo: {
     fullName: string;
     phoneNumber: string;
     isShopOwnerShip: boolean;
@@ -138,7 +124,7 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
   };
 
   return (
-    <MainLayout activeContentIndex={5}>
+    <MainLayout activeContentIndex={4}>
       <div className="md:col-span-1 pb-16">
         <Header title="Chi tiết báo cáo" />
       </div>
@@ -177,37 +163,46 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
             <p className="font-semibold">{customerData?.content}</p>
           </div>
           <div className="flex gap-2 items-center">
+            <p>Hình ảnh chứng minh: </p>
+            <div className="flex flex-wrap gap-2">
+              {customerData?.imageUrls?.map(
+                (url, index) =>
+                  !isLocalImage(url) && (
+                    <Image
+                      key={index}
+                      src={url}
+                      alt={`Image ${index + 1}`}
+                      width={100}
+                      height={100}
+                      className="rounded-lg object-cover"
+                    />
+                  ),
+              )}
+            </div>
+          </div>
+          <div className="flex gap-2 items-center">
             <p>Thời gian báo cáo:</p>
             <p className="font-bold">{formatTimeToSeconds(customerData?.createdDate ?? '')}</p>
           </div>
-          <div className="flex gap-2 items-center">
-            <p>Hình ảnh chứng minh: </p>
-            <div className="flex flex-wrap gap-2">
-              {customerData?.imageUrls?.map((url, index) => (
-                <Image
-                  key={index}
-                  src={url}
-                  alt={`Image ${index + 1}`}
-                  width={100}
-                  height={100}
-                  className="rounded-lg object-cover"
-                />
-              ))}
-            </div>
-          </div>
           <div className="flex flex-col">
-            <p className="font-bold">Thông tin người giao hàng:</p>
+            <p className="font-bold text-cyan-500">Thông tin người giao hàng:</p>
             <div className="flex flex-col">
               <p>
                 Tên người giao hàng:{' '}
-                {customerData?.shopDeliveryStaff?.isShopOwnerShip
-                  ? 'Tôi'
-                  : customerData?.shopDeliveryStaff?.fullName}
+                <span className="font-bold">
+                  {customerData?.shopDeliveryStaffInfo
+                    ? customerData?.shopDeliveryStaffInfo?.fullName
+                    : 'Tôi (tự giao)'}
+                </span>
               </p>
-              <p>
-                Số điện thoại:{' '}
-                {formatPhoneNumber(customerData?.shopDeliveryStaff?.phoneNumber ?? '')}
-              </p>
+              {customerData?.shopDeliveryStaffInfo && (
+                <p>
+                  <span className="font-bold">
+                    Số điện thoại:{' '}
+                    {formatPhoneNumber(customerData?.shopDeliveryStaffInfo?.phoneNumber ?? '')}
+                  </span>
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -219,23 +214,26 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
               <p className="font-semibold">{shopData?.content}</p>
             </div>
             <div className="flex gap-2 items-center">
-              <p>Thời gian phản hồi:</p>
-              <p className="font-bold">{formatTimeToSeconds(shopData?.createdDate ?? '')}</p>
-            </div>
-            <div className="flex gap-2 items-center">
               <p>Hình ảnh chứng minh:</p>
               <div className="flex flex-wrap gap-2">
-                {shopData?.imageUrls?.map((url, index) => (
-                  <Image
-                    key={index}
-                    src={url}
-                    alt={`Image ${index + 1}`}
-                    width={100}
-                    height={100}
-                    className="rounded-lg object-cover"
-                  />
-                ))}
+                {shopData?.imageUrls?.map(
+                  (url, index) =>
+                    !isLocalImage(url) && (
+                      <Image
+                        key={index}
+                        src={url}
+                        alt={`Image ${index + 1}`}
+                        width={100}
+                        height={100}
+                        className="rounded-lg object-cover"
+                      />
+                    ),
+                )}
               </div>
+            </div>
+            <div className="flex gap-2 items-center">
+              <p>Thời gian phản hồi:</p>
+              <p className="font-bold">{formatTimeToSeconds(shopData?.createdDate ?? '')}</p>
             </div>
           </div>
         ) : (
