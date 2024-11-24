@@ -22,9 +22,9 @@ const dateToDateValue = (date: Date): CalendarDate => {
 
 const DateRangeFilter = () => {
   // Calculate initial range values
-  const { range, setRange, setDateFrom, setDateTo, selected, setSelected, isSpecificTimeFilter } =
+  const { range, setDateFrom, setDateTo, setSelected, isSpecificTimeFilter } =
     usePeriodTimeFilterState();
-  const [choice, setChoice] = useState(selected.toString());
+  const [choice, setChoice] = useState<string>('1');
 
   //event handling
   const onChangeDashboardTimeFilterQuery = (key: number) => {
@@ -44,7 +44,7 @@ const DateRangeFilter = () => {
     <div className="grid grid-cols-2 gap-1">
       <Selector
         width="180px"
-        label="Lọc theo thời gian"
+        label="Lọc theo khoảng thời gian"
         placeholder="Chọn khoảng thời gian"
         onSelect={(id) => {
           setChoice(id.toString());

@@ -298,11 +298,6 @@ export default function Orders() {
       console.log('>>> error', error);
     }
   };
-  // option groups
-  const openOptionModal = (id: number) => {
-    // onOpen();
-    alert('opening');
-  };
 
   const handleAddNewOptionGroup = () => {
     onOptionGroupCreateOpen();
@@ -480,14 +475,21 @@ export default function Orders() {
                     Mở bán lại
                   </DropdownItem>
                 ) : (
-                  <DropdownItem onClick={() => handleSoldOutProduct(product.id)}>
-                    Tạm hết hàng
+                  <DropdownItem className="hidden" />
+                )}
+
+                {product.status === 1 && !product.isSoldOut ? (
+                  <DropdownItem className="hidden" />
+                ) : product.status === 1 && product.isSoldOut ? (
+                  <DropdownItem onClick={() => handleUpdateProduct(product.id)}>
+                    Sửa món ăn
+                  </DropdownItem>
+                ) : (
+                  <DropdownItem onClick={() => handleUpdateProduct(product.id)}>
+                    Sửa món ăn
                   </DropdownItem>
                 )}
 
-                <DropdownItem onClick={() => handleUpdateProduct(product.id)}>
-                  Sửa món ăn
-                </DropdownItem>
                 <DropdownItem onClick={() => handleDeleteProduct(product.id)}>
                   Xóa món ăn
                 </DropdownItem>
@@ -559,9 +561,13 @@ export default function Orders() {
                     Hoạt động lại
                   </DropdownItem>
                 )}
-                <DropdownItem onClick={() => handleUpdateOption(option.id)}>
-                  Sửa lựa chọn
-                </DropdownItem>
+                {option.status === 1 ? (
+                  <DropdownItem className="hidden" />
+                ) : (
+                  <DropdownItem onClick={() => handleUpdateOption(option.id)}>
+                    Sửa lựa chọn
+                  </DropdownItem>
+                )}
                 <DropdownItem onClick={() => handleDeleteOption(option.id)}>
                   Xóa lựa chọn
                 </DropdownItem>

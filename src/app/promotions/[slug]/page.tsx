@@ -37,7 +37,7 @@ export default function PromotionDetail({ params }: { params: { slug: number } }
         <BreadcrumbItem>Chi tiết khuyến mãi</BreadcrumbItem>
       </Breadcrumbs>
       <div className="px-4 py-2">
-        <div className="px-8 py-4 shadow-md rounded-lg">
+        <div className="px-8 py-4 shadow-md rounded-lg border-small">
           <div className="flex flex-col mr-auto text-lg gap-2">
             <div className="flex gap-2 items-center">
               <p>Tên khuyến mãi:</p>

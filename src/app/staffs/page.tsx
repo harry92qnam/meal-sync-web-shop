@@ -163,7 +163,7 @@ export default function Staffs() {
 
   const handleDelete = async (id: number, name: string) => {
     await Swal.fire({
-      title: 'Bạn có chắc muốn xóa nhân viên này không?',
+      title: 'Bạn có chắc muốn xóa tài khoản nhân viên này không?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
@@ -180,7 +180,7 @@ export default function Staffs() {
           const responseData = await apiClient.put('shop-owner/delivery-staff/delete', payload);
           if (responseData.data.isSuccess) {
             setIsRefetch();
-            toast('success', `Xóa nhân viên ${name} thành công`);
+            toast('success', `Xóa tài khoản nhân viên ${name} thành công`);
           } else {
             toast('error', responseData.data.error.message);
           }
@@ -268,7 +268,7 @@ export default function Staffs() {
                   </DropdownItem>
                 )}
                 <DropdownItem onClick={() => handleDelete(staff.id, staff.fullName)}>
-                  Xóa nhân viên
+                  Xóa tài khoản
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>

@@ -307,9 +307,13 @@ export default function Promotions() {
                 ) : (
                   <DropdownItem onClick={() => handleEnable(promotion.id)}>Bỏ tạm ẩn</DropdownItem>
                 )}
-                <DropdownItem onClick={() => handleUpdate(promotion.id)}>
-                  Sửa khuyến mãi
-                </DropdownItem>
+                {promotion.status === 1 ? (
+                  <DropdownItem className="hidden" />
+                ) : (
+                  <DropdownItem onClick={() => handleUpdate(promotion.id)}>
+                    Sửa khuyến mãi
+                  </DropdownItem>
+                )}
                 <DropdownItem onClick={() => handleDelete(promotion.id)}>
                   Xóa khuyến mãi
                 </DropdownItem>

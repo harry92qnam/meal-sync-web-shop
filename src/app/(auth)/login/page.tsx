@@ -31,10 +31,12 @@ export default function Login() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleLogin = async (data: { email: string; password: string }) => {
+    setIsLoading(true);
     try {
       const payload = {
         loginContext: 3,
@@ -44,12 +46,15 @@ export default function Login() {
       const responseData = await apiClient.post('auth/login', payload);
       if (responseData.data.isSuccess) {
         localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
+        localStorage.setItem('account', responseData.data.value.accountResponse);
         router.push('/orders');
       } else {
         setError(responseData.data.error.message);
       }
     } catch (error: any) {
       setError(error.response.data.error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,7 +119,12 @@ export default function Login() {
               <p className="underline text-primary text-sm w-28">Quên mật khẩu?</p>
             </Link>
           </div>
-          <Button type="submit" color="primary" className="w-full py-6 text-lg">
+          <Button
+            type="submit"
+            color="primary"
+            className="w-full py-6 text-lg"
+            isLoading={isLoading}
+          >
             Đăng nhập
           </Button>
           <div className="text-sm text-center">

@@ -255,7 +255,7 @@ export default function AccountBalance() {
                     Hủy yêu cầu
                   </DropdownItem>
                 ) : (
-                  <DropdownItem></DropdownItem>
+                  <DropdownItem className="hidden"></DropdownItem>
                 )}
                 <DropdownItem onClick={() => handleOpenDetail(withdrawal.id)}>
                   Xem chi tiết

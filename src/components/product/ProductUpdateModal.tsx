@@ -163,7 +163,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
           ? Number(values.platformCategoryId.currentKey)
           : values.platformCategoryId,
         foodOptionGroups: Array.from(values.optionGroups).map(Number),
-        status: 1,
+        status: product?.status,
       };
 
       if (!payload.name) {

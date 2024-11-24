@@ -64,7 +64,7 @@ const HISTORY_ORDER_COLUMNS = [
   { key: 'phoneNumber', name: 'Số điện thoại' },
   { key: 'status', name: 'Trạng thái đơn hàng' },
   { key: 'totalPrice', name: 'Tổng hóa đơn' },
-  { key: 'orderDate', name: 'Thời gian đặt hàng' },
+  { key: 'intendedReceiveDate', name: 'Ngày dự kiến nhận hàng' },
 ];
 
 const DELIVERY_STATUS = [

@@ -25,6 +25,7 @@ import PageableModel from '@/types/models/PageableModel';
 import OrderQuery from '@/types/queries/OrderQuery';
 import {
   formatCurrency,
+  formatDate,
   formatPhoneNumber,
   formatTimeFrame,
   formatTimeToSeconds,
@@ -558,10 +559,10 @@ export default function Orders() {
             <p className="text-bold text-small">{formatCurrency(order.totalPrice)}</p>
           </div>
         );
-      case 'orderDate':
+      case 'intendedReceiveDate':
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatTimeToSeconds(order.orderDate)}</p>
+            <p className="text-bold text-small">{formatDate(order.intendedReceiveDate)}</p>
           </div>
         );
       default:
