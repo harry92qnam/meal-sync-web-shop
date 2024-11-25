@@ -22,8 +22,6 @@ type OptionAssignmentModalProps = {
 };
 
 export const AddNewOption = ({ isOpen, onClose, existOptions, id }: OptionAssignmentModalProps) => {
-  console.log(id, 'id');
-
   const { setIsRefetch } = useRefetch();
   const [data, setData] = useState<OptionGroupModel[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);

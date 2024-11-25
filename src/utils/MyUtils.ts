@@ -120,3 +120,7 @@ export const isLocalImage = (uri: string) => {
     uri.toLocaleLowerCase().startsWith('content://')
   );
 };
+
+export const removeFormatting = (formattedPrice: string): number => {
+  return Number(formattedPrice.replace(/\./g, ''));
+};

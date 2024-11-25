@@ -47,7 +47,7 @@ export default function WithdrawalRequestDetail({ params }: { params: { slug: nu
               <p className="font-semibold">MS-{data?.id}</p>
             </div>
             <div className="flex gap-2">
-              <p>Tên ngân hàng nhận tiền:</p>
+              <p>Tên ngân hàng thụ hưởng:</p>
               <p className="font-semibold">{data?.bankShortName}</p>
             </div>
             <div className="flex gap-2">
@@ -77,10 +77,6 @@ export default function WithdrawalRequestDetail({ params }: { params: { slug: nu
               >
                 {WITHDRAWAL_STATUS.find((item) => item.key == data?.status)?.desc}
               </Chip>
-            </div>
-            <div className="flex gap-2">
-              <p>Số tiền yêu cầu rút:</p>
-              <p className="font-semibold">{formatCurrency(data?.amount ?? 0)}</p>
             </div>
           </div>
           {data?.reason && (

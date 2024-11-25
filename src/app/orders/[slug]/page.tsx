@@ -19,10 +19,11 @@ import { useEffect, useState } from 'react';
 
 export default function OrderDetail({ params }: { params: { slug: number } }) {
   const [data, setData] = useState<OrderModel>();
+  const [reportId, setReportId] = useState();
   const router = useRouter();
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
         const responseData = await apiClient.get(`shop-owner/order/${params.slug}`);
 
@@ -34,8 +35,27 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
       } catch (error) {
         console.log('>>> error', error);
       }
-    })();
+    };
+    const fetchReport = async () => {
+      try {
+        const responseData = await apiClient.get(`shop-owner/order/${params.slug}/report`);
+        console.log('Report data:', responseData.data);
+        if (responseData.data.isSuccess) {
+          const reportIdValue = responseData.data.value[0].id;
+          setReportId(reportIdValue);
+        } else {
+          toast('error', responseData.data.error.message);
+        }
+      } catch (error) {
+        console.log('>>> error', error);
+      }
+    };
+    fetchData();
+    fetchReport();
   }, []);
+
+  console.log(data?.status);
+  console.log(reportId);
 
   return (
     <MainLayout activeContentIndex={1}>
@@ -56,6 +76,30 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 <p className="font-semibold">MS-{data?.id}</p>
               </div>
               <div className="flex gap-2 items-center">
+                {data?.status === 10 && (
+                  <p
+                    className="underline text-primary text-sm cursor-pointer"
+                    onClick={() => router.push(`/reports/${reportId}`)}
+                  >
+                    Chi tiết báo cáo
+                  </p>
+                )}
+                {data?.status === 11 && (
+                  <p
+                    className="underline text-primary text-sm cursor-pointer"
+                    onClick={() => router.push(`/reports/${reportId}`)}
+                  >
+                    Chi tiết báo cáo
+                  </p>
+                )}
+                {data?.status === 12 && (
+                  <p
+                    className="underline text-primary text-sm cursor-pointer"
+                    onClick={() => router.push(`/reports/${reportId}`)}
+                  >
+                    Chi tiết báo cáo
+                  </p>
+                )}
                 <Chip
                   className={
                     data?.status === 10

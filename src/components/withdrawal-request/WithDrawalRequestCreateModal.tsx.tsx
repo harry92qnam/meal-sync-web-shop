@@ -39,7 +39,8 @@ interface BankProps {
 
 const validationSchema = yup.object().shape({
   amount: yup.number().positive('Vui lòng nhập số tiền muốn rút'),
-  bankAccountNumber: yup.string().required('Vui lòng nhập số tài khoản nhận tiền'),
+  bankAccountNumber: yup.string().required('Vui lòng nhập số tài khoản thụ hưởng'),
+  bankAccountName: yup.string().required('Vui lòng nhập tên tài khoản thụ hưởng'),
 });
 
 const fetchBanks = async (setBanks: React.Dispatch<React.SetStateAction<BankProps[]>>) => {
@@ -71,6 +72,7 @@ export default function WithDrawalRequestCreateModal({
     bankCode?: string;
     bankShortName?: string;
     bankAccountNumber: string;
+    bankAccountName: string;
     amount: number;
   } | null>(null);
 
@@ -129,6 +131,7 @@ export default function WithDrawalRequestCreateModal({
         bankCode: payloadData?.bankCode,
         bankShortName: payloadData?.bankShortName,
         bankAccountNumber: payloadData?.bankAccountNumber,
+        bankAccountName: payloadData?.bankAccountName,
         amount: payloadData?.amount ?? 0,
         verifyCode: parseInt(code.join(''), 10),
       };
@@ -165,6 +168,7 @@ export default function WithDrawalRequestCreateModal({
       bankCode: '',
       bankShortName: '',
       bankAccountNumber: '',
+      bankAccountName: '',
     },
     validationSchema,
     onSubmit: (values) => {
@@ -178,6 +182,7 @@ export default function WithDrawalRequestCreateModal({
         bankCode: selectedBank?.code,
         bankShortName: selectedBank?.shortName,
         bankAccountNumber: values.bankAccountNumber,
+        bankAccountName: values.bankAccountName,
         amount: Number(values?.amount),
       };
 
@@ -238,7 +243,7 @@ export default function WithDrawalRequestCreateModal({
                     selectionMode="single"
                     isRequired
                     name="bank"
-                    label="Ngân hàng rút tiền về"
+                    label="Ngân hàng thụ hưởng"
                     onSelectionChange={(value) => {
                       const bank = banks.find((b) => b.id === Number(value.currentKey));
                       setSelectedBank(bank);
@@ -275,9 +280,21 @@ export default function WithDrawalRequestCreateModal({
                   <Input
                     isRequired
                     type="text"
+                    name="bankAccountName"
+                    label="Tên tài khoản thụ hưởng"
+                    placeholder="Nhập tên tài khoản thụ hưởng"
+                    value={formik.values.bankAccountName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isInvalid={formik.touched.bankAccountName && !!formik.errors.bankAccountName}
+                    errorMessage={formik.touched.bankAccountName && formik.errors.bankAccountName}
+                  />
+                  <Input
+                    isRequired
+                    type="text"
                     name="bankAccountNumber"
-                    label="Số tài khoản nhận tiền"
-                    placeholder="Nhập số tài khoản nhận tiền"
+                    label="Số tài khoản thụ hưởng"
+                    placeholder="Nhập số tài khoản thụ hưởng"
                     value={formik.values.bankAccountNumber}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value.replace(/[^0-9]/g, '');

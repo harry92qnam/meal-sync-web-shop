@@ -57,6 +57,10 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
 
   const handleSubmitReply = async (values: any) => {
     try {
+      if (!selectedImages.length) {
+        toast('error', 'Vui lòng cung cấp hình ảnh làm bằng chứng');
+        return;
+      }
       const uploadPromises = selectedImages.map((image) => uploadImage(image));
       const imageUrls = await Promise.all(uploadPromises);
       const payload = {
@@ -66,6 +70,8 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
         images: imageUrls,
       };
       const responseData = await apiClient.post('shop-owner/order/report/reply', payload);
+      console.log(responseData);
+
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {
@@ -76,8 +82,8 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
         toast('success', 'Phản hồi báo cáo thành công');
       }
       console.log(payload, 'payload');
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
 
