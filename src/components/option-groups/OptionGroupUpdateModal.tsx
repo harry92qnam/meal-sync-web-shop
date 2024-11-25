@@ -2,7 +2,7 @@ import { PlusIcon } from '@/components/common/PlusIcon';
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
-import { formatPriceForInput, toast } from '@/utils/MyUtils';
+import { formatPriceForInput, removeFormatting, toast } from '@/utils/MyUtils';
 import {
   Avatar,
   Button,
@@ -363,9 +363,10 @@ export default function OptionGroupUpdateModal({
                       value={option.price ? formatPriceForInput(option.price.toString()) : '0'}
                       onChange={(e) => {
                         const newOptions = [...options];
-                        newOptions[index].price = Number(e.target.value);
+                        const value = removeFormatting(e.target.value);
+                        newOptions[index].price = value;
                         setOptions(newOptions);
-                        formik.setFieldValue(`options[${index}].price`, Number(e.target.value));
+                        formik.setFieldValue(`options[${index}].price`, value);
                       }}
                       className="w-2/3"
                       endContent={'VND'}

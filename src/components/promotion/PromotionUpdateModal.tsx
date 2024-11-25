@@ -129,8 +129,9 @@ export default function PromotionUpdateModal({
           bannerUrl: url,
         };
       }
-
-      if (!payload.title) {
+      if (!Number.isInteger(payload.usageLimit)) {
+        toast('error', 'Số lượng khuyến mãi phải là số nguyên');
+      } else if (!payload.title) {
         toast('error', 'Vui lòng nhập tên khuyến mãi');
       } else if (!payload.usageLimit) {
         toast('error', 'Vui lòng số lượng khuyến mãi');

@@ -184,7 +184,7 @@ const STAFF_STATUS = [
 
 const WITHDRAWAL_COLUMNS = [
   { key: 'id', name: 'Mã yêu cầu' },
-  { key: 'bankShortName', name: 'Tên ngân hàng' },
+  { key: 'bankShortName', name: 'Ngân hàng thụ hưởng' },
   { key: 'bankAccountNumber', name: 'Số tài khoản' },
   { key: 'amount', name: 'Số tiền muốn rút' },
   { key: 'status', name: 'Trạng thái' },
