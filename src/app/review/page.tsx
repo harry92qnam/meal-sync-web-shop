@@ -20,6 +20,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Selection,
   User,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';

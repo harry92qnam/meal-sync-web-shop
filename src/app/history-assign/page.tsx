@@ -24,12 +24,10 @@ import {
   Selection,
   User,
 } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
 export default function HistoryAssign() {
-  const router = useRouter();
   const { isRefetch } = useRefetch();
   const { range } = usePeriodTimeFilterState();
   const [isModalOpen, setIsModalOpen] = useState(false);
