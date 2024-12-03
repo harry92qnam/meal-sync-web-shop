@@ -1,6 +1,8 @@
 export default interface AuthDTO {
+  id: number;
   email: string;
-  username: string;
-  phone: string;
-  token: string;
+  fullName: string;
+  avatarUrl: string;
+  roleName: string;
+  roleId: number;
 }

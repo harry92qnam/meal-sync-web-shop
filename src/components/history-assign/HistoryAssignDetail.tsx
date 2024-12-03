@@ -12,11 +12,10 @@ type DeliveryOrder = {
   onClose: () => void;
 };
 
-export default function ChangeStatusToDelivery({ id, isOpen, onClose }: DeliveryOrder) {
+export default function HistoryAssignDetail({ id, isOpen, onClose }: DeliveryOrder) {
   const [data, setData] = useState<OrderModel[]>([]);
   const [packageModel, setPackageModel] = useState<PackageModel>();
-  const { isRefetch, setIsRefetch } = useRefetch();
-  const [selectedOrderIds, setSelectedOrderIds] = useState<number[]>([]);
+  const { isRefetch } = useRefetch();
 
   useEffect(() => {
     (async () => {
@@ -32,41 +31,22 @@ export default function ChangeStatusToDelivery({ id, isOpen, onClose }: Delivery
         console.log(error);
       }
     })();
-  }, [id, isRefetch, onClose]);
-
-  const handleStatusChange = async () => {
-    const payload = {
-      ids: selectedOrderIds,
-    };
-    try {
-      const responseData = await apiClient.put('shop-owner/order/delivering', payload);
-      if (responseData.data.isSuccess) {
-        toast('success', responseData.data.value.message);
-        setIsRefetch();
-        handleClose();
-      } else {
-        toast('error', responseData.data.error.message);
-      }
-    } catch (error: any) {
-      toast('error', error.response.data.error.message);
-    }
-  };
+  }, [id, isRefetch, isOpen]);
 
   const handleClose = () => {
-    setSelectedOrderIds([]);
     onClose();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} isDismissable={false} className="rounded-xl">
-      <ModalContent className="max-h-[640px] overflow-y-scroll">
+      <ModalContent>
         {() => (
-          <ModalBody className="flex flex-col py-4">
+          <ModalBody className="flex flex-col py-4 max-h-[640px] overflow-y-scroll">
             <p className="text-center pt-2 font-bold text-xl">
               Thông tin gói đơn hàng ({packageModel?.total} đơn hàng)
             </p>
             <Divider />
-            <div className="flex flex-col gap-2 mx-4">
+            <div className="flex flex-col gap-2 mx-2">
               <p className="flex justify-between">
                 <span className="text-gray-400">Chưa giao: ({packageModel?.waiting} đơn)</span>
                 <span className="text-quaternary">Đang giao: ({packageModel?.delivering} đơn)</span>
@@ -80,38 +60,32 @@ export default function ChangeStatusToDelivery({ id, isOpen, onClose }: Delivery
             </div>
             <Divider />
             {data.map((order) => (
-              <div key={order.id} className="flex items-center">
-                <Checkbox
-                  isSelected={selectedOrderIds.includes(order.id)}
-                  onChange={() => {
-                    if (order.status !== 6) {
-                      setSelectedOrderIds((prev) =>
-                        prev.includes(order.id)
-                          ? prev.filter((id) => id !== order.id)
-                          : [...prev, order.id],
-                      );
-                    }
-                  }}
-                  isDisabled={order.status === 6}
-                />
-                <span className={`${order.status === 6 ? 'opacity-50' : ''}`}>
+              <div key={order.id} className="flex items-center mx-2">
+                <span>
                   MS-{order.id} | {order.buildingName} (
-                  {formatTimeFrame(order.startTime, order.endTime)}){' '}
-                  {order.status === 6 && <span className="text-orange-600">Đang giao hàng</span>}
+                  {formatTimeFrame(order.startTime, order.endTime)})
+                  <span
+                    className={`${
+                      order.status === 5
+                        ? 'text-gray-400'
+                        : order.status === 6
+                          ? 'text-quaternary'
+                          : order.status === 7 || order.status === 9 || order.status === 10
+                            ? 'text-quinary'
+                            : 'text-senary'
+                    } ml-2`}
+                  >
+                    {order.status === 5
+                      ? 'Chưa giao'
+                      : order.status === 6
+                        ? 'Đang giao'
+                        : order.status === 7 || order.status === 9 || order.status === 10
+                          ? 'Giao thành công'
+                          : 'Giao thất bại'}
+                  </span>
                 </span>
               </div>
             ))}
-            <Button
-              onClick={handleStatusChange}
-              disabled={selectedOrderIds.length === 0}
-              className={
-                selectedOrderIds.length === 0
-                  ? 'cursor-not-allowed opacity-50 text-base mt-4'
-                  : 'text-base mt-4'
-              }
-            >
-              Chuyển trạng thái giao hàng
-            </Button>
           </ModalBody>
         )}
       </ModalContent>

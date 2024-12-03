@@ -200,6 +200,39 @@ const WITHDRAWAL_STATUS = [
   { key: 5, desc: 'Đã từ chối' },
 ];
 
+// Manage review
+const REVIEW_COLUMNS = [
+  { key: 'id', name: 'Mã đánh giá' },
+  { key: 'orderId', name: 'Mã đơn hàng' },
+  { key: 'customerName', name: 'Tên khách hàng đánh giá' },
+  { key: 'comment', name: 'Nội dung đánh giá' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'createdDate', name: 'Thời gian đánh giá' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const REVIEW_STATUS = [
+  { key: 1, desc: 'Chưa phản hồi' },
+  { key: 2, desc: 'Đã phản hồi' },
+];
+
+// Manage history delivery package
+const HISTORY_ASSIGN_COLUMNS = [
+  { key: 'id', name: 'Mã gói hàng' },
+  { key: 'shopDeliveryStaff', name: 'Người giao hàng' },
+  { key: 'numberOfOrders', name: 'Số lượng đơn hàng' },
+  { key: 'buildingName', name: 'Địa chỉ nhận hàng' },
+  { key: 'timeFrameFormat', name: 'Khung giờ giao hàng' },
+  { key: 'intenededReceiveDate', name: 'Ngày giao hàng' },
+  { key: 'status', name: 'Trạng thái' },
+  { key: 'actions', name: 'Thao tác' },
+];
+
+const HISTORY_ASSIGN_STATUS = [
+  { key: 1, desc: 'Đang xử lý' },
+  { key: 2, desc: 'Đã xử lý' },
+];
+
 export {
   ALL_PACKAGES_COLUMNS,
   CATEGORY_COLUMNS,
@@ -224,4 +257,8 @@ export {
   STAFF_STATUS,
   WITHDRAWAL_COLUMNS,
   WITHDRAWAL_STATUS,
+  REVIEW_COLUMNS,
+  REVIEW_STATUS,
+  HISTORY_ASSIGN_COLUMNS,
+  HISTORY_ASSIGN_STATUS,
 };

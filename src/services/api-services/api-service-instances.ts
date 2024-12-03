@@ -10,6 +10,8 @@ import OptionGroupModel from '@/types/models/OptionGroupModel';
 import PackageModel from '@/types/models/PackageModel';
 import { getFormattedCurrentTime } from '@/utils/MyUtils';
 import WithdrawalModel from '@/types/models/WithdrawalModel';
+import ReviewModel from '@/types/models/ReviewModel';
+import HistoryAssignModel from '@/types/models/HistoryAssignModel';
 
 export const endpoints = {
   ORDERS: 'web/shop-owner/order',
@@ -23,6 +25,8 @@ export const endpoints = {
   PROMOTIONS: 'shop-owner/promotion',
   STAFFS: 'shop-owner/delivery-staff',
   WITHDRAWALS: 'shop-owner/withdrawal/history',
+  REVIEW: 'web/shop-onwer/review',
+  HISTORY_ASSIGN: 'web/shop-owner/delivery-package/history',
 };
 
 export const orderApiService = (statuses: number[]) => {
@@ -67,4 +71,9 @@ export const staffApiService = createHttpService<StaffModel>(apiClient, endpoint
 export const withdrawalApiService = createHttpService<WithdrawalModel>(
   apiClient,
   endpoints.WITHDRAWALS,
+);
+export const reviewApiService = createHttpService<ReviewModel>(apiClient, endpoints.REVIEW);
+export const historyAssignApiService = createHttpService<HistoryAssignModel>(
+  apiClient,
+  endpoints.HISTORY_ASSIGN,
 );

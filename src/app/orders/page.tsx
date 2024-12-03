@@ -77,7 +77,13 @@ export default function Orders() {
 
   const [customQuery, setCustomQuery] = useState<any>({});
   useEffect(() => {
-    if (status.includes(6) || status.includes(7) || status.includes(8)) {
+    if (
+      status.includes(6) ||
+      status.includes(7) ||
+      status.includes(8) ||
+      status.includes(3) ||
+      status.includes(1)
+    ) {
       const { dateFrom, dateTo, ...rest } = query;
       setCustomQuery({
         ...rest,
@@ -183,8 +189,8 @@ export default function Orders() {
       } else {
         toast('error', responseData.data.error.message);
       }
-    } catch (error) {
-      console.log('>>> error', error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
 
@@ -248,8 +254,8 @@ export default function Orders() {
       } else {
         toast('error', responseData.data.error.message);
       }
-    } catch (error) {
-      console.log('>>> error', error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
   const handleConfirmRejectConfirmed = async (onClose: () => void) => {
@@ -576,7 +582,7 @@ export default function Orders() {
         <Header title="Quản lý đơn hàng" />
       </div>
 
-      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[290px] w-[1222px] justify-between border-t-small overflow-x-auto">
+      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] w-[1209px] justify-between border-t-small overflow-x-auto">
         {[1, 2, 3, 4, 5, 6].map((tab) => (
           <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
             <Button

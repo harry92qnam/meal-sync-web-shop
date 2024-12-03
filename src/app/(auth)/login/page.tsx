@@ -1,5 +1,7 @@
 'use client';
 import apiClient from '@/services/api-services/api-client';
+import sessionService from '@/services/session-service';
+import AuthDTO from '@/types/dtos/AuthDTO';
 import { Button, Image, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import Link from 'next/link';
@@ -44,14 +46,23 @@ export default function Login() {
         password: data.password,
       };
       const responseData = await apiClient.post('auth/login', payload);
+      console.log(responseData);
+      console.log(payload);
+
       if (responseData.data.isSuccess) {
+        const authDTO = responseData.data?.value?.accountResponse
+          ? (responseData.data?.value?.accountResponse as AuthDTO)
+          : null;
+        if (authDTO) {
+          sessionService.setAuthDTO(authDTO);
+        }
         localStorage.setItem('token', responseData.data.value.tokenResponse.accessToken);
-        localStorage.setItem('account', responseData.data.value.accountResponse);
         router.push('/orders');
       } else {
         setError(responseData.data.error.message);
       }
     } catch (error: any) {
+      console.log(error);
       setError(error.response.data.error.message);
     } finally {
       setIsLoading(false);

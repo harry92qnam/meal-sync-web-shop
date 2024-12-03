@@ -1,18 +1,29 @@
 import UpdateProfileModal from '@/components/authentication/UpdateProfileModal';
 import { Avatar, Badge, Divider, useDisclosure } from '@nextui-org/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaFacebookMessenger } from 'react-icons/fa6';
 import { IoMdNotifications } from 'react-icons/io';
 import { sampleChats, sampleNotifications } from '../../data/TestData';
 import { formatDate, formatTimeAgo } from '../../utils/MyUtils';
+import sessionService from '@/services/session-service';
 
 const Header: React.FC<{ title: string }> = ({ title }) => {
   const [chatVisible, setChatVisible] = useState(false);
   const [notiVisible, setNotiVisible] = useState(false);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const authDTO = sessionService.getAuthDTO();
+  const avatarUrl =
+    isMounted && authDTO?.avatarUrl
+      ? authDTO?.avatarUrl
+      : 'https://avatars.githubusercontent.com/u/62385893?v=4';
 
   const handleAvatarClick = () => {
-    // setDropdownVisible((prev) => !prev);
     onOpen();
     setChatVisible(false);
     setNotiVisible(false);
@@ -20,18 +31,16 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
 
   const handleChatClick = () => {
     setChatVisible((prev) => !prev);
-    // setDropdownVisible(false);
     setNotiVisible(false);
   };
 
   const handleNotiClick = () => {
     setNotiVisible((prev) => !prev);
-    // setDropdownVisible(false);
     setChatVisible(false);
   };
 
   return (
-    <div className="fixed top-0 left-[290px] right-4 z-50 bg-white shadow-md py-4 pl-8">
+    <div className="fixed top-0 left-[305px] right-[13px] z-50 bg-white shadow-md py-4 pl-8">
       <div className="flex justify-between items-center pr-4">
         <p className="text-2xl text-primary font-medium">{title}</p>
         <div className="flex gap-4 justify-between items-center">
@@ -98,7 +107,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
           )}
 
           <Avatar
-            src="https://avatars.githubusercontent.com/u/62385893?v=4"
+            src={avatarUrl}
             size="md"
             onClick={handleAvatarClick}
             className="cursor-pointer hover:opacity-70"

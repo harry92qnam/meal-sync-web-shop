@@ -54,9 +54,6 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
     fetchReport();
   }, []);
 
-  console.log(data?.status);
-  console.log(reportId);
-
   return (
     <MainLayout activeContentIndex={1}>
       <div className="md:col-span-1 pb-16">
@@ -176,9 +173,9 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                         <Image
                           src={food.imageUrl}
                           alt="Food image"
-                          width={120}
-                          height={120}
-                          className="border-small"
+                          width={100}
+                          height={100}
+                          className="border-small rounded-lg w-44 h-44 object-cover"
                         />
                       )}
                       <div className="flex flex-col justify-center">

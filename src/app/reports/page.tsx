@@ -13,18 +13,9 @@ import PageableModel from '@/types/models/PageableModel';
 import ReportModel from '@/types/models/ReportModel';
 import ReportQuery from '@/types/queries/ReportQuery';
 import { formatTimeToSeconds } from '@/utils/MyUtils';
-import {
-  Button,
-  Chip,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Selection,
-} from '@nextui-org/react';
+import { Chip, Selection } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
 
 export default function Reports() {
   const router = useRouter();

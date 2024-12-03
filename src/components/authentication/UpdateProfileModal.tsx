@@ -1,4 +1,5 @@
 import { ACCOUNT_INFO } from '@/data/TestData';
+import sessionService from '@/services/session-service';
 import {
   Avatar,
   Button,
@@ -28,21 +29,21 @@ interface UpdateProfileModalProps {
 }
 
 export default function UpdateProfileModal({ isOpen, onOpenChange }: UpdateProfileModalProps) {
-  const [avatar, setAvatar] = useState<string | null>(null);
   const [isUpdate, setIsUpdate] = useState(false);
+  const authDTO = sessionService.getAuthDTO();
   const formik = useFormik({
     initialValues: {
-      name: ACCOUNT_INFO.name,
-      email: ACCOUNT_INFO.email,
-      phoneNumber: ACCOUNT_INFO.phoneNumber,
+      name: authDTO?.fullName,
+      email: authDTO?.email,
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log('Updated profile:', values);
       // Handle logic here for updating profile
       onOpenChange(false); // Close modal after submission
     },
   });
+
+  const [avatar, setAvatar] = useState<string | undefined>(authDTO?.avatarUrl);
 
   const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files![0];
@@ -92,7 +93,7 @@ export default function UpdateProfileModal({ isOpen, onOpenChange }: UpdateProfi
                   className={!isUpdate ? 'opacity-50' : ''}
                 />
                 {/* Phone number input */}
-                <Input
+                {/* <Input
                   type="text"
                   name="phoneNumber"
                   label="Số điện thoại"
@@ -104,7 +105,7 @@ export default function UpdateProfileModal({ isOpen, onOpenChange }: UpdateProfi
                   errorMessage={formik.touched.phoneNumber && formik.errors.phoneNumber}
                   readOnly={!isUpdate}
                   className={!isUpdate ? 'opacity-50' : ''}
-                />
+                /> */}
                 {/* Email input (read-only) */}
                 <Input
                   type="text"
