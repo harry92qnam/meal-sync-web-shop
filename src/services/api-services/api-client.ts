@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://api.mealsync.org/api/v1/',
+  baseURL: 'https://api.1wolfalone1.com/api/v1/',
 });
 
 apiClient.interceptors.request.use(

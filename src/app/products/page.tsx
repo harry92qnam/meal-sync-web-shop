@@ -586,7 +586,7 @@ export default function Orders() {
         <Header title="Quản lý sản phẩm" />
       </div>
 
-      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[290px] w-[1230px] justify-around border-t-small">
+      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] w-[1209px] justify-around border-t-small">
         {[1, 2].map((tab) => (
           <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
             <Button

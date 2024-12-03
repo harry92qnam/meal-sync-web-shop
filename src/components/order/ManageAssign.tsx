@@ -25,7 +25,6 @@ import {
   DropdownTrigger,
   User,
 } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
@@ -211,7 +210,7 @@ export default function ManageAssign({ queryAssign }: { queryAssign: PackageQuer
 
   return (
     <div className="mt-24">
-      <div className="flex fixed top-[145px] z-30 bg-white shadow-md py-2 left-[290px] w-[1222px] justify-around border-t-small overflow-x-auto">
+      <div className="flex fixed top-[145px] z-30 bg-white shadow-md py-2 left-[305px] w-[1209px] justify-around border-t-small overflow-x-auto">
         {[1, 2].map((tab) => (
           <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
             <Button

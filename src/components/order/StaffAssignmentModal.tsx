@@ -28,6 +28,7 @@ export const StaffAssignmentModal = ({
       const responseData = await apiClient.put(`shop-owner/order/${orderId}/assign`, payload);
       if (responseData.data.isSuccess) {
         setIsRefetch();
+        onClose();
         toast('success', 'Chọn người giao hàng thành công');
       } else if (responseData.data.isWarning) {
         await Swal.fire({

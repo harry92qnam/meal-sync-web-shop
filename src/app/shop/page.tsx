@@ -5,7 +5,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import apiClient from '@/services/api-services/api-client';
 import ActiveSlotModel from '@/types/models/ActiveSlotModel';
 import { toast } from '@/utils/MyUtils';
-import { Button, Switch } from '@nextui-org/react';
+import { Button, Chip, Switch } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 
 export default function Shop() {
@@ -126,12 +126,13 @@ export default function Shop() {
         <Header title="Cài đặt cửa hàng" />
         <div className="pt-24 px-4">
           <div className="flex items-center justify-between pb-12">
-            <p>
-              Trạng thái:{' '}
-              <span className={`text-xl ${status === 2 ? 'text-quinary' : 'text-senary'}`}>
-                {status === 2 ? 'Đang hoạt động' : 'Tạm đóng cửa'}
-              </span>
-            </p>
+            <Chip
+              className={`text-medium px-2 py-4 ${status === 2 ? 'text-quinary bg-green-200' : 'text-senary bg-red-200'}`}
+              size="sm"
+              variant="flat"
+            >
+              {status === 2 ? 'Đang hoạt động' : 'Tạm đóng cửa'}
+            </Chip>
             <Switch isSelected={status === 2} aria-label="Shop status" onClick={changeShopStatus} />
           </div>
 

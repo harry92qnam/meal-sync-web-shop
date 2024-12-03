@@ -23,7 +23,7 @@ interface ReportDetailData {
   reason?: string;
   isReportedByCustomer: boolean;
   createdDate: string;
-  shopDeliveryStaffInfo: {
+  shopDeliveryStaffInfo?: {
     fullName: string;
     phoneNumber: string;
     isShopOwnerShip: boolean;
@@ -180,7 +180,7 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
                       alt={`Image ${index + 1}`}
                       width={100}
                       height={100}
-                      className="rounded-lg object-cover"
+                      className="rounded-lg w-44 h-44 object-cover border-small"
                     />
                   ),
               )}
@@ -231,7 +231,7 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
                         alt={`Image ${index + 1}`}
                         width={100}
                         height={100}
-                        className="rounded-lg object-cover"
+                        className="rounded-lg w-44 h-44 object-cover border-small"
                       />
                     ),
                 )}
@@ -262,12 +262,12 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
               multiple
               onChange={(e) => {
                 const files = Array.from(e.target.files || []);
-                if (files.length + selectedImages.length <= 5) {
+                if (files.length + selectedImages.length <= 3) {
                   setSelectedImages((prev) => [...prev, ...files]);
                   const newImagePreviews = files.map((file) => URL.createObjectURL(file));
                   setImagePreviews((prev) => [...prev, ...newImagePreviews]);
                 } else {
-                  toast('error', 'Bạn chỉ có thể tải lên tối đa 5 hình ảnh.');
+                  toast('error', 'Bạn chỉ có thể tải lên tối đa 3 hình ảnh.');
                 }
               }}
             />

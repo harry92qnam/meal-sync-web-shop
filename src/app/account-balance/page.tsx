@@ -275,7 +275,7 @@ export default function AccountBalance() {
         <Header title="Quản lý tài chính" />
       </div>
 
-      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[290px] w-[1220px] justify-around border-t-small">
+      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] w-[1209px] justify-around border-t-small">
         {[1, 2].map((tab) => (
           <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
             <Button
@@ -319,7 +319,10 @@ export default function AccountBalance() {
             arrayData={withdrawals?.value?.items ?? []}
             total={withdrawals?.value.totalCount ?? 0}
             searchHandler={(value: string) => {
-              setQuery({ ...query, searchValue: value });
+              const updatedValue = value.toLocaleLowerCase().startsWith('ms-')
+                ? value.slice(3)
+                : value;
+              setQuery({ ...query, searchValue: updatedValue });
             }}
             pagination={withdrawals?.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}

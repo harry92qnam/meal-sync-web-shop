@@ -8,6 +8,8 @@ import { IoMdGift } from 'react-icons/io';
 import { IoFastFoodOutline, IoPeopleOutline, IoSettingsOutline } from 'react-icons/io5';
 import { MdLogout, MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
 import { RiExchangeDollarFill } from 'react-icons/ri';
+import { LuPackageCheck } from 'react-icons/lu';
+import { VscFeedback } from 'react-icons/vsc';
 
 interface SidebarItemProps {
   title: string;
@@ -29,6 +31,18 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
     iconSize: 19,
     path: '/account-balance',
   },
+  {
+    title: 'Đánh giá sản phẩm',
+    icon: VscFeedback,
+    iconSize: 19,
+    path: '/review',
+  },
+  {
+    title: 'Lịch sử phân công',
+    icon: LuPackageCheck,
+    iconSize: 19,
+    path: '/history-assign',
+  },
 ];
 const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   const router = useRouter();
@@ -49,7 +63,7 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   };
 
   return (
-    <aside className="bg-white p-6 pt-5 h-screen flex-col items-center shadow-md">
+    <aside className="bg-white p-6 pt-5 h-screen flex-col items-center shadow-md overflow-y-scroll">
       <Link
         href={'/shop'}
         className="flex items-center gap-2 justify-center cursor-pointer hover:opacity-80 max-w-[240px]"

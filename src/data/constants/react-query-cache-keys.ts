@@ -8,6 +8,8 @@ const REACT_QUERY_CACHE_KEYS = {
   PROMOTIONS: ['promotions'],
   STAFFS: ['staffs'],
   WITHDRAWALS: ['withdrawals'],
+  REVIEW: ['review'],
+  HISTORY_ASSIGN: ['history_assign'],
 };
 
 export default REACT_QUERY_CACHE_KEYS;

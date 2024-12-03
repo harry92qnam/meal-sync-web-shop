@@ -208,7 +208,7 @@ export default function AssignOrder({ queryPreparing }: { queryPreparing: OrderQ
 
   return (
     <div className="mt-16">
-      <div className="flex fixed top-[145px] z-30 bg-white shadow-md left-[290px] w-[1222px] justify-start border-t-small overflow-x-auto">
+      <div className="flex fixed top-[145px] z-30 bg-white shadow-md left-[305px] w-[1209px] justify-start border-t-small overflow-x-auto">
         {frames.map((frame, index) => (
           <div
             key={index}
