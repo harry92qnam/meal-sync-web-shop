@@ -30,7 +30,7 @@ export default function Review() {
   const { isRefetch } = useRefetch();
   const router = useRouter();
   const { range } = usePeriodTimeFilterState();
-  const [statuses, setStatuses] = useState<Set<string>>(new Set(['0']));
+  const [statuses, setStatuses] = useState<Selection>(new Set(['0']));
 
   const [query, setQuery] = useState<ReviewQuery>({
     searchValue: '',
@@ -87,11 +87,11 @@ export default function Review() {
     options: statusFilterOptions,
     selectedValues: statuses,
     handleFunc: (values: Selection) => {
-      const value = Array.from(values).map((val) => parseInt((val as number).toString()))[0];
+      const value = Array.from(values).map((val) => parseInt(val.toString()))[0];
       setStatuses(values);
       setQuery({ ...query, statusMode: value, ...range });
     },
-  } as unknown as TableCustomFilter;
+  } as TableCustomFilter;
 
   const renderCell = useCallback((review: ReviewModel, columnKey: React.Key): ReactNode => {
     switch (columnKey) {
