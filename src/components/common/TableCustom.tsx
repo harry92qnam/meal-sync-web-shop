@@ -168,9 +168,11 @@ export default function TableCustom({
             </span>
             {selectionMode === 'multiple' && (
               <Button
-                className={`${selectedKeys.size ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                className={`${Array.from(selectedKeys).map((val) => parseInt(val.toString())).length ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
                 onClick={() => handleAcceptMany(selectedKeys)}
-                disabled={selectedKeys.size === 0}
+                disabled={
+                  Array.from(selectedKeys).map((val) => parseInt(val.toString())).length === 0
+                }
               >
                 Nhận tất cả
               </Button>
