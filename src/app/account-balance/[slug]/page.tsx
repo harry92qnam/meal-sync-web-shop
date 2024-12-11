@@ -31,7 +31,7 @@ export default function WithdrawalRequestDetail({ params }: { params: { slug: nu
   }, [isRefetch]);
 
   return (
-    <MainLayout activeContentIndex={3}>
+    <MainLayout activeContentIndex={7}>
       <div className="md:col-span-1 pb-16">
         <Header title="Chi tiết yêu cầu rút tiền" />
       </div>

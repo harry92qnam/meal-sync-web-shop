@@ -1,15 +1,17 @@
 import { Avatar, Button, Divider } from '@nextui-org/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconType } from 'react-icons';
 import { GrTransaction } from 'react-icons/gr';
 import { IoMdGift } from 'react-icons/io';
-import { IoFastFoodOutline, IoPeopleOutline, IoSettingsOutline } from 'react-icons/io5';
-import { MdLogout, MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
+import { IoFastFoodOutline, IoPeopleOutline } from 'react-icons/io5';
+import { MdLogout, MdOutlineCategory, MdOutlineDashboard, MdOutlineReport } from 'react-icons/md';
 import { RiExchangeDollarFill } from 'react-icons/ri';
 import { LuPackageCheck } from 'react-icons/lu';
 import { VscFeedback } from 'react-icons/vsc';
+import apiClient from '@/services/api-services/api-client';
+import ShopModel from '@/types/models/ShopModel';
 
 interface SidebarItemProps {
   title: string;
@@ -21,7 +23,7 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
   { title: 'Thống kê tổng quan', icon: MdOutlineDashboard, iconSize: 19, path: '/dashboard' },
   { title: 'Quản lý đơn hàng', icon: GrTransaction, iconSize: 18, path: '/orders' },
   { title: 'Quản lý sản phẩm', icon: IoFastFoodOutline, iconSize: 19, path: '/products' },
-  { title: 'Quản lý danh mục', icon: IoSettingsOutline, iconSize: 19, path: '/categories' },
+  { title: 'Quản lý danh mục', icon: MdOutlineCategory, iconSize: 19, path: '/categories' },
   { title: 'Quản lý báo cáo', icon: MdOutlineReport, iconSize: 19, path: '/reports' },
   { title: 'Quản lý khuyến mãi', icon: IoMdGift, iconSize: 19, path: '/promotions' },
   { title: 'Quản lý nhân viên', icon: IoPeopleOutline, iconSize: 19, path: '/staffs' },
@@ -46,16 +48,19 @@ export const SidebarItemPropsList: Array<SidebarItemProps> = [
 ];
 const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
   const router = useRouter();
-  // const isAuthenticated = () => {
-  //   const token = localStorage.getItem('token');
-  //   return token !== null;
-  // };
+  const [shopInfor, setShopInfor] = useState<ShopModel>();
 
-  // useEffect(() => {
-  //   if (!isAuthenticated()) {
-  //     navigate('/login');
-  //   }
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = await apiClient.get('shop-owner/full-infor');
+        setShopInfor(responseData.data.value);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -69,11 +74,11 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
         className="flex items-center gap-2 justify-center cursor-pointer hover:opacity-80 max-w-[240px]"
       >
         <Avatar
-          src="https://i.pinimg.com/originals/98/48/d6/9848d697fc7882b000c0fac2eabb4b6b.png"
+          src={shopInfor?.logoUrl ?? '/images/banner.png'}
           size="lg"
-          className="w-16 h-16 min-w-16"
+          className="w-16 h-16 min-w-16 border-small"
         />
-        <p className="text-xl font-bold text-primary">Tiệm ăn tháng năm</p>
+        <p className="text-xl font-bold text-primary">{shopInfor?.name}</p>
       </Link>
       <Divider className="my-5" />
       <nav>

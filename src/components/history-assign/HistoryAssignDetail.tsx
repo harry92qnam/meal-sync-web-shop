@@ -38,7 +38,7 @@ export default function HistoryAssignDetail({ id, isOpen, onClose }: DeliveryOrd
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} isDismissable={false} className="rounded-xl">
+    <Modal isOpen={isOpen} onClose={handleClose} className="rounded-xl">
       <ModalContent>
         {() => (
           <ModalBody className="flex flex-col py-4 max-h-[640px] overflow-y-scroll">
@@ -57,6 +57,11 @@ export default function HistoryAssignDetail({ id, isOpen, onClose }: DeliveryOrd
                 </span>
                 <span className="text-senary">Giao thất bại: ({packageModel?.failed} đơn)</span>
               </p>
+              <p className="flex justify-between">
+                <span className="text-purple-500">
+                  Bị báo cáo: ({packageModel?.issueReported} đơn)
+                </span>
+              </p>
             </div>
             <Divider />
             {data.map((order) => (
@@ -70,18 +75,22 @@ export default function HistoryAssignDetail({ id, isOpen, onClose }: DeliveryOrd
                         ? 'text-gray-400'
                         : order.status === 6
                           ? 'text-quaternary'
-                          : order.status === 7 || order.status === 9 || order.status === 10
-                            ? 'text-quinary'
-                            : 'text-senary'
+                          : order.status === 8
+                            ? 'text-senary'
+                            : order.status === 7 || order.status === 9
+                              ? 'text-quinary'
+                              : 'text-purple-500'
                     } ml-2`}
                   >
                     {order.status === 5
                       ? 'Chưa giao'
                       : order.status === 6
                         ? 'Đang giao'
-                        : order.status === 7 || order.status === 9 || order.status === 10
-                          ? 'Giao thành công'
-                          : 'Giao thất bại'}
+                        : order.status === 8
+                          ? 'Giao thất bại'
+                          : order.status === 7 || order.status === 9
+                            ? 'Giao thành công'
+                            : 'Bị báo cáo'}
                   </span>
                 </span>
               </div>

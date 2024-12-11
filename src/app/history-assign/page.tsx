@@ -143,7 +143,7 @@ export default function HistoryAssign() {
           return (
             <Chip
               className={`capitalize ${
-                packages.status === 1 ? 'bg-green-200 text-green-600' : 'bg-gray-200 text-gray-600'
+                packages.status === 1 ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
               }`}
               size="sm"
               variant="flat"

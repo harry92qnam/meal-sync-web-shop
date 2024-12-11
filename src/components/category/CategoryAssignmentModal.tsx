@@ -61,7 +61,7 @@ export const CategoryAssignmentModal = ({
       isOpen={isOpen}
       hideCloseButton
       onClose={onClose}
-      className="max-w-72 left-[560px] top-20"
+      className="max-w-64 left-[580px] top-20"
       backdrop="transparent"
     >
       <ModalContent>

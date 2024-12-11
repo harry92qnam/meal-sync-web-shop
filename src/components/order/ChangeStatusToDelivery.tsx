@@ -77,6 +77,11 @@ export default function ChangeStatusToDelivery({ id, isOpen, onClose }: Delivery
                 </span>
                 <span className="text-senary">Giao thất bại: ({packageModel?.failed} đơn)</span>
               </p>
+              <p className="flex justify-between">
+                <span className="text-purple-500">
+                  Bị báo cáo: ({packageModel?.issueReported} đơn)
+                </span>
+              </p>
             </div>
             <Divider />
             {data.map((order) => (
@@ -84,7 +89,7 @@ export default function ChangeStatusToDelivery({ id, isOpen, onClose }: Delivery
                 <Checkbox
                   isSelected={selectedOrderIds.includes(order.id)}
                   onChange={() => {
-                    if (order.status !== 6) {
+                    if (order.status === 5) {
                       setSelectedOrderIds((prev) =>
                         prev.includes(order.id)
                           ? prev.filter((id) => id !== order.id)
@@ -92,12 +97,34 @@ export default function ChangeStatusToDelivery({ id, isOpen, onClose }: Delivery
                       );
                     }
                   }}
-                  isDisabled={order.status === 6}
+                  isDisabled={order.status !== 5}
                 />
-                <span className={`${order.status === 6 ? 'opacity-50' : ''}`}>
+                <span className={`${order.status !== 5 ? 'opacity-50' : ''}`}>
                   MS-{order.id} | {order.buildingName} (
                   {formatTimeFrame(order.startTime, order.endTime)}){' '}
-                  {order.status === 6 && <span className="text-orange-600">Đang giao hàng</span>}
+                  <span
+                    className={`${
+                      order.status === 5
+                        ? 'text-gray-400'
+                        : order.status === 6
+                          ? 'text-quaternary'
+                          : order.status === 8
+                            ? 'text-senary'
+                            : order.status === 7 || order.status === 9
+                              ? 'text-quinary'
+                              : 'text-purple-500'
+                    } ml-2`}
+                  >
+                    {order.status === 5
+                      ? 'Chưa giao'
+                      : order.status === 6
+                        ? 'Đang giao'
+                        : order.status === 8
+                          ? 'Giao thất bại'
+                          : order.status === 7 || order.status === 9
+                            ? 'Giao thành công'
+                            : 'Bị báo cáo'}
+                  </span>
                 </span>
               </div>
             ))}
@@ -110,7 +137,7 @@ export default function ChangeStatusToDelivery({ id, isOpen, onClose }: Delivery
                   : 'text-base mt-4'
               }
             >
-              Chuyển trạng thái giao hàng
+              Tiến hành đi giao
             </Button>
           </ModalBody>
         )}

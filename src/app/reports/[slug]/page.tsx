@@ -144,8 +144,8 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
             customerData?.status === 1
               ? 'bg-gray-200 text-gray-600'
               : customerData?.status === 2
-                ? 'bg-green-200 text-green-600'
-                : 'bg-red-200 text-rose-600'
+                ? 'bg-red-200 text-rose-600'
+                : 'bg-green-200 text-green-600'
           }`}
           size="md"
           variant="flat"

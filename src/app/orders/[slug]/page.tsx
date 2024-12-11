@@ -131,7 +131,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                                     : data?.status === 10
                                       ? 'Đang bị báo cáo'
                                       : data?.status === 11
-                                        ? 'Đang kiểm tra báo cáo'
+                                        ? 'Đang xử lý báo cáo'
                                         : 'Đã xử lý báo cáo'}
                 </Chip>
               </div>

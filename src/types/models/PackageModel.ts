@@ -13,6 +13,7 @@ export default interface PackageModel {
   delivering: number;
   successful: number;
   failed: number;
+  issueReported: number;
   shopDeliveryStaff: ShopDeliveryStaff;
   dormitories: [
     {

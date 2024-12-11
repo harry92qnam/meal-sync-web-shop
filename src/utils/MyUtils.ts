@@ -124,3 +124,23 @@ export const isLocalImage = (uri: string) => {
 export const removeFormatting = (formattedPrice: string): number => {
   return Number(formattedPrice.replace(/\./g, ''));
 };
+
+export const formatDateWithTimezone = (date: Date): string => {
+  // Create a new date object in UTC
+  const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+  // Add 7 hours to adjust for GMT+7
+  const adjustedDate = new Date(utcDate.getTime() + 7 * 60 * 60 * 1000);
+  return adjustedDate.toISOString().split('T')[0];
+};
+
+export function convertTimeToNumber(time: string) {
+  const [hours, minutes] = time.split(':');
+  return parseInt(hours) * 100 + parseInt(minutes);
+}
+
+export function convertNumberToTime(time: number) {
+  const timeString = time.toString().padStart(4, '0');
+  const hours = timeString.slice(0, 2);
+  const minutes = timeString.slice(2);
+  return `${hours}:${minutes}`;
+}

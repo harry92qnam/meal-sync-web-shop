@@ -91,7 +91,7 @@ export default function Staffs() {
       showCancelButton: true,
       confirmButtonColor: '#ef4444',
       cancelButtonColor: '#94a3b8',
-      confirmButtonText: 'Xóa',
+      confirmButtonText: 'Khóa',
       cancelButtonText: 'Không',
     }).then(async (result) => {
       if (result.isConfirmed) {

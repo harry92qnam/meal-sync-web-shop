@@ -214,6 +214,7 @@ const REVIEW_COLUMNS = [
 const REVIEW_STATUS = [
   { key: 1, desc: 'Chưa phản hồi' },
   { key: 2, desc: 'Đã phản hồi' },
+  { key: 3, desc: 'Hết hạn phản hồi' },
 ];
 
 // Manage history delivery package
@@ -229,8 +230,8 @@ const HISTORY_ASSIGN_COLUMNS = [
 ];
 
 const HISTORY_ASSIGN_STATUS = [
-  { key: 1, desc: 'Đang xử lý' },
-  { key: 2, desc: 'Đã xử lý' },
+  { key: 1, desc: 'Đang thực hiện' },
+  { key: 2, desc: 'Đã hoàn thành' },
 ];
 
 export {
