@@ -1,10 +1,8 @@
 import DateRangeFilter from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
-import OrderStatusChart from '@/components/dashboard/OrderStatusChart';
-import PieChart from '@/components/dashboard/PieChart';
-import RevenueChart from '@/components/dashboard/RevenueChart';
 import MainLayout from '@/components/layout/MainLayout';
 import { formatCurrency, formatNumber } from '@/utils/MyUtils';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import React from 'react';
 
@@ -14,6 +12,16 @@ const overview = {
   numberOfUsers: 38,
   promotion: 120000,
 };
+
+const PieChart = dynamic(() => import('@/components/dashboard/PieChart'), {
+  ssr: false,
+});
+const RevenueChart = dynamic(() => import('@/components/dashboard/RevenueChart'), {
+  ssr: false,
+});
+const OrderStatusChart = dynamic(() => import('@/components/dashboard/OrderStatusChart'), {
+  ssr: false,
+});
 
 export default function Dashboard() {
   return (
