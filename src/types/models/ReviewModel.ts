@@ -13,5 +13,6 @@ export default interface ReviewModel {
     avatarUrl: string;
   };
   isAllowShopReply: boolean;
+  isShopReplied: boolean;
   createdDate: string;
 }

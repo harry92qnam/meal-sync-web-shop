@@ -94,7 +94,11 @@ export default function TableCustom({
     searchHandler('');
     setPage(1);
   }, []);
-  console.dir(selectedKeys);
+
+  const handleAcceptMany = (selectedKeys: Selection) => {
+    const selectedArray = Array.from(selectedKeys).map((val) => parseInt(val.toString()));
+    console.log(selectedArray);
+  };
 
   const topContent = useMemo(() => {
     return (
@@ -162,8 +166,16 @@ export default function TableCustom({
             <span className="text-default-400 text-small mr-4">
               Tổng cộng có {total} {description}
             </span>
-            {selectionMode === 'multiple' && selectedKeys && (
-              <Button className="block">Nhận tất cả</Button>
+            {selectionMode === 'multiple' && (
+              <Button
+                className={`${Array.from(selectedKeys).map((val) => parseInt(val.toString())).length ? 'opacity-100 cursor-pointer' : 'opacity-50 cursor-not-allowed'}`}
+                onClick={() => handleAcceptMany(selectedKeys)}
+                disabled={
+                  Array.from(selectedKeys).map((val) => parseInt(val.toString())).length === 0
+                }
+              >
+                Nhận tất cả
+              </Button>
             )}
           </div>
           <label className="flex items-center text-default-400 text-small">

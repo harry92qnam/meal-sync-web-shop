@@ -12,7 +12,7 @@ import { reviewApiService } from '@/services/api-services/api-service-instances'
 import PageableModel from '@/types/models/PageableModel';
 import ReviewModel from '@/types/models/ReviewModel';
 import ReviewQuery from '@/types/queries/ReviewQuery';
-import { formatDate } from '@/utils/MyUtils';
+import { formatTimeToSeconds } from '@/utils/MyUtils';
 import {
   Button,
   Chip,
@@ -43,14 +43,17 @@ export default function Review() {
   } as ReviewQuery);
 
   const [customQuery, setCustomQuery] = useState<any>({});
+  console.log(range.dateTo);
 
   useEffect(() => {
     const { dateFrom, dateTo, ...rest } = query;
     setCustomQuery({
       ...rest,
       dateFrom: dateFrom.toISOString().split('T')[0],
-      dateTo: dateTo.toISOString().split('T')[0],
+      dateTo: new Date(dateTo.setHours(23, 59, 59, 999)).toISOString().split('T')[0],
     });
+    console.log(customQuery);
+    console.log(range.dateTo.toISOString().split('T')[0]);
   }, [query]);
 
   const { data: reviews, refetch } = useFetchWithRQ<ReviewModel, ReviewQuery>(
@@ -126,18 +129,26 @@ export default function Review() {
         return (
           <Chip
             className={`capitalize ${
-              review.isAllowShopReply ? 'bg-gray-200 text-gray-600' : 'bg-green-200 text-green-600'
+              review.isAllowShopReply && !review.isShopReplied
+                ? 'bg-gray-200 text-gray-600'
+                : !review.isAllowShopReply && !review.isShopReplied
+                  ? 'bg-red-200 text-red-600'
+                  : 'bg-green-200 text-green-600'
             }`}
             size="sm"
             variant="flat"
           >
-            {review.isAllowShopReply ? 'Chưa phản hồi' : 'Đã phản hồi'}
+            {review.isAllowShopReply && !review.isShopReplied
+              ? 'Chưa phản hồi'
+              : !review.isAllowShopReply && !review.isShopReplied
+                ? 'Hết hạn phản hồi'
+                : 'Đã phản hồi'}
           </Chip>
         );
       case 'createdDate':
         return (
           <div className="flex flex-col">
-            <p className="text-small">{formatDate(review.createdDate)}</p>
+            <p className="text-small">{formatTimeToSeconds(review.createdDate)}</p>
           </div>
         );
       case 'actions':
@@ -190,7 +201,6 @@ export default function Review() {
         selectionMode="single"
         filters={[statusFilter]}
         renderCell={renderCell}
-        // handleRowClick={openReviewDetail}
       />
     </MainLayout>
   );
