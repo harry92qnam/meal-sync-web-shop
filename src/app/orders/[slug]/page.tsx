@@ -161,6 +161,66 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 <p className="font-semibold">{formatTimeToSeconds(data?.orderDate ?? '')}</p>
               </div>
             </div>
+
+            {(data?.status === 2 ||
+              data?.status === 4 ||
+              data?.status === 8 ||
+              data?.status === 10 ||
+              data?.status === 11 ||
+              data?.status === 12) && (
+              <div className="mt-3 text-lg">
+                <strong className="text-xl text-red-500">Lý do đơn thất bại:</strong>
+                {data.reasonIdentity === 'ShopCancel' ? (
+                  <div>
+                    Người hủy: <span className="font-bold">Chủ cửa hàng</span>{' '}
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                ) : data.reasonIdentity === 'CustomerCancel' ? (
+                  <div>
+                    Người hủy: <span className="font-bold">Khách hàng</span>{' '}
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                ) : data.reasonIdentity === 'DeliveryFailByShop' ? (
+                  <div>
+                    Nguyên nhân giao thất bại: <span className="font-bold">Chủ cửa hàng</span>{' '}
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                ) : data.reasonIdentity === 'DeliveryFailByCustomerReportedByCustomer' ? (
+                  <div>
+                    Nguyên nhân giao thất bại: <span className="font-bold">Khách hàng</span>{' '}
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                ) : data.reasonIdentity === 'DeliveryFailByShopReportedByCustomer' ? (
+                  <div>
+                    Nguyên nhân giao thất bại: <span className="font-bold">Chủ cửa hàng</span>{' '}
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                ) : data.reasonIdentity === 'DeliveryFailByCustomer' ? (
+                  <div>
+                    Nguyên nhân giao thất bại: <span className="font-bold">Khách hàng</span>{' '}
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <p>
+                      Lý do: <span className="font-bold">{data.reason}</span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <div className="mt-2">
             <strong className="text-xl text-cyan-500">Thông tin sản phẩm:</strong>

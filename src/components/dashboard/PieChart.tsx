@@ -27,7 +27,7 @@ export default function PieChart() {
     const options = {
       series: data.map((item) => (item.revenue / totalRevenue) * 100),
       chart: {
-        width: 328,
+        width: 360,
         type: 'pie',
       },
       labels: data.map((item) => item.name),

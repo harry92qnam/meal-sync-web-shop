@@ -38,7 +38,10 @@ interface BankProps {
 }
 
 const validationSchema = yup.object().shape({
-  amount: yup.number().positive('Vui lòng nhập số tiền muốn rút'),
+  amount: yup
+    .number()
+    .positive('Vui lòng nhập số tiền muốn rút')
+    .min(50000, 'Số tiền rút phải lớn hơn hoặc bằng 50.000 VNĐ'),
   bankAccountNumber: yup.string().required('Vui lòng nhập số tài khoản thụ hưởng'),
   bankAccountName: yup.string().required('Vui lòng nhập tên tài khoản thụ hưởng'),
 });
@@ -284,7 +287,16 @@ export default function WithDrawalRequestCreateModal({
                     label="Tên tài khoản thụ hưởng"
                     placeholder="Nhập tên tài khoản thụ hưởng"
                     value={formik.values.bankAccountName}
-                    onChange={formik.handleChange}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Capitalize the first letter of each word
+                      const capitalizedValue = value
+                        .toLowerCase() // Ensure all letters are lowercase first
+                        .split(' ')
+                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ');
+                      formik.setFieldValue('bankAccountName', capitalizedValue);
+                    }}
                     onBlur={formik.handleBlur}
                     isInvalid={formik.touched.bankAccountName && !!formik.errors.bankAccountName}
                     errorMessage={formik.touched.bankAccountName && formik.errors.bankAccountName}

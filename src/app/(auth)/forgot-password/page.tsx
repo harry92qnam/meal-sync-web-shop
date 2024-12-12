@@ -1,8 +1,11 @@
 'use client';
 import HeaderAuthentication from '@/components/authentication/HeaderAuthentication';
+import useEmailState from '@/hooks/states/useCounterState';
+import apiClient from '@/services/api-services/api-client';
 import { Button, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
@@ -14,6 +17,8 @@ const validationSchema = yup.object().shape({
 
 export default function ForgotPassword() {
   const router = useRouter();
+  const { setEmail } = useEmailState();
+  const [error, setError] = useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -21,11 +26,27 @@ export default function ForgotPassword() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log('Reset email:', values);
-      // Handle logic here
-      router.push('/verify-code-forgot');
+      handleForgot(values);
     },
   });
+
+  const handleForgot = async (values: { email: string }) => {
+    const payload = {
+      verifyType: 3,
+      email: values.email,
+    };
+    try {
+      const responseData = await apiClient.post('auth/send-code', payload);
+      if (responseData.data.isSuccess) {
+        setEmail(values.email);
+        router.push('/verify-code-forgot');
+      } else {
+        setError(responseData.data.error.message);
+      }
+    } catch (error: any) {
+      setError(error.response.data.error.message);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
@@ -45,8 +66,9 @@ export default function ForgotPassword() {
             isInvalid={formik.touched.email && !!formik.errors.email}
             errorMessage={formik.touched.email && formik.errors.email}
           />
+          {error && <p className="text-medium text-primary text-center">{error}</p>}
           <div>
-            <Button type="submit" color="primary" className="w-full mt-4 py-6 text-lg">
+            <Button type="submit" color="primary" className="w-full py-6 text-lg">
               Lấy lại mật khẩu
             </Button>
           </div>

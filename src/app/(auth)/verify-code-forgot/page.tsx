@@ -1,5 +1,7 @@
 'use client';
 import HeaderAuthentication from '@/components/authentication/HeaderAuthentication';
+import useEmailState from '@/hooks/states/useCounterState';
+import apiClient from '@/services/api-services/api-client';
 import { Button } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -8,6 +10,8 @@ export default function VerifyCodeReset() {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const router = useRouter();
   const [code, setCode] = useState(['', '', '', '']);
+  const [error, setError] = useState<string>();
+  const { email, setOtp } = useEmailState();
   const [countDown, setCountDown] = useState(120);
 
   useEffect(() => {
@@ -49,20 +53,47 @@ export default function VerifyCodeReset() {
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      handleSubmitBtn();
+      if (!code.join('')) {
+        setError('Vui lòng nhập mã xác thực!');
+      } else {
+        handleVerifyCode(code.join(''));
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleSubmitBtn = async () => {
-    console.log('OTP:', code.join(''));
-    // Handle logic here
-    router.push('/reset-password');
+  const handleVerifyCode = async (code: string) => {
+    const payload = {
+      email,
+      code,
+      isVerify: true,
+      verifyType: 3,
+    };
+
+    try {
+      const responseData = await apiClient.post('auth/verify-code', payload);
+      if (responseData.data.isSuccess) {
+        setOtp(code);
+        router.push('/reset-password');
+      } else {
+        setError(responseData.data.error.message);
+      }
+    } catch (error: any) {
+      setError(error.response.data.error.message);
+    }
   };
 
   const handleResendOTP = async () => {
+    const payload = {
+      verifyType: 3,
+      email,
+    };
     // Implement logic for resending OTP here
+    setCountDown(120);
+    setCode(['', '', '', '']);
+    setError('');
+    await apiClient.post('auth/send-code', payload);
   };
 
   return (
@@ -102,6 +133,7 @@ export default function VerifyCodeReset() {
               Gửi lại mã?
             </p>
           </div>
+          {error && <p className="text-medium text-primary text-center">{error}</p>}
           <div>
             <Button type="submit" color="primary" className="w-full mt-4 py-6 text-lg">
               Xác thực

@@ -5,6 +5,7 @@ export default interface WithdrawalModel {
   bankCode: string;
   bankShortName: string;
   bankAccountNumber: string;
+  bankAccountName: string;
   reason?: string;
   createdDate: string;
   walletHistory: {

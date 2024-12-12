@@ -2,10 +2,17 @@ import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { create } from 'zustand';
 import PeriodTimeFilterQuery from '../../types/queries/PeriodTimeFilterQuery';
 
+const adjustToTimezone = (date: Date, timezoneOffset: number): Date => {
+  const adjustedDate = new Date(date.getTime() + timezoneOffset);
+  return adjustedDate;
+};
+
+const timezoneOffset = 7 * 60 * 60 * 1000;
+
 const getDateMinusDays = (date: Date, days: number): Date => {
   const newDate = new Date(date);
   newDate.setDate(date.getDate() - days);
-  return newDate;
+  return adjustToTimezone(newDate, timezoneOffset);
 };
 
 const getThisYear = () => new Date().getFullYear();
@@ -22,8 +29,8 @@ export interface PeriodTimeFilterQueryState {
 
 const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
   range: {
-    dateFrom: new Date(0),
-    dateTo: new Date(),
+    dateFrom: adjustToTimezone(new Date(getThisYear(), 0, 1), timezoneOffset),
+    dateTo: adjustToTimezone(new Date(), timezoneOffset),
   } as PeriodTimeFilterQuery,
   selected: 3,
   isSpecificTimeFilter: false,
@@ -31,11 +38,11 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
   setDateFrom: (date) =>
     set((state) => ({
       ...state,
-      range: { ...state.range, dateFrom: date },
+      range: { ...state.range, dateFrom: adjustToTimezone(date, timezoneOffset) },
     })),
   setDateTo: (date) =>
     set((state) => ({
-      range: { ...state.range, dateTo: date },
+      range: { ...state.range, dateTo: adjustToTimezone(date, timezoneOffset) },
     })),
   setSelected: (choice: number) => {
     {
@@ -45,7 +52,10 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             ...state,
             selected: choice,
             isSpecificTimeFilter: false,
-            range: { dateFrom: new Date(0), dateTo: new Date() },
+            range: {
+              dateFrom: adjustToTimezone(new Date(getThisYear(), 0, 1), timezoneOffset),
+              dateTo: adjustToTimezone(new Date(), timezoneOffset),
+            },
           }));
           break;
         case 2:
@@ -54,8 +64,8 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: getDateMinusDays(new Date(), 6),
-              dateTo: new Date(),
+              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 6), timezoneOffset),
+              dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));
           break;
@@ -65,8 +75,8 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: getDateMinusDays(new Date(), 29),
-              dateTo: new Date(),
+              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 29), timezoneOffset),
+              dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));
           break;
@@ -76,11 +86,10 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: new Date(getThisYear(), 0, 1),
-              dateTo: new Date(),
+              dateFrom: adjustToTimezone(new Date(getThisYear(), 0, 1), timezoneOffset),
+              dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));
-
           break;
         case 5:
           set((state) => ({
@@ -88,8 +97,8 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: new Date(getThisYear() - 1, 0, 1),
-              dateTo: new Date(getThisYear() - 1, 11, 31),
+              dateFrom: adjustToTimezone(new Date(getThisYear() - 1, 0, 1), timezoneOffset),
+              dateTo: adjustToTimezone(new Date(getThisYear() - 1, 11, 31), timezoneOffset),
             },
           }));
           break;

@@ -14,6 +14,8 @@ export default interface OrderModel {
   endTime: number;
   timeFrameFormat: string;
   note: string;
+  reasonIdentity?: string;
+  reason?: string;
   shopDeliveryStaff?: {
     id: number;
     fullName: string;
