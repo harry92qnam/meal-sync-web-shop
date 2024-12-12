@@ -51,7 +51,11 @@ export default function WithdrawalRequestDetail({ params }: { params: { slug: nu
               <p className="font-semibold">{data?.bankShortName}</p>
             </div>
             <div className="flex gap-2">
-              <p>Số tài khoản nhận tiền:</p>
+              <p>Tên tài khoản thụ hưởng:</p>
+              <p className="font-semibold">{data?.bankAccountName}</p>
+            </div>
+            <div className="flex gap-2">
+              <p>Số tài khoản thụ hưởng:</p>
               <p className="font-semibold">{data?.bankAccountNumber}</p>
             </div>
             <div className="flex gap-2">

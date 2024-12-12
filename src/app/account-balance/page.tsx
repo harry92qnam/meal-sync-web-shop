@@ -178,7 +178,14 @@ export default function AccountBalance() {
   };
 
   const handleAddNewRequest = async () => {
-    onCreateOpen();
+    if (overview?.isAllowedRequestWithdrawal) {
+      onCreateOpen();
+    } else {
+      toast(
+        'error',
+        'Hiện đang có yêu cầu chưa được duyệt. Vui lòng hủy yêu cầu hoặc thử lại sau!',
+      );
+    }
   };
 
   const handleLoadMore = () => {

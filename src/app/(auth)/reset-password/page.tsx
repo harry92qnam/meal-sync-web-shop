@@ -1,5 +1,8 @@
 'use client';
 import HeaderAuthentication from '@/components/authentication/HeaderAuthentication';
+import useEmailState from '@/hooks/states/useCounterState';
+import apiClient from '@/services/api-services/api-client';
+import { toast } from '@/utils/MyUtils';
 import { Button, Input } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -32,6 +35,7 @@ export default function ResetPassword() {
   const togglePassword = () => setIsShownPassword(!isShowPassword);
   const toggleConfirmPassword = () => setIsShownConfirmPassword(!isShowConfirmPassword);
   const router = useRouter();
+  const { email, otp } = useEmailState();
 
   const formik = useFormik({
     initialValues: {
@@ -40,11 +44,29 @@ export default function ResetPassword() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log('New password:', values.password);
-      // Handle logic here
-      router.push('/login');
+      handleResetPassword(values);
     },
   });
+
+  const handleResetPassword = async (values: any) => {
+    const payload = {
+      isVerify: false,
+      email,
+      password: values.password,
+      verifyType: 3,
+      code: otp,
+    };
+
+    try {
+      const responseData = await apiClient.post('auth/verify-code', payload);
+      if (responseData.data.isSuccess) {
+        toast('success', responseData.data.value.message);
+        router.push('/login');
+      }
+    } catch (error) {
+      console.log('error ne', error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
