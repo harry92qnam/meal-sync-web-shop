@@ -317,7 +317,7 @@ export default function Shop() {
           <div className="relative">
             {!isLocalImage(shopInfor?.bannerUrl || '') && (
               <Image
-                src={shopInfor?.bannerUrl ?? '/images/banner.png'}
+                src={shopInfor?.bannerUrl ?? '/images/banner.jpg'}
                 width={0}
                 height={0}
                 sizes="100vw"
