@@ -2,6 +2,7 @@
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
+import DepositCreateModal from '@/components/withdrawal-request/DepositCreateModal';
 import WithDrawalRequestCreateModal from '@/components/withdrawal-request/WithDrawalRequestCreateModal.tsx';
 import { WITHDRAWAL_COLUMNS, WITHDRAWAL_STATUS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
@@ -68,6 +69,13 @@ export default function AccountBalance() {
     isOpen: isCreateOpen,
     onOpen: onCreateOpen,
     onOpenChange: onCreateOpenChange,
+  } = useDisclosure();
+
+  const {
+    isOpen: isCreateDepositOpen,
+    onOpen: onCreateDepositOpen,
+    onClose: onCreateDepositClose,
+    onOpenChange: onCreateDepositOpenChange,
   } = useDisclosure();
 
   const [query, setQuery] = useState<WithdrawalQuery>({
@@ -194,6 +202,10 @@ export default function AccountBalance() {
     }
   };
 
+  const handleDeposit = () => {
+    onCreateDepositOpen();
+  };
+
   const renderCell = useCallback((withdrawal: WithdrawalModel, columnKey: React.Key): ReactNode => {
     switch (columnKey) {
       case 'id':
@@ -301,13 +313,24 @@ export default function AccountBalance() {
 
       {isActiveTab === 1 ? (
         <>
-          <div className="shadow-medium rounded-lg border-small p-4 mb-4">
-            <p>
-              Số dư có sẵn:{' '}
-              <strong className="text-quinary text-xl">
-                {formatCurrency(overview?.availableAmount ?? 0)}
-              </strong>
-            </p>
+          <div className="shadow-md rounded-lg p-4 mb-4">
+            <div className="flex gap-12 items-center">
+              <p>
+                Số dư có sẵn:{' '}
+                <strong className="text-quinary text-xl">
+                  {formatCurrency(overview?.availableAmount ?? 0)}
+                </strong>
+              </p>
+              <Button
+                type="button"
+                color="success"
+                className=" text-secondary px-4 text-medium"
+                size="sm"
+                onClick={handleDeposit}
+              >
+                Nạp tiền
+              </Button>
+            </div>
             <p>
               Tiền bán chờ về:{' '}
               <strong className="text-xl">{formatCurrency(overview?.incomingAmount ?? 0)}</strong>
@@ -344,6 +367,12 @@ export default function AccountBalance() {
             isOpen={isCreateOpen}
             onOpen={onCreateOpen}
             onOpenChange={onCreateOpenChange}
+          />
+          <DepositCreateModal
+            isOpen={isCreateDepositOpen}
+            onOpen={onCreateDepositOpen}
+            onClose={onCreateDepositClose}
+            onOpenChange={onCreateDepositOpenChange}
           />
         </>
       ) : (

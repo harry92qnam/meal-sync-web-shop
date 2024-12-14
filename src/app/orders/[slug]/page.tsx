@@ -39,7 +39,6 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
     const fetchReport = async () => {
       try {
         const responseData = await apiClient.get(`shop-owner/order/${params.slug}/report`);
-        console.log('Report data:', responseData.data);
         if (responseData.data.isSuccess) {
           const reportIdValue = responseData.data.value[0].id;
           setReportId(reportIdValue);
@@ -155,6 +154,12 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
               <div className="flex gap-2 items-center">
                 <p>Khung giờ nhận hàng</p>
                 <p className="font-semibold">{formatTimeFrame(data?.startTime, data?.endTime)}</p>
+              </div>
+              <div className="flex gap-2 items-center">
+                <p>Phương thức thanh toán:</p>
+                <p className="font-semibold">
+                  {data?.isCustomerPaid ? 'Đã thanh toán' : 'Thanh toán khi nhận hàng'}
+                </p>
               </div>
               <div className="flex gap-2 items-center">
                 <p>Thời gian giao dịch:</p>

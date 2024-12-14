@@ -74,7 +74,7 @@ const SideBar = ({ activeContentIndex }: { activeContentIndex: number }) => {
         className="flex items-center gap-2 justify-center cursor-pointer hover:opacity-80 max-w-[240px]"
       >
         <Avatar
-          src={shopInfor?.logoUrl ?? '/images/banner.png'}
+          src={shopInfor?.logoUrl ?? '/images/banner.jpg'}
           size="lg"
           className="w-16 h-16 min-w-16 border-small"
         />

@@ -13,6 +13,7 @@ export default interface OrderModel {
   startTime: number;
   endTime: number;
   timeFrameFormat: string;
+  isCustomerPaid: boolean;
   note: string;
   reasonIdentity?: string;
   reason?: string;

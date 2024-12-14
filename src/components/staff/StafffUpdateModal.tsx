@@ -39,7 +39,6 @@ const validationSchema = yup.object().shape({
 
 export default function StaffUpdateModal({ staff, isOpen, onOpenChange }: StaffModalProps) {
   const { setIsRefetch } = useRefetch();
-  console.log(staff, 'staff');
 
   const formik = useFormik({
     enableReinitialize: true,

@@ -26,6 +26,17 @@ const sessionService = {
       localStorage.setItem('authDTO', authDTO ? JSON.stringify(authDTO) : '');
     }
   },
+  setAuthRole: async (role: number) => {
+    localStorage.setItem('auth-role', role.toString());
+  },
+
+  setAuthToken: async (token: string) => {
+    localStorage.setItem('auth-token', token);
+  },
+  getAuthRole: async () => {
+    const role = await localStorage.getItem('auth-role');
+    return parseInt(role || '', 10);
+  },
 };
 
 export default sessionService;

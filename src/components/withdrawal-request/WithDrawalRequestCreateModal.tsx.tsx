@@ -289,11 +289,10 @@ export default function WithDrawalRequestCreateModal({
                     value={formik.values.bankAccountName}
                     onChange={(e) => {
                       const value = e.target.value;
-                      // Capitalize the first letter of each word
                       const capitalizedValue = value
-                        .toLowerCase() // Ensure all letters are lowercase first
+                        .toLowerCase()
                         .split(' ')
-                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                        .map((word) => word.toUpperCase())
                         .join(' ');
                       formik.setFieldValue('bankAccountName', capitalizedValue);
                     }}

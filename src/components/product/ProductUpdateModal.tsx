@@ -102,8 +102,6 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
     },
   });
 
-  console.log(formik.initialValues, 'formik');
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -146,7 +144,6 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
     }
   };
   const handleUpdate = async (values: any) => {
-    console.log(values, 'values');
     try {
       const url = avatar ? await uploadImage(avatar) : urlFile;
       const payload = {
