@@ -367,7 +367,7 @@ export default function AccountBalance() {
             isOpen={isCreateOpen}
             onOpen={onCreateOpen}
             onOpenChange={onCreateOpenChange}
-            isAllowedRequestWithdrawal={overview?.isAllowedRequestWithdrawal}
+            isAllowedRequestWithdrawal={overview?.isAllowedRequestWithdrawal ?? false}
           />
           <DepositCreateModal
             isOpen={isCreateDepositOpen}
