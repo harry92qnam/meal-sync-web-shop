@@ -112,7 +112,7 @@ export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryMo
         {(onClose) => (
           <React.Fragment>
             <ModalHeader className="flex flex-col text-2xl text-center">
-              Tạo thể loại mới
+              Tạo danh mục mới
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col items-center">

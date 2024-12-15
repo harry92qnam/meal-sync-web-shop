@@ -1,5 +1,5 @@
 'use client';
-import DateRangeFilter from '@/components/common/DateRangeFilter';
+import DateRangeFilter, { dateToDateValue } from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -43,17 +43,14 @@ export default function Review() {
   } as ReviewQuery);
 
   const [customQuery, setCustomQuery] = useState<any>({});
-  console.log(range.dateTo);
 
   useEffect(() => {
     const { dateFrom, dateTo, ...rest } = query;
     setCustomQuery({
       ...rest,
-      dateFrom: dateFrom.toISOString().split('T')[0],
-      dateTo: new Date(dateTo.setHours(23, 59, 59, 999)).toISOString().split('T')[0],
+      dateFrom: dateToDateValue(dateFrom),
+      dateTo: dateToDateValue(dateTo),
     });
-    console.log(customQuery);
-    console.log(range.dateTo.toISOString().split('T')[0]);
   }, [query]);
 
   const { data: reviews, refetch } = useFetchWithRQ<ReviewModel, ReviewQuery>(

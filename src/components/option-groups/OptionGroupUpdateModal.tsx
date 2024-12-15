@@ -197,13 +197,10 @@ export default function OptionGroupUpdateModal({
           options: options,
         };
       }
-      console.log(payload, 'payloadđ');
-
       const responseData = await apiClient.put(
         `shop-owner/option-group/${optionGroup?.id}`,
         payload,
       );
-      console.log(responseData);
       if (!responseData.data.isSuccess) {
         toast('error', responseData.data.error.message);
       } else {

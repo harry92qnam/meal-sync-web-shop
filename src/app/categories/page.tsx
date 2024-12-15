@@ -123,12 +123,6 @@ export default function Categories() {
             className="flex justify-start ml-12 gap-4"
           />
         );
-      case 'description':
-        return (
-          <div className="flex flex-col">
-            <p className="text-small text-start">{category.description}</p>
-          </div>
-        );
       case 'createdDate':
         return (
           <div className="flex flex-col">

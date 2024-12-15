@@ -12,21 +12,13 @@ import {
   isLocalImage,
   toast,
 } from '@/utils/MyUtils';
-import {
-  Avatar,
-  BreadcrumbItem,
-  Breadcrumbs,
-  Button,
-  Divider,
-  Textarea,
-  User,
-} from '@nextui-org/react';
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Divider, Textarea } from '@nextui-org/react';
 import { useFormik } from 'formik';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import * as yup from 'yup';
 import { FaStar } from 'react-icons/fa';
+import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
   comment: yup
@@ -266,7 +258,7 @@ export default function ReviewDetail({ params }: { params: { slug: number } }) {
                         'https://www.949vans.com/images/products/detail/E60195ABKS.2.jpg'
                       }
                       alt="Category Image"
-                      className={`rounded-full w-12 h-12 ${customerData?.avatar ? '' : 'border-medium'}`}
+                      className={`rounded-full w-12 h-12 border-small`}
                     />
                     <div className="flex flex-col">
                       <p className="text-lg font-bold">{customerData?.name}</p>
@@ -315,17 +307,16 @@ export default function ReviewDetail({ params }: { params: { slug: number } }) {
                 </div>
               </div>
 
-              <strong className="text-xl text-cyan-500">Phản hồi:</strong>
               {shopData ? (
-                <div className="flex flex-col mr-auto text-lg gap-2">
+                <div className="flex shadow-sm border-small rounded-lg px-4 py-2 ml-4 flex-col mr-auto text-lg gap-2">
                   <div className="flex items-center gap-2 pb-2">
                     <Avatar
                       src={
                         shopData?.avatar ||
                         'https://www.949vans.com/images/products/detail/E60195ABKS.2.jpg'
                       }
-                      alt="Category Image"
-                      className={`rounded-full w-12 h-12 ${shopData?.avatar ? '' : 'border-medium'}`}
+                      alt="Shop Image"
+                      className={`rounded-full w-12 h-12 border-small`}
                     />
                     <div className="flex flex-col">
                       <p className="text-lg font-bold">{shopData?.name}</p>

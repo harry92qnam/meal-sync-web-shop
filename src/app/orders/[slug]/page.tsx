@@ -100,7 +100,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                   className={
                     data?.status === 10
                       ? 'text-gray-600 bg-gray-200 font-bold capitalize'
-                      : data?.status === 11
+                      : data?.status === 5 || data?.status === 6 || data?.status === 11
                         ? 'text-yellow-600 bg-yellow-200 font-bold capitalize'
                         : data?.status === 12
                           ? 'bg-purple-200 text-purple-600 font-bold capitalize'
@@ -126,7 +126,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                                 : data?.status === 8
                                   ? 'Giao hàng thất bại'
                                   : data?.status === 9
-                                    ? 'Hoàn thành đơn hàng'
+                                    ? 'Hoàn thành'
                                     : data?.status === 10
                                       ? 'Đang bị báo cáo'
                                       : data?.status === 11
@@ -157,8 +157,10 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
               </div>
               <div className="flex gap-2 items-center">
                 <p>Phương thức thanh toán:</p>
-                <p className="font-semibold">
-                  {data?.isCustomerPaid ? 'Đã thanh toán' : 'Thanh toán khi nhận hàng'}
+                <p
+                  className={`font-semibold ${data?.isCustomerPaid ? 'text-green-500' : 'text-red-500'}`}
+                >
+                  {data?.isCustomerPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}
                 </p>
               </div>
               <div className="flex gap-2 items-center">
@@ -167,12 +169,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
               </div>
             </div>
 
-            {(data?.status === 2 ||
-              data?.status === 4 ||
-              data?.status === 8 ||
-              data?.status === 10 ||
-              data?.status === 11 ||
-              data?.status === 12) && (
+            {data?.reasonIdentity && (
               <div className="mt-3 text-lg">
                 <strong className="text-xl text-red-500">Lý do đơn thất bại:</strong>
                 {data.reasonIdentity === 'ShopCancel' ? (
@@ -227,6 +224,29 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
               </div>
             )}
           </div>
+
+          {data?.evidences && data?.evidences.length > 0 && (
+            <div className="flex flex-col gap-2 mt-3">
+              <p className="text-xl text-red-500 font-bold">Hình ảnh chứng minh:</p>
+              <div className="flex flex-wrap gap-2">
+                {data?.evidences.map((evidence, index) => (
+                  <div key={index} className="flex flex-col gap-2 items-center">
+                    {!isLocalImage(evidence.imageUrl || '') && (
+                      <Image
+                        src={evidence.imageUrl || ''}
+                        alt={`Image ${index + 1}`}
+                        width={100}
+                        height={100}
+                        quality={100}
+                        className="rounded-lg w-44 h-44 object-cover border-small"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-2">
             <strong className="text-xl text-cyan-500">Thông tin sản phẩm:</strong>
             {data?.orderDetails.map((food) => (
@@ -275,17 +295,21 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                   </div>
                   <strong className="text-xl">{formatCurrency(food.totalPrice)}</strong>
                 </div>
-                <p>
-                  <strong>Ghi chú món ăn: </strong> <span>{food.note}</span>
-                </p>
+                {food.note && (
+                  <p>
+                    <strong>Ghi chú món ăn: </strong> <span>{food.note}</span>
+                  </p>
+                )}
                 <Divider />
               </div>
             ))}
           </div>
-          <p className="py-4">
-            <strong>Ghi chú đơn hàng: </strong>
-            {data?.note.split('\n').map((item, index) => <span key={index}>{item}</span>)}
-          </p>
+          {data?.note && (
+            <p className="py-4">
+              <strong>Ghi chú đơn hàng: </strong>
+              {data?.note?.split('\n').map((item, index) => <span key={index}>{item}</span>)}
+            </p>
+          )}
           <Divider />
           <div className="flex flex-col ml-auto w-1/3 pt-4 text-lg">
             <div className="flex justify-between">

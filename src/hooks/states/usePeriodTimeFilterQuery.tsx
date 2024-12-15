@@ -12,7 +12,7 @@ const timezoneOffset = 7 * 60 * 60 * 1000;
 const getDateMinusDays = (date: Date, days: number): Date => {
   const newDate = new Date(date);
   newDate.setDate(date.getDate() - days);
-  return adjustToTimezone(newDate, timezoneOffset);
+  return newDate;
 };
 
 const getThisYear = () => new Date().getFullYear();
@@ -38,11 +38,11 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
   setDateFrom: (date) =>
     set((state) => ({
       ...state,
-      range: { ...state.range, dateFrom: adjustToTimezone(date, timezoneOffset) },
+      range: { ...state.range, dateFrom: new Date(date.getTime()) },
     })),
   setDateTo: (date) =>
     set((state) => ({
-      range: { ...state.range, dateTo: adjustToTimezone(date, timezoneOffset) },
+      range: { ...state.range, dateTo: new Date(date.getTime()) },
     })),
   setSelected: (choice: number) => {
     {
@@ -64,18 +64,19 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 6), timezoneOffset),
+              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 7), timezoneOffset), // 7 days ago
               dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));
           break;
+
         case 3:
           set((state) => ({
             ...state,
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 29), timezoneOffset),
+              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 30), timezoneOffset), // 30 days ago
               dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));
