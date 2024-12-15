@@ -8,6 +8,7 @@ export default interface ReportModel {
   imageUrl: string;
   status: number;
   reason?: string;
+  isAllowShopReply: boolean;
   createdDate: string;
   customer: {
     id: number;

@@ -1,5 +1,5 @@
 'use client';
-import DateRangeFilter from '@/components/common/DateRangeFilter';
+import DateRangeFilter, { dateToDateValue } from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';

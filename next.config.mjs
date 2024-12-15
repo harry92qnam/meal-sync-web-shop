@@ -13,6 +13,18 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'd2uru0ppsj1ja5.cloudfront.net',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'mealsync.s3.ap-southeast-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

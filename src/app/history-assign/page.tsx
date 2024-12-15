@@ -1,5 +1,5 @@
 'use client';
-import DateRangeFilter from '@/components/common/DateRangeFilter';
+import DateRangeFilter, { dateToDateValue } from '@/components/common/DateRangeFilter';
 import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import HistoryAssignDetail from '@/components/history-assign/HistoryAssignDetail';
@@ -54,8 +54,8 @@ export default function HistoryAssign() {
     const { dateFrom, dateTo, ...rest } = query;
     setCustomQuery({
       ...rest,
-      dateFrom: dateFrom?.toISOString().split('T')[0],
-      dateTo: dateTo?.toISOString().split('T')[0],
+      dateFrom: dateToDateValue(range.dateFrom),
+      dateTo: dateToDateValue(range.dateTo),
     });
   }, [query]);
 

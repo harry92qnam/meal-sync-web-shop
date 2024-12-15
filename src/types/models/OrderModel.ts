@@ -17,6 +17,14 @@ export default interface OrderModel {
   note: string;
   reasonIdentity?: string;
   reason?: string;
+  evidences?: [
+    {
+      imageUrl: string;
+      takePictureDateTime: string;
+    },
+  ];
+  isDeliveredByQR: boolean;
+  deliverySuccessImageUrls: boolean;
   shopDeliveryStaff?: {
     id: number;
     fullName: string;

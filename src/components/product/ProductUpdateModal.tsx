@@ -1,5 +1,6 @@
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
+import ContainerModel from '@/types/models/ContainerModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 import ProductModel from '@/types/models/ProductModel';
 import { formatPriceForInput, toast } from '@/utils/MyUtils';
@@ -70,6 +71,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
   const [platformCategories, setPlatformCategories] = useState<PlatCategory[]>([]);
   const [shopCategories, setShopCategories] = useState<ShopCategory[]>([]);
   const [optionGroups, setOptionGroups] = useState<OptionGroupModel[]>([]);
+  const [containers, setContainers] = useState<ContainerModel[]>([]);
 
   useEffect(() => {
     setUrlFile(product?.imageUrl);
@@ -93,6 +95,7 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
       operatingSlots: product?.operatingSlots.map((slot) => slot.id),
       platformCategoryId: product?.platformCategoryId,
       shopCategoryId: product?.shopCategoryId,
+      foodPackingUnitId: product?.foodPackingUnitId,
       description: product?.description,
       optionGroups: product?.optionGroups.map((option) => option.optionGroupId),
     },
@@ -105,17 +108,19 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
   useEffect(() => {
     async function fetchData() {
       try {
-        const [operatingSlots, platformCategories, shopCategories, optionGroups] =
+        const [operatingSlots, platformCategories, shopCategories, optionGroups, containers] =
           await Promise.all([
             apiClient.get('shop-owner/operating-slot'),
             apiClient.get('platform-category'),
             apiClient.get('web/shop-owner/category'),
             apiClient.get('shop-owner/option-group'),
+            apiClient.get('shop-onwer/food-packing-unit'),
           ]);
         setOperatingSlots(operatingSlots.data.value);
         setPlatformCategories(platformCategories.data.value);
         setShopCategories(shopCategories.data.value.items);
         setOptionGroups(optionGroups.data.value.items);
+        setContainers(containers.data.value.items);
       } catch (error) {
         console.log(error);
       }
@@ -144,6 +149,8 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
     }
   };
   const handleUpdate = async (values: any) => {
+    console.log(values);
+
     try {
       const url = avatar ? await uploadImage(avatar) : urlFile;
       const payload = {
@@ -160,6 +167,9 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
           ? Number(values.platformCategoryId.currentKey)
           : values.platformCategoryId,
         foodOptionGroups: Array.from(values.optionGroups).map(Number),
+        foodPackingUnitId: values.foodPackingUnitId.currentKey
+          ? Number(values.foodPackingUnitId.currentKey)
+          : values.foodPackingUnitId,
         status: product?.status,
       };
 
@@ -171,6 +181,8 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
         toast('error', 'Vui lòng chọn khung giờ mở bán');
       } else if (!payload.platformCategoryId) {
         toast('error', 'Vui lòng chọn danh mục hệ thống');
+      } else if (!payload.foodPackingUnitId) {
+        toast('error', 'Vui lòng chọn vật đựng');
       } else if (!payload.shopCategoryId) {
         toast('error', 'Vui lòng chọn danh mục cửa hàng');
       } else if (!payload.imgUrl) {
@@ -267,6 +279,20 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
                   errorMessage={formik.touched.price && formik.errors.price}
                   endContent={'VND'}
                 />
+                <Select
+                  selectionMode="single"
+                  isRequired
+                  name="foodPackingUnitId"
+                  label="Vật đựng món ăn"
+                  onSelectionChange={(value) => formik.setFieldValue('foodPackingUnitId', value)}
+                  value={formik.values.foodPackingUnitId}
+                >
+                  {containers.map((unit) => (
+                    <SelectItem key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </SelectItem>
+                  ))}
+                </Select>
                 <Select
                   selectionMode="multiple"
                   isRequired

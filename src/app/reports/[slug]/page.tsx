@@ -4,6 +4,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import { REPORT_STATUS } from '@/data/constants/constants';
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
+import ReportModel from '@/types/models/ReportModel';
 import { formatPhoneNumber, formatTimeToSeconds, isLocalImage, toast } from '@/utils/MyUtils';
 import { BreadcrumbItem, Breadcrumbs, Button, Chip, Divider, Textarea } from '@nextui-org/react';
 import { useFormik } from 'formik';
@@ -40,6 +41,7 @@ const validationSchema = yup.object().shape({
 export default function ReportDetail({ params }: { params: { slug: number } }) {
   const [customerData, setCustomerData] = useState<ReportDetailData>();
   const [shopData, setShopData] = useState<ReportDetailData>();
+  const [data, setData] = useState<ReportModel>();
   const router = useRouter();
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -57,16 +59,12 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
 
   const handleSubmitReply = async (values: any) => {
     try {
-      if (!selectedImages.length) {
-        toast('error', 'Vui lòng cung cấp hình ảnh làm bằng chứng');
-        return;
-      }
       const uploadPromises = selectedImages.map((image) => uploadImage(image));
       const imageUrls = await Promise.all(uploadPromises);
       const payload = {
         replyReportId: customerData?.id,
         title: customerData?.title,
-        content: formik.values.reason,
+        content: values.reason,
         images: imageUrls,
       };
       const responseData = await apiClient.post('shop-owner/order/report/reply', payload);
@@ -99,6 +97,7 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
               setShopData(element);
             }
           });
+          setData(responseData.data.value);
         } else {
           toast('error', responseData.data.error.message);
         }
@@ -242,6 +241,10 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
               <p className="font-bold">{formatTimeToSeconds(shopData?.createdDate ?? '')}</p>
             </div>
           </div>
+        ) : !data?.isAllowShopReply ? (
+          <p className="text-red-500 font-bold text-xl text-center">
+            Báo cáo này đã quá thời gian phản hồi
+          </p>
         ) : (
           <>
             <Textarea

@@ -125,7 +125,7 @@ export default function CategoryUpdateModal({
         {(onClose) => (
           <React.Fragment>
             <ModalHeader className="flex flex-col text-2xl text-center">
-              Sửa đổi danh mục
+              Cập nhật danh mục
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col items-center">

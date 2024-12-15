@@ -1,5 +1,6 @@
 import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
+import ContainerModel from '@/types/models/ContainerModel';
 import OptionGroupModel from '@/types/models/OptionGroupModel';
 import { formatPriceForInput, toast } from '@/utils/MyUtils';
 import {
@@ -67,6 +68,7 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
   const [platformCategories, setPlatformCategories] = useState<PlatCategory[]>([]);
   const [shopCategories, setShopCategories] = useState<ShopCategory[]>([]);
   const [optionGroups, setOptionGroups] = useState<OptionGroupModel[]>([]);
+  const [containers, setContainers] = useState<ContainerModel[]>([]);
 
   const formik = useFormik({
     initialValues: {
@@ -77,6 +79,7 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
       shopCategoryId: 0,
       description: '',
       optionGroups: [],
+      FoodPackingUnitId: 0,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -87,17 +90,19 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
   useEffect(() => {
     async function fetchData() {
       try {
-        const [operatingSlots, platformCategories, shopCategories, optionGroups] =
+        const [operatingSlots, platformCategories, shopCategories, optionGroups, containers] =
           await Promise.all([
             apiClient.get('shop-owner/operating-slot'),
             apiClient.get('platform-category'),
             apiClient.get('web/shop-owner/category'),
             apiClient.get('shop-owner/option-group'),
+            apiClient.get('shop-onwer/food-packing-unit'),
           ]);
         setOperatingSlots(operatingSlots.data.value);
         setPlatformCategories(platformCategories.data.value);
         setShopCategories(shopCategories.data.value.items);
         setOptionGroups(optionGroups.data.value.items);
+        setContainers(containers.data.value.items);
       } catch (error) {
         console.log(error);
       }
@@ -137,6 +142,7 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
         shopCategoryId: Number(values.shopCategoryId.currentKey),
         platformCategoryId: Number(values.platformCategoryId.currentKey),
         optionGroups: Array.from(values.optionGroups).map(Number),
+        FoodPackingUnitId: Number(values.FoodPackingUnitId.currentKey),
         status: 1,
       };
 
@@ -148,6 +154,8 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
         toast('error', 'Vui lòng chọn khung giờ mở bán');
       } else if (!payload.platformCategoryId) {
         toast('error', 'Vui lòng chọn danh mục hệ thống');
+      } else if (!payload.FoodPackingUnitId) {
+        toast('error', 'Vui lòng chọn vật đựng');
       } else if (!payload.shopCategoryId) {
         toast('error', 'Vui lòng chọn danh mục cửa hàng');
       } else if (!payload.imgUrl) {
@@ -248,6 +256,19 @@ export default function ProductCreateModal({ isOpen, onOpenChange }: ProductModa
                   errorMessage={formik.touched.price && formik.errors.price}
                   endContent={'VND'}
                 />
+                <Select
+                  selectionMode="single"
+                  isRequired
+                  name="FoodPackingUnitId"
+                  label="Vật đựng món ăn"
+                  onSelectionChange={(value) => formik.setFieldValue('FoodPackingUnitId', value)}
+                >
+                  {containers.map((unit) => (
+                    <SelectItem key={unit.id} value={unit.id}>
+                      {unit.name}
+                    </SelectItem>
+                  ))}
+                </Select>
                 <Select
                   selectionMode="multiple"
                   isRequired

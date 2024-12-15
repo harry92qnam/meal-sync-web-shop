@@ -13,10 +13,10 @@ const DateRangePicker = dynamic(
   },
 );
 
-const dateToDateValue = (date: Date): CalendarDate => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+export const dateToDateValue = (date: Date): CalendarDate => {
+  const year = date.getUTCFullYear(); // Use UTC methods
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // UTC month
+  const day = String(date.getUTCDate()).padStart(2, '0'); // UTC day
   return parseDate(`${year}-${month}-${day}`);
 };
 
@@ -64,6 +64,10 @@ const DateRangeFilter = () => {
         label="Chọn ngày"
         variant="bordered"
         isDisabled={!isSpecificTimeFilter}
+        defaultValue={{
+          start: dateToDateValue(range.dateFrom),
+          end: dateToDateValue(range.dateTo),
+        }}
         value={{
           start: dateToDateValue(range.dateFrom),
           end: dateToDateValue(range.dateTo),

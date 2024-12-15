@@ -4,6 +4,7 @@ export default interface ProductModel {
   platformCategoryId: number;
   shopCategoryId: number;
   numberOfOptionGroupLinked: number;
+  foodPackingUnitId: number;
   shopCategory: {
     id: number;
     shopId: number;

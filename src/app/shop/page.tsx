@@ -296,6 +296,39 @@ export default function Shop() {
       } else {
         toast('error', responseData.data.error.message);
       }
+      if (responseData.data.isWarning) {
+        await Swal.fire({
+          text: responseData.data.value.message,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#94a3b8',
+          confirmButtonText: 'Xác nhận',
+          cancelButtonText: 'Hủy',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const responseData = await apiClient.delete(`shop-owner/operating-slot/${id}`, {
+              data: {
+                ...payload,
+                IsConfirm: true,
+              },
+            });
+            if (responseData.data.isSuccess) {
+              setIsRefetch();
+              toast('success', responseData.data.value.message);
+            } else {
+              toast('error', responseData.data.error.message);
+            }
+          } else {
+            return;
+          }
+        });
+      } else if (responseData.data.isSuccess) {
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
     } catch (error) {
       console.log(error);
     }

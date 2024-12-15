@@ -74,12 +74,12 @@ const DELIVERY_STATUS = [
 ];
 
 const ORDER_STATUS = [
-  { key: 2, desc: 'Từ chối' },
+  { key: 2, desc: 'Đã từ chối' },
   { key: 4, desc: 'Đã hủy' },
   { key: 9, desc: 'Hoàn thành' },
-  { key: 10, desc: 'Bị báo cáo' },
-  { key: 11, desc: 'Đang giải quyết' },
-  { key: 12, desc: 'Đã giải quyết' },
+  { key: 10, desc: 'Đang bị báo cáo' },
+  { key: 11, desc: 'Đang xử lý báo cáo' },
+  { key: 12, desc: 'Đã xử lý báo cáo' },
 ];
 
 // Manage reports
@@ -136,9 +136,8 @@ const OPTION_GROUP_STATUS = [
 const CATEGORY_COLUMNS = [
   { key: 'id', name: 'Mã danh mục' },
   { key: 'name', name: 'Tên danh mục' },
-  { key: 'description', name: 'Mô tả' },
   { key: 'numberFoodLinked', name: 'Số sản phẩm liên kết' },
-  { key: 'createdDate', name: 'Thời gian tạo danh mục' },
+  { key: 'createdDate', name: 'Ngày tạo danh mục' },
   { key: 'actions', name: 'Thao tác' },
 ];
 

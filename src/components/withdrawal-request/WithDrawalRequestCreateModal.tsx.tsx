@@ -26,6 +26,7 @@ interface WithdrawalRequestModalProps {
   isOpen: boolean;
   onOpen: () => void;
   onOpenChange: (isOpen: boolean) => void;
+  isAllowedRequestWithdrawal: boolean;
 }
 
 interface BankProps {
@@ -58,6 +59,7 @@ const fetchBanks = async (setBanks: React.Dispatch<React.SetStateAction<BankProp
 export default function WithDrawalRequestCreateModal({
   isOpen,
   onOpenChange,
+  isAllowedRequestWithdrawal,
 }: WithdrawalRequestModalProps) {
   const { setIsRefetch } = useRefetch();
   const [banks, setBanks] = useState<BankProps[]>([]);
@@ -227,137 +229,158 @@ export default function WithDrawalRequestCreateModal({
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        hideCloseButton
-        isDismissable={false}
-        className="max-h-[640px] rounded-xl overflow-y-auto"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <React.Fragment>
-              <ModalHeader className="flex flex-col text-2xl text-center">
-                Tạo yêu cầu rút tiền mới
-              </ModalHeader>
-              <ModalBody>
-                <form className="space-y-4">
-                  <Select
-                    selectionMode="single"
-                    isRequired
-                    name="bank"
-                    label="Ngân hàng thụ hưởng"
-                    onSelectionChange={(value) => {
-                      const bank = banks.find((b) => b.id === Number(value.currentKey));
-                      setSelectedBank(bank);
-                      formik.setFieldValue('bank', value);
-                    }}
-                    onFocus={handleBankSelectFocus}
-                    renderValue={(selected) => (
-                      <div className="flex flex-wrap gap-2">
-                        {selected.map((bank) => (
-                          <div key={bank.key} className="text-septenary">
-                            {bank.rendered}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  >
-                    {banks.map((bank) => (
-                      <SelectItem key={bank.id} value={bank.id}>
-                        <div className="flex gap-2">
-                          <Image
-                            src={bank.logo}
-                            width={40}
-                            height={40}
-                            className="rounded-full border-small object-contain"
-                            alt="bankImage"
-                          />
-                          <p>
-                            {bank.name} <span>({bank.shortName})</span>
-                          </p>
+      {isAllowedRequestWithdrawal ? (
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          className="max-h-[640px] rounded-xl overflow-y-auto"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <React.Fragment>
+                <ModalHeader className="flex flex-col text-2xl text-center">
+                  Tạo yêu cầu rút tiền mới
+                </ModalHeader>
+                <ModalBody className="text-red-500 text-xl pb-5 mx-2">
+                  Đang có yêu cầu chưa được phê duyệt. Vui lòng thử lại sau!
+                </ModalBody>
+              </React.Fragment>
+            )}
+          </ModalContent>
+        </Modal>
+      ) : (
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          hideCloseButton
+          isDismissable={false}
+          className="max-h-[640px] rounded-xl overflow-y-auto"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <React.Fragment>
+                <ModalHeader className="flex flex-col text-2xl text-center">
+                  Tạo yêu cầu rút tiền mới
+                </ModalHeader>
+                <ModalBody>
+                  <form className="space-y-4">
+                    <Select
+                      selectionMode="single"
+                      isRequired
+                      name="bank"
+                      label="Ngân hàng thụ hưởng"
+                      onSelectionChange={(value) => {
+                        const bank = banks.find((b) => b.id === Number(value.currentKey));
+                        setSelectedBank(bank);
+                        formik.setFieldValue('bank', value);
+                      }}
+                      onFocus={handleBankSelectFocus}
+                      renderValue={(selected) => (
+                        <div className="flex flex-wrap gap-2">
+                          {selected.map((bank) => (
+                            <div key={bank.key} className="text-septenary">
+                              {bank.rendered}
+                            </div>
+                          ))}
                         </div>
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <Input
-                    isRequired
-                    type="text"
-                    name="bankAccountName"
-                    label="Tên tài khoản thụ hưởng"
-                    placeholder="Nhập tên tài khoản thụ hưởng"
-                    value={formik.values.bankAccountName}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      const capitalizedValue = value
-                        .toLowerCase()
-                        .split(' ')
-                        .map((word) => word.toUpperCase())
-                        .join(' ');
-                      formik.setFieldValue('bankAccountName', capitalizedValue);
-                    }}
-                    onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.bankAccountName && !!formik.errors.bankAccountName}
-                    errorMessage={formik.touched.bankAccountName && formik.errors.bankAccountName}
-                  />
-                  <Input
-                    isRequired
-                    type="text"
-                    name="bankAccountNumber"
-                    label="Số tài khoản thụ hưởng"
-                    placeholder="Nhập số tài khoản thụ hưởng"
-                    value={formik.values.bankAccountNumber}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                      const value = e.target.value.replace(/[^0-9]/g, '');
-                      formik.setFieldValue('bankAccountNumber', value);
-                    }}
-                    onBlur={formik.handleBlur}
-                    isInvalid={
-                      formik.touched.bankAccountNumber && !!formik.errors.bankAccountNumber
-                    }
-                    errorMessage={
-                      formik.touched.bankAccountNumber && formik.errors.bankAccountNumber
-                    }
-                  />
-                  <Input
-                    isRequired
-                    type="text"
-                    name="amount"
-                    label="Số tiền muốn rút"
-                    placeholder="Nhập số tiền muốn rút"
-                    value={
-                      formik.values.amount
-                        ? formatPriceForInput(formik.values.amount.toString())
-                        : ''
-                    }
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9]/g, '');
-                      formik.setFieldValue('amount', value);
-                    }}
-                    onBlur={formik.handleBlur}
-                    isInvalid={formik.touched.amount && !!formik.errors.amount}
-                    errorMessage={formik.touched.amount && formik.errors.amount}
-                    endContent={'VND'}
-                  />
-                </form>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="danger"
-                  variant="faded"
-                  onClick={() => handleCancel(onClose)}
-                  className="hover:text-danger-500 hover:border-danger-500"
-                >
-                  Đóng
-                </Button>
-                <Button type="button" color="primary" onClick={() => formik.handleSubmit()}>
-                  Tạo
-                </Button>
-              </ModalFooter>
-            </React.Fragment>
-          )}
-        </ModalContent>
-      </Modal>
+                      )}
+                    >
+                      {banks.map((bank) => (
+                        <SelectItem key={bank.id} value={bank.id}>
+                          <div className="flex gap-2">
+                            <Image
+                              src={bank.logo}
+                              width={40}
+                              height={40}
+                              className="rounded-full border-small object-contain"
+                              alt="bankImage"
+                            />
+                            <p>
+                              {bank.name} <span>({bank.shortName})</span>
+                            </p>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </Select>
+                    <Input
+                      isRequired
+                      type="text"
+                      name="bankAccountName"
+                      label="Tên tài khoản thụ hưởng"
+                      placeholder="Nhập tên tài khoản thụ hưởng"
+                      value={formik.values.bankAccountName}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const capitalizedValue = value
+                          .toLowerCase()
+                          .split(' ')
+                          .map((word) => word.toUpperCase())
+                          .join(' ');
+                        formik.setFieldValue('bankAccountName', capitalizedValue);
+                      }}
+                      onBlur={formik.handleBlur}
+                      isInvalid={formik.touched.bankAccountName && !!formik.errors.bankAccountName}
+                      errorMessage={formik.touched.bankAccountName && formik.errors.bankAccountName}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      name="bankAccountNumber"
+                      label="Số tài khoản thụ hưởng"
+                      placeholder="Nhập số tài khoản thụ hưởng"
+                      value={formik.values.bankAccountNumber}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        formik.setFieldValue('bankAccountNumber', value);
+                      }}
+                      onBlur={formik.handleBlur}
+                      isInvalid={
+                        formik.touched.bankAccountNumber && !!formik.errors.bankAccountNumber
+                      }
+                      errorMessage={
+                        formik.touched.bankAccountNumber && formik.errors.bankAccountNumber
+                      }
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      name="amount"
+                      label="Số tiền muốn rút"
+                      placeholder="Nhập số tiền muốn rút"
+                      value={
+                        formik.values.amount
+                          ? formatPriceForInput(formik.values.amount.toString())
+                          : ''
+                      }
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        formik.setFieldValue('amount', value);
+                      }}
+                      onBlur={formik.handleBlur}
+                      isInvalid={formik.touched.amount && !!formik.errors.amount}
+                      errorMessage={formik.touched.amount && formik.errors.amount}
+                      endContent={'VND'}
+                    />
+                  </form>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    color="danger"
+                    variant="faded"
+                    onClick={() => handleCancel(onClose)}
+                    className="hover:text-danger-500 hover:border-danger-500"
+                  >
+                    Đóng
+                  </Button>
+                  <Button type="button" color="primary" onClick={() => formik.handleSubmit()}>
+                    Tạo
+                  </Button>
+                </ModalFooter>
+              </React.Fragment>
+            )}
+          </ModalContent>
+        </Modal>
+      )}
       <Modal
         isOpen={isNewModalOpen}
         onOpenChange={() => setIsNewModalOpen(false)} // Close new modal
