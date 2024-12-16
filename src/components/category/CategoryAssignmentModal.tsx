@@ -75,7 +75,11 @@ export const CategoryAssignmentModal = ({
                   className="flex flex-row items-center gap-2 hover:cursor-pointer hover:opacity-80 hover:text-slate-700"
                   onClick={() => assignCategory(category?.id)}
                 >
-                  <Avatar src={category?.imageUrl} alt="Avatar" className="rounded-full w-8 h-8" />
+                  <Avatar
+                    src={category?.imageUrl}
+                    alt="Avatar"
+                    className="rounded-full w-8 h-8 border-small"
+                  />
                   <p>{category?.name}</p>
                 </div>
               ))}

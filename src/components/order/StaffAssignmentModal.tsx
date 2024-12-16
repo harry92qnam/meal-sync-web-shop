@@ -84,7 +84,7 @@ export const StaffAssignmentModal = ({
                 <Avatar
                   src={staff?.staffInfor?.avatarUrl}
                   alt="Avatar"
-                  className="rounded-full w-8 h-8"
+                  className="rounded-full w-8 h-8 border-small"
                 />
                 <p>{staff?.staffInfor.isShopOwner ? 'Tôi' : staff?.staffInfor?.fullName}</p>
               </div>

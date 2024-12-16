@@ -116,7 +116,11 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
                   key={noti.id}
                   onClick={() => router.push(`/orders/${noti.referenceId}`)}
                 >
-                  <Avatar src={noti.imageUrl} size="md" className="w-12 h-12 min-w-12" />
+                  <Avatar
+                    src={noti.imageUrl}
+                    size="md"
+                    className="w-12 h-12 min-w-12 border-small"
+                  />
                   <div key={noti.id} className="flex-col items-center">
                     <p className={`text-sm ${!noti.isRead && 'font-bold'}`}>{noti.content}</p>
                     <p className="text-xs text-gray-400">{formatTimeToSeconds(noti.createdDate)}</p>
@@ -146,7 +150,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
             src={avatarUrl}
             size="md"
             onClick={handleAvatarClick}
-            className="cursor-pointer hover:opacity-70"
+            className="cursor-pointer hover:opacity-70 border-small"
           />
           <UpdateProfileModal isOpen={isOpen} onOpenChange={onOpenChange} />
         </div>

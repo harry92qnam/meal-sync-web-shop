@@ -1,5 +1,8 @@
 import { PlusIcon } from '@/components/common/PlusIcon';
+import useRefetch from '@/hooks/states/useRefetch';
+import apiClient from '@/services/api-services/api-client';
 import PageableModel from '@/types/models/PageableModel';
+import { toast } from '@/utils/MyUtils';
 import {
   Button,
   Dropdown,
@@ -95,9 +98,25 @@ export default function TableCustom({
     setPage(1);
   }, []);
 
-  const handleAcceptMany = (selectedKeys: Selection) => {
+  const { setIsRefetch } = useRefetch();
+
+  const handleAcceptMany = async (selectedKeys: Selection) => {
     const selectedArray = Array.from(selectedKeys).map((val) => parseInt(val.toString()));
-    console.log(selectedArray);
+    try {
+      const payload = {
+        ids: selectedArray,
+      };
+      const responseData = await apiClient.put('shop-owner/order/confirm', payload);
+
+      if (responseData.data.isSuccess) {
+        setIsRefetch();
+        toast('success', responseData.data.value.message);
+      } else {
+        toast('error', responseData.data.error.message);
+      }
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
+    }
   };
 
   const topContent = useMemo(() => {

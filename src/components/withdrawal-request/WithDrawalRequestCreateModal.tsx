@@ -2,7 +2,6 @@ import useRefetch from '@/hooks/states/useRefetch';
 import apiClient from '@/services/api-services/api-client';
 import { formatPriceForInput, toast } from '@/utils/MyUtils';
 import {
-  Avatar,
   Button,
   Input,
   Modal,
@@ -10,17 +9,14 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  Radio,
-  RadioGroup,
-  Textarea,
   Select,
   SelectItem,
 } from '@nextui-org/react';
-import { useFormik } from 'formik';
-import React, { ChangeEvent, useState, useEffect, useRef } from 'react';
-import * as yup from 'yup';
 import axios from 'axios';
+import { useFormik } from 'formik';
 import Image from 'next/image';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import * as yup from 'yup';
 
 interface WithdrawalRequestModalProps {
   isOpen: boolean;
@@ -229,7 +225,7 @@ export default function WithDrawalRequestCreateModal({
 
   return (
     <>
-      {isAllowedRequestWithdrawal ? (
+      {!isAllowedRequestWithdrawal ? (
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}

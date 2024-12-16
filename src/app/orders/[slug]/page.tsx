@@ -168,6 +168,25 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 <p className="font-semibold">{formatTimeToSeconds(data?.orderDate ?? '')}</p>
               </div>
             </div>
+            {data?.isCustomerPaid && !data?.isDeliveredByQR && data?.deliverySuccessImageUrls && (
+              <div>
+                <p>Hình ảnh nhận hàng:</p>
+                {data?.deliverySuccessImageUrls.map((evidence, index) => (
+                  <div key={index} className="flex">
+                    {!isLocalImage(evidence || '') && (
+                      <Image
+                        src={evidence || ''}
+                        alt={`Image ${index + 1}`}
+                        width={100}
+                        height={100}
+                        quality={100}
+                        className="rounded-lg w-44 h-44 object-cover border-small"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             {data?.reasonIdentity && (
               <div className="mt-3 text-lg">

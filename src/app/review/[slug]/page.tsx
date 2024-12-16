@@ -145,8 +145,8 @@ export default function ReviewDetail({ params }: { params: { slug: number } }) {
           return responseData.data.value.url;
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
 
@@ -347,6 +347,10 @@ export default function ReviewDetail({ params }: { params: { slug: number } }) {
                     </div>
                   </div>
                 </div>
+              ) : !reviewDetail[0]?.isAllowShopReply ? (
+                <p className="text-red-500 font-bold text-xl text-center">
+                  Báo cáo này đã quá thời gian phản hồi
+                </p>
               ) : (
                 <>
                   <Textarea

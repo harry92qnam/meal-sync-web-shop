@@ -118,8 +118,8 @@ export default function OptionGroupUpdateModal({
           return responseData.data.value.url;
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
   const handleUpdate = async (values: any) => {

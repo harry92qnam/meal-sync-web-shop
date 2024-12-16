@@ -61,14 +61,17 @@ export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryMo
           return responseData.data.value.url;
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
 
   const handleCreate = async (values: any) => {
     try {
       const url = await uploadImage(avatar);
+      if (!url) {
+        return;
+      }
       const payload = {
         name: values.name,
         description: values.description,
@@ -119,7 +122,7 @@ export default function CategoryCreateModal({ isOpen, onOpenChange }: CategoryMo
                 <Avatar
                   src={urlFile || 'https://www.949vans.com/images/products/detail/E60195ABKS.2.jpg'}
                   alt="Category Image"
-                  className={`rounded-full w-32 h-32 ${urlFile ? '' : 'border-medium'}`}
+                  className={`rounded-full w-32 h-32 border-small`}
                 />
                 <input
                   type="file"

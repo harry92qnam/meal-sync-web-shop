@@ -680,7 +680,7 @@ export default function Orders() {
             pagination={orders?.value as PageableModel}
             goToPage={(index: number) => setQuery({ ...query, pageIndex: index })}
             setPageSize={(size: number) => setQuery({ ...query, pageSize: size })}
-            selectionMode="multiple"
+            selectionMode="single"
             isFilter={false}
             renderCell={confirmedOrdersCell}
             handleRowClick={openOrderDetail}

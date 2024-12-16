@@ -123,8 +123,8 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
           return responseData.data.value.url;
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
 
@@ -156,8 +156,18 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
         )}
         <div className="flex flex-col mr-auto text-lg gap-2">
           <div className="flex gap-2 items-center">
+            <p>Mã báo cáo:</p>
+            <p className="font-semibold">RP-{customerData?.id}</p>
+          </div>
+          <div className="flex gap-2 items-center">
             <p>Mã đơn hàng:</p>
             <p className="font-semibold">MS-{customerData?.orderId}</p>
+            <p
+              className="underline text-primary text-medium cursor-pointer"
+              onClick={() => router.push(`/orders/${customerData?.orderId}`)}
+            >
+              Chi tiết đơn hàng
+            </p>
           </div>
           <div className="flex gap-2 items-center">
             <p>Loại báo cáo:</p>
@@ -167,24 +177,26 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
             <p>Lý do cụ thể:</p>
             <p className="font-semibold">{customerData?.content}</p>
           </div>
-          <div className="flex gap-2 items-center">
-            <p>Hình ảnh chứng minh: </p>
-            <div className="flex flex-wrap gap-2">
-              {customerData?.imageUrls?.map(
-                (url, index) =>
-                  !isLocalImage(url) && (
-                    <Image
-                      key={index}
-                      src={url}
-                      alt={`Image ${index + 1}`}
-                      width={100}
-                      height={100}
-                      className="rounded-lg w-44 h-44 object-cover border-small"
-                    />
-                  ),
-              )}
+          {shopData?.imageUrls && shopData?.imageUrls.length > 0 && (
+            <div className="flex gap-2 items-center">
+              <p>Hình ảnh chứng minh: </p>
+              <div className="flex flex-wrap gap-2">
+                {customerData?.imageUrls?.map(
+                  (url, index) =>
+                    !isLocalImage(url) && (
+                      <Image
+                        key={index}
+                        src={url}
+                        alt={`Image ${index + 1}`}
+                        width={100}
+                        height={100}
+                        className="rounded-lg w-44 h-44 object-cover border-small"
+                      />
+                    ),
+                )}
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex gap-2 items-center">
             <p>Thời gian báo cáo:</p>
             <p className="font-bold">{formatTimeToSeconds(customerData?.createdDate ?? '')}</p>
@@ -218,24 +230,26 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
               <p>Nội dung phản hồi:</p>
               <p className="font-semibold">{shopData?.content}</p>
             </div>
-            <div className="flex gap-2 items-center">
-              <p>Hình ảnh chứng minh:</p>
-              <div className="flex flex-wrap gap-2">
-                {shopData?.imageUrls?.map(
-                  (url, index) =>
-                    !isLocalImage(url) && (
-                      <Image
-                        key={index}
-                        src={url}
-                        alt={`Image ${index + 1}`}
-                        width={100}
-                        height={100}
-                        className="rounded-lg w-44 h-44 object-cover border-small"
-                      />
-                    ),
-                )}
+            {shopData.imageUrls.length > 0 && (
+              <div className="flex gap-2 items-center">
+                <p>Hình ảnh chứng minh:</p>
+                <div className="flex flex-wrap gap-2">
+                  {shopData?.imageUrls?.map(
+                    (url, index) =>
+                      !isLocalImage(url) && (
+                        <Image
+                          key={index}
+                          src={url}
+                          alt={`Image ${index + 1}`}
+                          width={100}
+                          height={100}
+                          className="rounded-lg w-44 h-44 object-cover border-small"
+                        />
+                      ),
+                  )}
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex gap-2 items-center">
               <p>Thời gian phản hồi:</p>
               <p className="font-bold">{formatTimeToSeconds(shopData?.createdDate ?? '')}</p>
