@@ -211,6 +211,8 @@ export default function Shop() {
           title: values.title,
           startTime,
           endTime,
+          isActive: true,
+          isReceivingOrderPaused: false,
         };
         const responseData = await apiClient.post('shop-owner/operating-slot', payload);
         if (responseData.data.isSuccess) {
@@ -239,8 +241,14 @@ export default function Shop() {
           title: values.title,
           startTime,
           endTime,
+          isConfirm: false,
+          isActive: true,
+          isReceivingOrderPaused: false,
         };
-        const responseData = await apiClient.put(`shop-owner/operating-slot/${slotId}`, payload);
+        const responseData = await apiClient.put(`shop-owner/operating-slot/${slotId}`, {
+          ...payload,
+          isConfirm: true,
+        });
 
         if (responseData.data.isWarning) {
           await Swal.fire({
@@ -564,8 +572,16 @@ export default function Shop() {
                             value={formikUpdate.values.title || operatingSlot?.title}
                             onChange={formikUpdate.handleChange}
                             onBlur={formikUpdate.handleBlur}
-                            isInvalid={formikUpdate.touched.title && !!formikUpdate.errors.title}
-                            errorMessage={formikUpdate.touched.title && formikUpdate.errors.title}
+                            isInvalid={
+                              !operatingSlot?.title &&
+                              formikUpdate.touched.title &&
+                              !!formikUpdate.errors.title
+                            }
+                            errorMessage={
+                              !operatingSlot?.title &&
+                              formikUpdate.touched.title &&
+                              formikUpdate.errors.title
+                            }
                           />
                           <div className="flex gap-2 w-full">
                             <Input

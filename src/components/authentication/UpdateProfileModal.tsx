@@ -64,7 +64,7 @@ export default function UpdateProfileModal({ isOpen, onOpenChange }: UpdateProfi
                 <Avatar
                   src={avatar || './images/'}
                   alt="Avatar"
-                  className="rounded-full w-36 h-36"
+                  className="rounded-full w-36 h-36 border-small"
                 />
                 <input
                   type="file"

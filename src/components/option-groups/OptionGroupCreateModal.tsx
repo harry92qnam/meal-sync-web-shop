@@ -90,8 +90,8 @@ export default function OptionGroupCreateModal({ isOpen, onOpenChange }: OptionG
           return responseData.data.value.url;
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
   const handleCreate = async (values: any) => {

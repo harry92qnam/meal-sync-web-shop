@@ -24,7 +24,7 @@ export default interface OrderModel {
     },
   ];
   isDeliveredByQR: boolean;
-  deliverySuccessImageUrls: boolean;
+  deliverySuccessImageUrls?: string[];
   shopDeliveryStaff?: {
     id: number;
     fullName: string;

@@ -64,7 +64,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 7), timezoneOffset), // 7 days ago
+              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 6), timezoneOffset), // 7 days ago
               dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));
@@ -76,7 +76,7 @@ const usePeriodTimeFilterState = create<PeriodTimeFilterQueryState>((set) => ({
             selected: choice,
             isSpecificTimeFilter: false,
             range: {
-              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 30), timezoneOffset), // 30 days ago
+              dateFrom: adjustToTimezone(getDateMinusDays(new Date(), 29), timezoneOffset), // 30 days ago
               dateTo: adjustToTimezone(new Date(), timezoneOffset),
             },
           }));

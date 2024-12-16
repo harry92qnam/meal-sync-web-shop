@@ -144,8 +144,8 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
           return responseData.data.value.url;
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast('error', error.response.data.error.message);
     }
   };
   const handleUpdate = async (values: any) => {
@@ -153,6 +153,9 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
 
     try {
       const url = avatar ? await uploadImage(avatar) : urlFile;
+      if (!url) {
+        return;
+      }
       const payload = {
         id: product?.id,
         name: values.name,
@@ -236,7 +239,11 @@ export default function ProductUpdateModal({ product, isOpen, onOpenChange }: Pr
             </ModalHeader>
             <ModalBody className="overflow-y-auto">
               <div className="flex flex-col items-center">
-                <Avatar src={urlFile} alt="Avatar" className="rounded-full w-24 h-24" />
+                <Avatar
+                  src={urlFile}
+                  alt="Avatar"
+                  className="rounded-full w-24 h-24 border-small"
+                />
                 <input
                   type="file"
                   accept="image/*"

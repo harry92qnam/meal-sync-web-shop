@@ -3,7 +3,7 @@ import Header from '@/components/common/Header';
 import TableCustom, { TableCustomFilter } from '@/components/common/TableCustom';
 import MainLayout from '@/components/layout/MainLayout';
 import DepositCreateModal from '@/components/withdrawal-request/DepositCreateModal';
-import WithDrawalRequestCreateModal from '@/components/withdrawal-request/WithDrawalRequestCreateModal.tsx';
+import WithDrawalRequestCreateModal from '@/components/withdrawal-request/WithDrawalRequestCreateModal';
 import { WITHDRAWAL_COLUMNS, WITHDRAWAL_STATUS } from '@/data/constants/constants';
 import REACT_QUERY_CACHE_KEYS from '@/data/constants/react-query-cache-keys';
 import useFetchWithRQ from '@/hooks/fetching/useFetchWithRQ';
@@ -186,14 +186,14 @@ export default function AccountBalance() {
   };
 
   const handleAddNewRequest = async () => {
-    if (overview?.isAllowedRequestWithdrawal) {
-      onCreateOpen();
-    } else {
-      toast(
-        'error',
-        'Hiện đang có yêu cầu chưa được duyệt. Vui lòng hủy yêu cầu hoặc thử lại sau!',
-      );
-    }
+    // if (overview?.isAllowedRequestWithdrawal) {
+    onCreateOpen();
+    // } else {
+    //   toast(
+    //     'error',
+    //     'Hiện đang có yêu cầu chưa được duyệt. Vui lòng hủy yêu cầu hoặc thử lại sau!',
+    //   );
+    // }
   };
 
   const handleLoadMore = () => {
