@@ -1,70 +1,24 @@
 'use client';
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
+import RevenueStatisticModel from '@/types/models/RevenueStatisticModel';
 
-const data = [
-  {
-    name: 'Tháng 1',
-    revenue: 10,
-  },
-  {
-    name: 'Tháng 2',
-    revenue: 15,
-  },
-  {
-    name: 'Tháng 3',
-    revenue: 20,
-  },
-  {
-    name: 'Tháng 4',
-    revenue: 12,
-  },
-  {
-    name: 'Tháng 5',
-    revenue: 30,
-  },
-  {
-    name: 'Tháng 6',
-    revenue: 8,
-  },
-  {
-    name: 'Tháng 7',
-    revenue: 12,
-  },
-  {
-    name: 'Tháng 8',
-    revenue: 10,
-  },
-  {
-    name: 'Tháng 9',
-    revenue: 24,
-  },
-  {
-    name: 'Tháng 10',
-    revenue: 15,
-  },
-  {
-    name: 'Tháng 11',
-    revenue: 10,
-  },
-  {
-    name: 'Tháng 12',
-    revenue: 20,
-  },
-];
+interface RevenueChartProps {
+  data: RevenueStatisticModel[];
+}
 
-export default function RevenueChart() {
+const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
   useEffect(() => {
     const options = {
       series: [
         {
-          name: 'Triệu đồng',
+          name: 'Nghìn đồng (VND)',
           data: data.map((item) => item.revenue),
         },
       ],
       chart: {
-        height: 350,
-        width: 520,
+        height: 400,
+        width: 500,
         type: 'bar',
       },
       plotOptions: {
@@ -88,12 +42,15 @@ export default function RevenueChart() {
         labels: {
           rotate: -45,
         },
-        categories: data.map((item) => item.name),
+        categories: data.map((item) => item.month),
         tickPlacement: 'on',
+        title: {
+          text: 'Tháng',
+        },
       },
       yaxis: {
         title: {
-          text: 'Doanh thu (triệu đồng)',
+          text: 'Doanh thu (VND)',
         },
       },
       fill: {
@@ -111,8 +68,10 @@ export default function RevenueChart() {
       },
     };
 
-    var chart = new ApexCharts(document.querySelector('#revenueChart'), options);
+    const chart = new ApexCharts(document.querySelector('#revenueChart'), options);
     chart.render();
   });
   return <div id="revenueChart"></div>;
-}
+};
+
+export default RevenueChart;

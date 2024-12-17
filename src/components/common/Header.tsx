@@ -15,7 +15,7 @@ interface NotificationModel {
   accountId: number;
   referenceId: number;
   imageUrl: string;
-  title: string;
+  title: 'Nhận xét đơn hàng' | 'Đơn hàng' | 'Báo cáo đơn hàng' | 'Quản lí số dư';
   content: string;
   entityType: number;
   isRead: boolean;
@@ -116,7 +116,17 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
                 <div
                   className="flex gap-2 py-1 pl-2 pr-5 items-center hover:bg-slate-200 hover:rounded-lg cursor-pointer"
                   key={noti.id}
-                  onClick={() => router.push(`/orders/${noti.referenceId}`)}
+                  onClick={() => {
+                    if (noti.title == 'Đơn hàng') {
+                      router.push(`/orders/${noti.referenceId}`);
+                    } else if (noti.title === 'Báo cáo đơn hàng') {
+                      router.push(`/reports/${noti.referenceId}`);
+                    } else if (noti.title === 'Nhận xét đơn hàng') {
+                      router.push(`/review/${noti.referenceId}`);
+                    } else if (noti.title === 'Quản lí số dư') {
+                      router.push(`/account-balance/${noti.referenceId}`);
+                    }
+                  }}
                 >
                   <Avatar
                     src={noti.imageUrl}
