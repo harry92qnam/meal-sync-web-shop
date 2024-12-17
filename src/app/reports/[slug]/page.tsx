@@ -177,7 +177,7 @@ export default function ReportDetail({ params }: { params: { slug: number } }) {
             <p>Lý do cụ thể:</p>
             <p className="font-semibold">{customerData?.content}</p>
           </div>
-          {shopData?.imageUrls && shopData?.imageUrls.length > 0 && (
+          {customerData?.imageUrls && customerData?.imageUrls.length > 0 && (
             <div className="flex gap-2 items-center">
               <p>Hình ảnh chứng minh: </p>
               <div className="flex flex-wrap gap-2">

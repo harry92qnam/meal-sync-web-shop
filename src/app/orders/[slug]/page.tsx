@@ -98,15 +98,20 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 )}
                 <Chip
                   className={
-                    data?.status === 10
+                    data?.status === 1
                       ? 'text-gray-600 bg-gray-200 font-bold capitalize'
-                      : data?.status === 5 || data?.status === 6 || data?.status === 11
+                      : data?.status === 5 ||
+                          data?.status === 6 ||
+                          data?.status === 11 ||
+                          data?.status === 10
                         ? 'text-yellow-600 bg-yellow-200 font-bold capitalize'
-                        : data?.status === 12
-                          ? 'bg-purple-200 text-purple-600 font-bold capitalize'
-                          : data?.status === 7 || data?.status === 9
-                            ? 'text-green-600 bg-green-200 font-bold capitalize'
-                            : 'text-rose-600 bg-red-200 font-bold capitalize'
+                        : data?.status === 3
+                          ? 'text-cyan-600 bg-cyan-200 font-bold capitalize'
+                          : data?.status === 12
+                            ? 'bg-purple-200 text-purple-600 font-bold capitalize'
+                            : data?.status === 7 || data?.status === 9
+                              ? 'text-green-600 bg-green-200 font-bold capitalize'
+                              : 'text-rose-600 bg-red-200 font-bold capitalize'
                   }
                 >
                   {data?.status === 1
@@ -156,7 +161,7 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 <p className="font-semibold">{formatTimeFrame(data?.startTime, data?.endTime)}</p>
               </div>
               <div className="flex gap-2 items-center">
-                <p>Phương thức thanh toán:</p>
+                <p>Trạng thái thanh toán:</p>
                 <p
                   className={`font-semibold ${data?.isCustomerPaid ? 'text-green-500' : 'text-red-500'}`}
                 >
@@ -190,7 +195,9 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
 
             {data?.reasonIdentity && (
               <div className="mt-3 text-lg">
-                <strong className="text-xl text-red-500">Lý do đơn thất bại:</strong>
+                {data.reasonIdentity !== 'DeliveredReportedByCustomer' && (
+                  <strong className="text-xl text-red-500">Lý do đơn thất bại:</strong>
+                )}
                 {data.reasonIdentity === 'ShopCancel' ? (
                   <div>
                     Người hủy: <span className="font-bold">Chủ cửa hàng</span>{' '}
@@ -235,9 +242,9 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                   </div>
                 ) : (
                   <div>
-                    <p>
-                      Lý do: <span className="font-bold">{data.reason}</span>
-                    </p>
+                    <strong className="text-xl text-red-500">
+                      Đơn hàng giao thành công bị báo cáo
+                    </strong>
                   </div>
                 )}
               </div>

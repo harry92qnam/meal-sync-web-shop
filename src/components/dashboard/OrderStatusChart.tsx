@@ -1,133 +1,40 @@
 'use client';
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
+import OrderStatisticModel from '@/types/models/OrderStatisticModel';
 
-const data = [
-  {
-    name: 'Tháng 1',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 2',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 3',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 4',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 5',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 6',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 7',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 8',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 9',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 10',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 11',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-  {
-    name: 'Tháng 12',
-    processing: Math.floor(Math.random() * 20),
-    success: Math.floor(Math.random() * 20),
-    fail: Math.floor(Math.random() * 20),
-    cancel: Math.floor(Math.random() * 20),
-    report: Math.floor(Math.random() * 50),
-  },
-];
-export default function OrderStatusChart() {
+interface OrderStatisticProps {
+  data: OrderStatisticModel[];
+}
+
+const OrderStatistic: React.FC<OrderStatisticProps> = ({ data }) => {
   useEffect(() => {
     const options = {
       series: [
         {
           name: 'Tổng',
-          data: data.map((item) => item.processing),
+          data: data.map((item) => item.orderStatisticDetail.total),
         },
         {
           name: 'Thành công',
-          data: data.map((item) => item.success),
+          data: data.map((item) => item.orderStatisticDetail.totalSuccess),
         },
         {
           name: 'Đang xử lý',
-          data: data.map((item) => item.fail),
+          data: data.map((item) => item.orderStatisticDetail.totalOrderInProcess),
         },
         {
           name: 'Thất bại/ hoàn tiền',
-          data: data.map((item) => item.cancel),
+          data: data.map((item) => item.orderStatisticDetail.totalFailOrRefund),
         },
         {
           name: 'Đã hủy',
-          data: data.map((item) => item.report),
+          data: data.map((item) => item.orderStatisticDetail.totalCancelOrReject),
         },
       ],
       chart: {
-        height: 350,
-        width: 540,
+        height: 400,
+        width: 500,
         type: 'line',
         zoom: {
           enabled: false,
@@ -141,7 +48,6 @@ export default function OrderStatusChart() {
         curve: 'smooth',
       },
       title: {
-        text: 'Tổng số đơn',
         align: 'left',
         style: {
           fontFamily: 'Arial',
@@ -155,15 +61,26 @@ export default function OrderStatusChart() {
         },
       },
       xaxis: {
-        categories: data.map((item) => item.name),
+        categories: data.map((item) => item.month),
+        title: {
+          text: 'Tháng',
+          align: 'up',
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Tổng số đơn',
+        },
       },
       grid: {
         borderColor: '#f1f1f1',
       },
     };
 
-    var chart = new ApexCharts(document.querySelector('#orderStatus'), options);
+    const chart = new ApexCharts(document.querySelector('#orderStatus'), options);
     chart.render();
   });
   return <div id="orderStatus"></div>;
-}
+};
+
+export default OrderStatistic;

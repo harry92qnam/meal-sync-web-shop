@@ -8,13 +8,14 @@ import { useEffect, useState } from 'react';
 import { IoMdNotifications } from 'react-icons/io';
 import { formatTimeToSeconds } from '../../utils/MyUtils';
 import { useRouter } from 'next/navigation';
+import useRefetch from '@/hooks/states/useRefetch';
 
 interface NotificationModel {
   id: number;
   accountId: number;
   referenceId: number;
   imageUrl: string;
-  title: string;
+  title: 'Nhận xét đơn hàng' | 'Đơn hàng' | 'Báo cáo đơn hàng' | 'Quản lí số dư';
   content: string;
   entityType: number;
   isRead: boolean;
@@ -30,6 +31,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
   const [notifications, setNotifications] = useState<NotificationModel[]>();
   const [tmp, setTmp] = useState<PageableModel>();
   const [numberOfUnread, setNumberOfUnread] = useState(0);
+  const { isRefetch } = useRefetch();
 
   useEffect(() => {
     setIsMounted(true);
@@ -61,7 +63,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
       const responseData = await apiClient.get(
         `shop-owner-staff/notification?pageSize=${pageSize}`,
       );
-
+      setNotifications([]);
       if (responseData.data.isSuccess) {
         setNotifications((prevNotifications) => {
           const newItems = responseData.data.value.items;
@@ -77,7 +79,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
       }
     };
     fetchData();
-  }, [pageSize, notiVisible]);
+  }, [pageSize, notiVisible, isRefetch]);
 
   useEffect(() => {
     const fetchUnread = async () => {
@@ -87,7 +89,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
       }
     };
     fetchUnread();
-  }, []);
+  }, [notiVisible, isRefetch]);
 
   return (
     <div className="fixed top-0 left-[305px] right-[13px] z-50 bg-white shadow-md py-4 pl-8">
@@ -114,7 +116,17 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
                 <div
                   className="flex gap-2 py-1 pl-2 pr-5 items-center hover:bg-slate-200 hover:rounded-lg cursor-pointer"
                   key={noti.id}
-                  onClick={() => router.push(`/orders/${noti.referenceId}`)}
+                  onClick={() => {
+                    if (noti.title == 'Đơn hàng') {
+                      router.push(`/orders/${noti.referenceId}`);
+                    } else if (noti.title === 'Báo cáo đơn hàng') {
+                      router.push(`/reports/${noti.referenceId}`);
+                    } else if (noti.title === 'Nhận xét đơn hàng') {
+                      router.push(`/review/${noti.referenceId}`);
+                    } else if (noti.title === 'Quản lí số dư') {
+                      router.push(`/account-balance/${noti.referenceId}`);
+                    }
+                  }}
                 >
                   <Avatar
                     src={noti.imageUrl}

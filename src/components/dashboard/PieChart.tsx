@@ -1,36 +1,21 @@
 'use client';
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
+import FoodStatisticModel from '@/types/models/FoodStatisticModel';
 
-const totalRevenue = 10000;
-const data = [
-  {
-    name: 'Cơm',
-    revenue: 2000,
-  },
-  {
-    name: 'Bún',
-    revenue: 3000,
-  },
-  {
-    name: 'Bánh xèo',
-    revenue: 4000,
-  },
-  {
-    name: 'Phở',
-    revenue: 1000,
-  },
-];
+interface PieChartProps {
+  data: FoodStatisticModel[];
+}
 
-export default function PieChart() {
+const PieChart: React.FC<PieChartProps> = ({ data }) => {
   useEffect(() => {
     const options = {
-      series: data.map((item) => (item.revenue / totalRevenue) * 100),
+      series: data.map((item) => item.percent),
       chart: {
-        width: 360,
+        width: 500,
         type: 'pie',
       },
-      labels: data.map((item) => item.name),
+      labels: data.map((item) => item.foodName),
       responsive: [
         {
           breakpoint: 480,
@@ -55,4 +40,6 @@ export default function PieChart() {
   }, []);
 
   return <div id="pieChart"></div>;
-}
+};
+
+export default PieChart;
