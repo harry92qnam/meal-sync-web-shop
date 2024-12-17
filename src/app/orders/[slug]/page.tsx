@@ -98,15 +98,20 @@ export default function OrderDetail({ params }: { params: { slug: number } }) {
                 )}
                 <Chip
                   className={
-                    data?.status === 10
+                    data?.status === 1
                       ? 'text-gray-600 bg-gray-200 font-bold capitalize'
-                      : data?.status === 5 || data?.status === 6 || data?.status === 11
+                      : data?.status === 5 ||
+                          data?.status === 6 ||
+                          data?.status === 11 ||
+                          data?.status === 10
                         ? 'text-yellow-600 bg-yellow-200 font-bold capitalize'
-                        : data?.status === 12
-                          ? 'bg-purple-200 text-purple-600 font-bold capitalize'
-                          : data?.status === 7 || data?.status === 9
-                            ? 'text-green-600 bg-green-200 font-bold capitalize'
-                            : 'text-rose-600 bg-red-200 font-bold capitalize'
+                        : data?.status === 3
+                          ? 'text-cyan-600 bg-cyan-200 font-bold capitalize'
+                          : data?.status === 12
+                            ? 'bg-purple-200 text-purple-600 font-bold capitalize'
+                            : data?.status === 7 || data?.status === 9
+                              ? 'text-green-600 bg-green-200 font-bold capitalize'
+                              : 'text-rose-600 bg-red-200 font-bold capitalize'
                   }
                 >
                   {data?.status === 1

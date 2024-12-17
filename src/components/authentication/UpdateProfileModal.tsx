@@ -1,4 +1,3 @@
-import { ACCOUNT_INFO } from '@/data/TestData';
 import sessionService from '@/services/session-service';
 import {
   Avatar,
