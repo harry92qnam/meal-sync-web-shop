@@ -122,7 +122,7 @@ export default function Dashboard() {
       {/* Overview */}
       <div className="flex flex-col gap-4">
         <div className="flex justify-between mx-2">
-          <div className="flex flex-col py-4 px-[10px] border-small rounded-md gap-8 shadow-md">
+          <div className="flex flex-col py-4 px-10 border-small rounded-md gap-8 shadow-md">
             <p className="font-bold text-2xl text-center text-primary mt-4">Số liệu tổng quan</p>
             <div className="flex justify-between">
               <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export default function Dashboard() {
           </div>
           {/* Chart */}
           <div className="flex flex-col gap-2">
-            <div className="flex py-4 flex-col justify-center items-center border-small rounded-md shadow-md">
+            <div className="flex py-4 flex-col justify-center items-center border-small rounded-md shadow-md px-8">
               <p className="font-bold text-xl text-center text-primary">
                 Tỉ lệ doanh thu của món ăn
               </p>
@@ -193,7 +193,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex justify-between mx-2">
-          <div className="flex flex-col border-small rounded-md shadow-md">
+          <div className="flex flex-col border-small rounded-md shadow-md px-8">
             <div>
               <p className="font-bold text-xl text-center my-4 text-primary">
                 Doanh thu cửa hàng trong năm nay
@@ -201,7 +201,7 @@ export default function Dashboard() {
               <RevenueChart data={revenueStatistic} />
             </div>
           </div>
-          <div className="flex justify-center items-center border-small rounded-md shadow-md">
+          <div className="flex justify-center items-center border-small rounded-md shadow-md px-8">
             <div>
               <p className="font-bold text-xl text-center my-4 text-primary">
                 Trạng thái đơn hàng trong năm nay
