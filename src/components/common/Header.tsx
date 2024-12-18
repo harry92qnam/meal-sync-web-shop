@@ -59,37 +59,48 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const responseData = await apiClient.get(
-        `shop-owner-staff/notification?pageSize=${pageSize}`,
-      );
-      setNotifications([]);
-      if (responseData.data.isSuccess) {
-        setNotifications((prevNotifications) => {
-          const newItems = responseData.data.value.items;
-          const existingIds = prevNotifications
-            ? new Set(prevNotifications.map((item: NotificationModel) => item.id))
-            : new Set();
-          const uniqueNewItems = newItems.filter(
-            (item: NotificationModel) => !existingIds.has(item.id),
-          );
-          return prevNotifications ? [...prevNotifications, ...uniqueNewItems] : uniqueNewItems;
-        });
-        setTmp(responseData.data.value);
-      }
-    };
-    fetchData();
+    try {
+      const fetchData = async () => {
+        const responseData = await apiClient.get(
+          `shop-owner-staff/notification?pageSize=${pageSize}`,
+        );
+        setNotifications([]);
+        if (responseData.data.isSuccess) {
+          setNotifications((prevNotifications) => {
+            const newItems = responseData.data.value.items;
+            const existingIds = prevNotifications
+              ? new Set(prevNotifications.map((item: NotificationModel) => item.id))
+              : new Set();
+            const uniqueNewItems = newItems.filter(
+              (item: NotificationModel) => !existingIds.has(item.id),
+            );
+            return prevNotifications ? [...prevNotifications, ...uniqueNewItems] : uniqueNewItems;
+          });
+          setTmp(responseData.data.value);
+        }
+      };
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
   }, [pageSize, notiVisible, isRefetch]);
+  console.log(isRefetch, 'isRefetch');
 
   useEffect(() => {
-    const fetchUnread = async () => {
-      const responseData = await apiClient.get('shop-owner-staff/notification/total-unread');
-      if (responseData.data.isSuccess) {
-        setNumberOfUnread(responseData.data.value.totalUnerad);
-      }
-    };
-    fetchUnread();
+    try {
+      const fetchUnread = async () => {
+        const responseData = await apiClient.get('shop-owner-staff/notification/total-unread');
+        if (responseData.data.isSuccess) {
+          setNumberOfUnread(responseData.data.value.totalUnerad);
+        }
+      };
+      fetchUnread();
+    } catch (error) {
+      console.log(error);
+    }
   }, [notiVisible, isRefetch]);
+
+  console.log(numberOfUnread, 'numofunread');
 
   return (
     <div className="fixed top-0 left-[305px] right-[13px] z-50 bg-white shadow-md py-4 pl-8">
@@ -109,24 +120,14 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
             )}
           </div>
           {notiVisible && (
-            <div className="absolute max-w-[360px] max-h-[620px] overflow-y-scroll top-[72px] right-[0.5px] border-1 px-2 py-2 rounded-lg bg-white shadow-2xl">
+            <div className="absolute max-w-[360px] max-h-[520px] overflow-y-scroll top-[72px] right-[0.5px] border-1 px-2 py-2 rounded-lg bg-white shadow-2xl">
               <p className="text-2xl font-bold mt-2 text-center">Thông báo</p>
               <Divider className="my-2" />
               {notifications?.map((noti) => (
                 <div
                   className="flex gap-2 py-1 pl-2 pr-5 items-center hover:bg-slate-200 hover:rounded-lg cursor-pointer"
                   key={noti.id}
-                  onClick={() => {
-                    if (noti.title == 'Đơn hàng') {
-                      router.push(`/orders/${noti.referenceId}`);
-                    } else if (noti.title === 'Báo cáo đơn hàng') {
-                      router.push(`/reports/${noti.referenceId}`);
-                    } else if (noti.title === 'Nhận xét đơn hàng') {
-                      router.push(`/review/${noti.referenceId}`);
-                    } else if (noti.title === 'Quản lí số dư') {
-                      router.push(`/account-balance/${noti.referenceId}`);
-                    }
-                  }}
+                  onClick={() => router.push(`/orders/${noti.referenceId}`)}
                 >
                   <Avatar
                     src={noti.imageUrl}

@@ -294,16 +294,26 @@ export default function AccountBalance() {
         <Header title="Quản lý tài chính" />
       </div>
 
-      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] w-[1209px] justify-around border-t-small">
+      <div
+        className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] justify-around border-t-small"
+        style={{ width: `calc(100% - 320px)` }}
+      >
         {[1, 2].map((tab) => (
-          <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
+          <div
+            key={tab}
+            className={
+              isActiveTab === tab
+                ? 'border-b-2 border-b-primary flex-1 flex flex-row items-center justify-center'
+                : 'flex-1 flex flex-row items-center justify-center'
+            }
+          >
             <Button
               onClick={() => {
                 if (isActiveTab !== tab) {
                   setIsActiveTab(tab);
                 }
               }}
-              className={`${isActiveTab === tab ? 'text-primary' : 'text-black'} bg-transparent text-lg font-medium`}
+              className={`${isActiveTab === tab ? 'text-primary ' : 'text-black'} bg-transparent text-lg font-medium text-center `}
             >
               {tab === 1 ? 'Yêu cầu đã tạo' : 'Biến động số dư'}
             </Button>

@@ -582,16 +582,26 @@ export default function Orders() {
         <Header title="Quản lý đơn hàng" />
       </div>
 
-      <div className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] w-[1209px] justify-between border-t-small overflow-x-auto">
+      <div
+        className="flex fixed top-[72px] z-30 bg-white shadow-md py-2 left-[305px] justify-between border-t-small overflow-x-auto"
+        style={{ width: `calc(100% - 320px)` }}
+      >
         {[1, 2, 3, 4, 5, 6].map((tab) => (
-          <div key={tab} className={isActiveTab === tab ? 'border-b-2 border-b-primary' : ''}>
+          <div
+            key={tab}
+            className={
+              isActiveTab === tab
+                ? 'border-b-2 border-b-primary flex-1 flex flex-row items-center justify-center'
+                : 'flex-1 flex flex-row items-center justify-center'
+            }
+          >
             <Button
               onClick={() => {
                 if (isActiveTab !== tab) {
                   setIsActiveTab(tab);
                 }
               }}
-              className={`${isActiveTab === tab ? 'text-primary' : 'text-black'} w-[245px] bg-transparent text-lg font-medium`}
+              className={`${isActiveTab === tab ? 'text-primary' : 'text-black'} w-[245px] bg-transparent text-lg font-medium text-center`}
             >
               {tab === 1
                 ? 'Đơn mới'
