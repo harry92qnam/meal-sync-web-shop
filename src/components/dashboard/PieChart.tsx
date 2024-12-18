@@ -8,7 +8,11 @@ interface PieChartProps {
 }
 
 const PieChart: React.FC<PieChartProps> = ({ data }) => {
+  console.log(data);
+
   useEffect(() => {
+    console.log(data);
+
     const options = {
       series: data.map((item) => item.percent),
       chart: {
@@ -30,14 +34,17 @@ const PieChart: React.FC<PieChartProps> = ({ data }) => {
         },
       ],
     };
-
     const chart = new ApexCharts(document.querySelector('#pieChart'), options);
-    chart.render();
+    if (!chart) {
+      return;
+    } else {
+      chart.render();
+    }
 
     return () => {
       chart.destroy();
     };
-  }, []);
+  }, [data]);
 
   return <div id="pieChart"></div>;
 };

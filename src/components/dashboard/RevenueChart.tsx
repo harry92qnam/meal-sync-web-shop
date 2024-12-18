@@ -13,7 +13,7 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
       series: [
         {
           name: 'Nghìn đồng (VND)',
-          data: data.map((item) => item.revenue),
+          data: data.map((item) => Math.round(item.revenue / 1000)),
         },
       ],
       chart: {
@@ -67,10 +67,17 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data }) => {
         },
       },
     };
-
     const chart = new ApexCharts(document.querySelector('#revenueChart'), options);
-    chart.render();
-  });
+    if (!chart) {
+      return;
+    } else {
+      chart.render();
+    }
+
+    return () => {
+      chart.destroy();
+    };
+  }, [data]);
   return <div id="revenueChart"></div>;
 };
 
