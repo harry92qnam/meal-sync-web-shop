@@ -111,6 +111,7 @@ export default function TableCustom({
       if (responseData.data.isSuccess) {
         setIsRefetch();
         toast('success', responseData.data.value.message);
+        setSelectedKeys(new Set([]));
       } else {
         toast('error', responseData.data.error.message);
       }

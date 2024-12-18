@@ -76,10 +76,17 @@ const OrderStatistic: React.FC<OrderStatisticProps> = ({ data }) => {
         borderColor: '#f1f1f1',
       },
     };
-
     const chart = new ApexCharts(document.querySelector('#orderStatus'), options);
-    chart.render();
-  });
+    if (!chart) {
+      return;
+    } else {
+      chart.render();
+    }
+
+    return () => {
+      chart.destroy();
+    };
+  }, [data]);
   return <div id="orderStatus"></div>;
 };
 

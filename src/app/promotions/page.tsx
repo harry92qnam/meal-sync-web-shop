@@ -25,6 +25,7 @@ import {
   DropdownTrigger,
   Selection,
   useDisclosure,
+  User,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
@@ -238,9 +239,16 @@ export default function Promotions() {
         );
       case 'title':
         return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{promotion.title}</p>
-          </div>
+          <User
+            avatarProps={{
+              radius: 'full',
+              src:
+                promotion.bannerUrl ??
+                'https://media.licdn.com/dms/image/D5612AQHSxBZVAk0LhQ/article-cover_image-shrink_720_1280/0/1694026297548?e=2147483647&v=beta&t=l6eLDl43pi9MfjMPHqiuFM72iJryItMwpKI6wb_fFkM',
+            }}
+            name={promotion.title}
+            className="flex justify-start ml-6 gap-2"
+          />
         );
       case 'startDate':
         return (

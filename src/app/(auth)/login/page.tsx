@@ -76,7 +76,7 @@ export default function Login() {
         globalAuthState.setAuthDTO(authDTO);
         globalAuthState.setRoleId(roleId);
         globalAuthState.setToken(token);
-        router.push('/orders');
+        router.push('/dashboard');
       } else {
         setError(responseData.data.error.message);
       }
